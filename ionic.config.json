@@ -1,0 +1,7 @@
+{
+  "name": "gogreen",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
