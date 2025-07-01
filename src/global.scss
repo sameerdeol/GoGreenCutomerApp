@@ -35,3 +35,191 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+@font-face{
+    font-family: opensans_bold;
+        src:url('/assets/gogreen_font/opensans_bold/OpenSans-Bold.eot') format('eot'),
+            url('/assets/gogreen_font/opensans_bold/OpenSans-Bold.woff2') format('woff2'),
+            url('/assets/gogreen_font/opensans_bold/OpenSans-Bold.woff') format('woff'),
+            url('/assets/gogreen_font/opensans_bold/OpenSans-Bold.ttf') format('ttf'),
+            url('/assets/gogreen_font/opensans_bold/OpenSans-Bold.otf') format('otf');
+}
+
+@font-face{
+    font-family: opensans_semibold;
+        src:url('/assets/gogreen_font/opensans_semibold/OpenSans-SemiBold.eot') format('eot'),
+            url('/assets/gogreen_font/opensans_semibold/OpenSans-SemiBold.woff2') format('woff2'),
+            url('/assets/gogreen_font/opensans_semibold/OpenSans-SemiBold.woff') format('woff'),
+            url('/assets/gogreen_font/opensans_semibold/OpenSans-SemiBold.ttf') format('ttf'),
+            url('/assets/gogreen_font/opensans_semibold/OpenSans-SemiBold.otf') format('otf');
+}
+
+@font-face{
+    font-family: opensans_regular;
+        src:url('/assets/gogreen_font/opensans_regular/OpenSans-Regular.eot') format('eot'),
+            url('/assets/gogreen_font/opensans_regular/OpenSans-Regular.woff2') format('woff2'),
+            url('/assets/gogreen_font/opensans_regular/OpenSans-Regular.woff') format('woff'),
+            url('/assets/gogreen_font/opensans_regular/OpenSans-Regular.ttf') format('ttf'),
+            url('/assets/gogreen_font/opensans_regular/OpenSans-Regular.otf') format('otf');
+}
+body {
+    font-family: 'Open Sans' !important;
+  }
+.m_auto {
+    margin: auto;
+}
+.m_0  {
+    margin: 0px !important;
+}
+.mt_0 {
+    margin-top: 0 !important;
+}
+.mb_0 {
+    margin-bottom: 0 !important;
+}
+.mt_1 {
+    margin-top: 1em !important;
+}
+.mt_2 {
+    margin-top: 2em !important;
+}
+.mt_3 {
+    margin-top: 3em !important;
+}
+.mt_4 {
+    margin-top: 4em !important;
+}
+.mt_5 {
+    margin-top: 5em !important;
+}
+.pt_1 {
+    padding-top: 1em;
+}
+.h_100vh {
+    height: 100vh;
+}
+.bg_gogreen {
+    background-color: #088B46;
+}
+.bg_white {
+    background-color: #fff;
+}
+.bg_gogreen {
+    --background-color: #088B46;
+}
+.bg_white {
+    --background-color: #fff;
+}
+.text_cap {
+    text-transform: capitalize;
+}
+.text_center {
+    text-align: center;
+}
+.display_flex_only{
+    display: flex;
+}
+.text_white {
+    color: #fff;
+}
+.text_gogreen {
+    color: #088B46 !important;
+}
+.text_grey {
+    color: #808080;
+}
+.text_black {
+    color: #000;
+}
+.gray_text{
+  color: #434343;
+}
+.d_flex {
+    display: flex;
+}
+.justify_content_center {
+    justify-content: center;
+}
+.align_center {
+    align-items: center;
+}
+.justify_content_between {
+    justify-content: space-between;
+}
+.position_relative {
+    position: relative;
+}
+.opensans_semibold {
+    font-family: opensans_semibold;
+}
+.text_dec_none {
+    text-decoration: none;
+}
+body * {
+    font-family: opensans_regular;
+}
+.border_none {
+    border: 0px !important;
+}
+.page_outer_div {
+    padding: 12px;
+}
+app-footer-tabs {
+    z-index: 999;
+    position: fixed;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+}
+.display_flex{
+    display: flex;
+    justify-content: space-between;
+}
+.remove_margin{
+    margin: 8px;
+}
+.font_weight{
+    font-weight: 600;
+}
+.text_font{
+    font-size: 13px;
+}
+.align_items_center{
+    align-items: center;
+}
+.justify_content_center{
+    justify-content: center;
+}
+.margin_0{
+    margin: 0;
+}
+.padding_0{
+    padding: 0;
+}
+.color_black{
+    color: #000;
+}
+.header_heding_p{
+    color: white !important;
+    margin: 0 !important;
+}
+.footer-tabs{
+    box-shadow: 0 10px 42px rgba(0, 0, 0, 0.2);
+
+}
+.font-24{
+    font-size: 24px;
+}
+.margin_bottom_5{
+    margin-bottom: 7rem;
+  }
+  .mb-6rem{
+    margin-bottom: 6rem;
+  }
+  .custom-toast {
+    --background: #088B46 !important;
+    --color: #fff !important;
+  }
+  .vendor-heading-primary{
+    font-size: 22px;
+  }

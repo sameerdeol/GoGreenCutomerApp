@@ -1,0 +1,80 @@
+.logo {
+  height: 40px;
+  width: auto;
+  position: relative;
+  // top: 5px;
+}
+ 
+  
+  ion-toolbar {
+    --background: #ffffff;  /* White background */
+    --color: #000000;  /* Black text/icons */
+  }
+  .header_profile{
+    border: 1px solid gray;
+    border-radius: 41px;
+    width: 43px;
+    height: 43px;
+    display: flex
+;
+    justify-content: center;
+    overflow: hidden;
+  }
+  ion-icon {
+    font-size: 20px;
+    color: green;
+  }
+ 
+  .pickup_logo{
+    height: 20px;
+    width: auto;
+    margin-right: 7px;
+  }
+  ion-toolbar {
+    --background: #ffffff; /* White background */
+    --color: #000000;
+    --border-width: 0 !important; /* Black text/icons */
+  }
+  
+  .icon-circle {
+    width: 33px;
+    height: 33px;
+    border: 1px solid #797878;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #272727;
+    background: transparent;
+    margin: 0px 8px 0px 8px;
+  }
+  .pickup_drop {
+    background: #088b46;
+    display: flex;
+    color: white;
+    align-items: center;
+    border-radius: 31px;
+    font-size: 11px;
+    padding: 0px 10px 0px 10px;
+}
+.pickup_drop p{
+  margin: 7px 0px 9px 0px;
+}
+  .icon-circle ion-icon {
+    font-size: 20px;
+    color: gray;
+  }
+  .inner_header_text_div {
+    display: flex;
+}
+.header_location_outer_div p{
+    margin: 0;
+}
+.header_location_outer_div>p{
+    font-size: 12px;
+    margin-left: 6px;
+}
+.inner_header_text_div>p{
+    font-weight: 600;
+    font-size: 14px;
+}

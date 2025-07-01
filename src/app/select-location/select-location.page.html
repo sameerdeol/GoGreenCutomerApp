@@ -1,0 +1,63 @@
+<ion-content [fullscreen]="true">
+  
+  <div class="map-container">
+    <div class="location_search">
+      <ion-searchbar class="search_bar" placeholder="Custom Placeholder"></ion-searchbar>
+    </div>
+    <iframe class="position_relative"
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.835434508616!2d144.95373531590465!3d-37.81720974202126!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad65d5df0b0b0b1%3A0x5045675218ce6e0!2sMelbourne%2C%20Australia!5e0!3m2!1sen!2sin!4v1649118758657!5m2!1sen!2sin"
+      width="100%"
+      height="700"
+      style="border:0;"
+      loading="lazy" style="z-index: -1;">
+    </iframe>
+  </div>
+  <div class="location_white_bg2">
+    <div class="curr_loc_one loc_disabled_main text_gogreen opensans_semibold mt_4" style="width: 100%;">
+      <ion-icon slot="start" src="assets/icons/loc_disabled.svg"></ion-icon>
+      <p class="m_0 text_black" ><span class="opensans_semibold">Device location not enabled</span><br>
+        <span>Enable for a better delivery experience</span>
+      </p>
+      <ion-button class="btn_enable_loc" size="small">Small</ion-button>
+    </div>
+    <!-- <ion-button size="small" class="curr_loc_one text_gogreen opensans_semibold" expand="block">
+      <ion-icon slot="start" src="assets/icons/curr_location.svg"></ion-icon>
+      Use current location
+    </ion-button> -->
+    <div class="location_search" style="position: unset;">
+      <h4 class="opensans_semibold">Select delivery locations</h4>
+      <ion-searchbar class="search_bar" style="position: unset; width: 100%;" placeholder="Custom Placeholder"></ion-searchbar>
+    </div>
+    <div class="location_cont">
+    </div>
+    <div class="">
+      <ion-button style="width: 100%;" size="small" class="curr_loc_one mt_2 text_gogreen opensans_semibold" expand="block">
+        <ion-icon slot="start" src="assets/icons/curr_location.svg"></ion-icon>
+        Use current location
+      </ion-button>
+      <ion-button style="width: 100%;" size="small" class="curr_loc_one mt_1 text_gogreen opensans_semibold" expand="block">
+        <ion-icon slot="start" name="add-outline"></ion-icon>
+        Add new address
+        <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button class="curr_loc_two text_white opensans_semibold m_auto mt_4" expand="block" style="width: 70%;">Save Location</ion-button>
+      
+    </div>
+  </div>
+  <div class="location_white_bg">
+    <ion-button size="small" class="curr_loc_one text_gogreen opensans_semibold" expand="block">
+      <ion-icon slot="start" src="assets/icons/curr_location.svg"></ion-icon>
+      Use current location
+    </ion-button>
+    <div class="location_cont">
+      <p class="mb_0 opensans_semibold"><b>Sorry, we’re not here yet!</b></p>
+      <p class="mt_0">Go Green is not available at the moment. Please try a different location.</p>
+    </div>
+    <div class="location_twobtn_main">
+      <ion-button class="curr_loc_two text_white opensans_semibold" expand="block">Use current location</ion-button>
+      <ion-button id="loc_manual" class="loc_manual text_gogreen opensans_semibold" expand="block">Select location manually</ion-button>
+    </div>
+  </div>
+
+</ion-content>

@@ -1,0 +1,168 @@
+.green_header{
+    background-image: url(/assets/header_bg.png);
+    background-size: 180%;
+    background-position: top;
+    background-repeat: no-repeat;
+    position: relative;
+    top: 0px;
+    height: 230px;
+
+}
+.green_header ion-icon{
+    font-size: 25px;
+}
+.card-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+    font-size: 14px;
+    color: #007b2e;
+    background-color: white;
+    border: 1px solid #D9D9D9;  
+    border-radius: 2px;
+    padding: 0px 9px 0px 9px;
+  }
+  
+  .ion_grid_outer_div ion-card {
+    text-align: center;
+    box-shadow: none;
+    margin: 4px;
+  }
+  .ion_grid_outer_div ion-icon {
+    font-size: 24px;
+
+    color: #007b2e;
+  }
+  .bordr_bottom_gray{
+    border-bottom: 1px solid #D9D9D9;
+  }
+  .accounts_grid ion-card {
+    margin: 0;
+  }
+  .accounts_grid ion-icon {
+    font-size: 24px;
+
+    color: #007b2e;
+  }
+  .main_icons ion-icon{
+    margin-right: 12px;
+  }
+  .main_icons p{
+    color: black;
+  }
+  .img_circle{
+    width: 80px;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid white;
+    background-color: transparent !important;
+    color: green;
+    font-size: 14px;
+    padding: 7px;
+    box-shadow: none !important;
+    overflow: hidden;
+  }
+  .active-circle{
+    background-color: white !important;
+  }
+ 
+  .active-circle-p{
+    color: green;
+    background: white;
+  }
+  .img_circle img{
+    padding-top: 20px;
+  }
+  .profile_div p{
+    text-align: center;
+    border: 1px solid;
+    border-radius: 15px;
+    padding: 1px 6px 2px 6px;
+    font-size: 13px;
+    margin-top: 12px;
+  }
+  .profile_div {
+    margin-right: 15px;
+
+  }
+  .welcome_submit {
+    --padding-bottom: 15px;
+    --padding-top: 15px;
+    --border-radius: 30px;
+    --background: #088B46 !important;
+    color: #fff;
+    width: 100%;
+    margin: auto;
+    font-size: 13px;
+
+}
+input[type="text"] {
+    width: 100%;
+    background: white;
+    border: 1px solid gray;
+    border-radius: 30px;
+    padding: 8px 13px 8px 19px;
+    color: black;
+}
+input[type="email"] {
+  width: 100%;
+  background: white;
+  border: 1px solid gray;
+  border-radius: 30px;
+  padding: 8px 13px 8px 19px;
+  color: black;
+}
+input[type="number"] {
+  width: 100%;
+  background: white;
+  border: 1px solid gray;
+  border-radius: 30px;
+  padding: 8px 13px 8px 19px;
+  color: black;
+}
+.form_label{
+    color: black;
+    font-size: 13px;
+    font-weight: 600;
+    margin: 7px 1px 8px 9px;
+}
+.left_arrow_div img{
+  width: 60%;
+}
+.left_arrow_div{
+ width: 13%;
+}
+.white_bg_header {
+  margin: 0;
+  font-weight: 600;
+  color: #ffffff;
+}
+.header_search_img img{
+  width: 60%;
+}
+.header_search_img{
+  width: 18%;
+  display: flex;
+}
+
+.gender-card {
+  background-color: transparent;
+  text-align: center;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+  cursor: pointer;
+
+
+  &:hover {
+    transform: scale(1.03);
+  }
+}
+
+.gender-card.active {
+  background-color: transparent;
+  transform: scale(1.05);
+}

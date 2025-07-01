@@ -1,0 +1,75 @@
+.welcome_second {
+    height: 100%;
+    background-image: url(../../assets/welcome/white_ellipse_square.webp);
+    background-size: 140%;
+    background-position: top center;
+    background-repeat: no-repeat;
+    position: relative;
+    top: -100px;
+    padding-top: 215px;
+}
+.welcome_ingredients {
+    margin-top: 50px;
+    width: 100%;
+}
+.delivery_man {
+    width: 80%;
+}
+.delivery_man_main {
+    text-align: center;
+    position: absolute;
+    top: -15%;
+    width: 100%;
+    animation: leafMove 1.5s ease-out forwards;
+}
+.content_welcome {
+    padding: 15px;
+}
+.login_btn{
+    height: 10px; 
+    width: 100%;
+    height: 45px;
+    min-height: unset;
+    color: white;
+    text-transform: capitalize;
+    margin-top: 13px;
+    border-radius: 35px;
+    background-color: #088B46;
+}
+.login_welcome a {
+    margin-top: 15px;
+    font-family: opensans_semibold;
+    text-decoration: none;
+    border-radius: 30px;
+    display: block;
+    padding: 13px;
+    font-size: 14px;
+    width: 90%;
+    
+}
+.sign_up_welcome a {
+    margin-top: 15px;
+    font-family: opensans_semibold;
+    text-decoration: none;
+    color: #088b46;
+    font-size: 14px;
+}
+.welcome_footer {
+    margin-top: 30px;
+}
+@keyframes leafMove {
+    from {
+        transform: translateX(-900px); /* Start from left */
+    }
+    to {
+        transform: translateX(0); /* Move to normal position */
+    }
+}
+p{
+    font-size: 14px;
+}
+a.bg_gogreen:visited,
+a.bg_gogreen:active,
+a.bg_gogreen:focus {
+  color: white !important;         /* override blue */
+}

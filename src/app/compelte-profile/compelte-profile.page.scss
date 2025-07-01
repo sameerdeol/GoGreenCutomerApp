@@ -1,0 +1,26 @@
+ion-content{
+    --background: white;
+}
+p{
+    color: black;
+    margin: 7px 0px 7px 0px;
+}
+.create_Id_heading_section{
+    text-align: center;
+}
+h2{
+    color: #088b46;
+    font-weight: 600;
+}
+input[type="text"] {
+    width: 100%;
+    background-color: white;
+    line-height: 2;
+    border: 1px solid gray;
+    border-radius: 4px;
+    color: black;
+    padding: 0px 11px 0px 18px;
+}
+.btn_outer_div{
+    margin-top: 2rem;
+}

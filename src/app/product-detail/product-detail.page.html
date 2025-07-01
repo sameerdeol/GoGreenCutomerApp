@@ -1,0 +1,226 @@
+
+<ion-content  [fullscreen]="true">
+ <!-- <div class="page_outer_div "> -->
+  <div class="padding_header">
+    <div class="display_flex align_items_center">
+      <div class="left_arrow_div"> <img src="assets/left_arrow.svg" (click)="goBack()" ></div>
+      <p class="margin_0">Product Details</p>
+      <div class="header_search_img ">
+        <!-- <ion-icon slot="icon-only" name="search-outline"></ion-icon> -->
+         <img src="assets/common_search_icon.svg" class="search_img">
+         <img src="assets/common_bell_icon.svg">
+        <!-- <ion-icon slot="icon-only" name="notifications-outline"></ion-icon> -->
+      </div>
+    </div>
+  </div>
+
+  
+   <div class="bg_img">
+    <div class="home_slidr_outer_div">
+      <swiper-container class="mySwiper" slides-per-view="1" space-between="15" autoplay="false" pagination="true">
+        <swiper-slide *ngFor="let item of property_detail?.gallery_images">
+          <div class="slide-klm">
+            <img 
+              [src]="baseUrl + item.image_path" 
+              alt="Gallery Image"
+            >
+          </div>  
+        </swiper-slide>
+        <ng-container *ngIf="property_detail?.gallery_images?.length === 0">
+          <swiper-slide>
+            <div class="slide-klm">
+              <img src="assets/dummy.svg" alt="Dummy Image">
+            </div>
+          </swiper-slide>
+        </ng-container>
+      </swiper-container>
+     
+    </div>
+    <div class="page_outer_div" *ngIf="property_detail">
+      <div class="product_heading_outer_div">
+        <div class="product_head display_flex">
+          <p class="text_font">{{property_detail?.name}}</p>
+          <img>
+        </div>
+        <div class="product_desc display_flex">
+          <p class="text_font">{{property_detail.description}}</p>
+           <p class="text_font text-right" *ngIf="property_detail?.fast_delivery_available === 1"><img class="mr-1" src="assets/fast-delivery.svg">Available on fast delivery</p>
+        </div>
+      </div>
+    </div>
+      <div class="price_and_review_div display_flex">
+        <p>${{property_detail?.price}}</p>
+        <div class="rating_p">
+          <p>4.5 start Rating</p>
+          <ion-icon
+          *ngFor="let star of stars; let i = index"
+          name="{{ i < rating ? 'star' : 'star-outline' }}"      
+          class="star-icon"
+          ></ion-icon>
+        </div>
+      </div>
+      <div class="page_outer_div">
+    <div *ngIf="property_detail" class="accordion-container">
+      <details class="product_desc_outer_div">
+        <summary>All Product Details
+        </summary>
+        <div class="desc_Padding">
+          <div class="padding_top">
+            <p class="product_desc_head">{{property_detail.title}}Description</p>
+            <p class="product_short_desc">{{property_detail.subtitle}}This is the first section's content.</p>
+          </div>
+          <div class="border_top padding_top">
+            <p class="product_desc_head">Key Features</p>
+            <p class="product_short_desc">This is the Second section's content.</p>
+          </div>
+       
+        </div>
+        <div class="table_outer_div">
+          
+          <div class="row" *ngFor="let attr of property_detail.attributes">
+            <div class="col-6 product-label" >{{ attr.attribute_key }}</div>
+            <div class="col-6 product-value" >{{ attr.attribute_value }}</div>
+          </div>
+         
+      </div>
+      </details>
+    
+      <div class="product_desc_outer_div product_desc_outer_div2" *ngIf="relatedBrandInfo" (click)="navigateToBrands(relatedBrandInfo.id)">
+        <div class="brand_product_inner_div"><img [src]="baseUrl+relatedBrandInfo.brand_logo" alt="">All {{relatedBrandInfo.name}} Products
+        </div>
+        <div>
+          <ion-icon name="caret-forward-outline"></ion-icon>
+        </div>
+      </div>
+    </div>
+
+    <div class="features_product_div" *ngIf="allweeklydeals?.length>0">
+      <div class="slider_heading_div">
+        <h3>Deals of the Week</h3>
+        <p (click)="navigateToinerAllDeals(allweeklydeals[0].category_id, 'dealsProduct')">See all</p>
+      </div>
+      <swiper-container class="mySwiper" slides-per-view="3" space-between="5" [breakpoints]="{
+        '640': { 'slidesPerView': 5, 'spaceBetween': 10 },
+        '768': { 'slidesPerView': 5, 'spaceBetween': 10 },
+        '1024': { 'slidesPerView': 5, 'spaceBetween': 10 }
+      }">
+        <swiper-slide *ngFor="let deals of allweeklydeals; let i = index">
+          <div class="slide-content slide_div slide_content">
+            <div class="whishlist_img_div">
+              <!-- <img src="assets/whishlist.svg"> -->
+              <button
+              class="heart-button"
+
+              (click)="toggleFavoritefeatured(deals,deals.id,deals.is_favourite)"
+            >
+            <img 
+            [src]="deals.is_favourite === 1 ? 'assets/heart-filled.svg' : 'assets/heart-empty.svg'" 
+            alt="Favorite" 
+            class="heart-img"
+          />
+            </button>
+            </div>
+            <div class="image_wrapper" (click)="navigateToproduct(deals.id)" >
+              <img [src]="baseUrl + deals.featured_image"alt="">
+            </div>
+            <div class="product_desc display_flex">
+              <div class="width_50">
+                <p class="product_heading_desc">{{deals.title}}</p>
+                <p class="product_sub_heading_desc">{{deals.subtitle}}</p>
+              </div>
+          
+              <div class="price_outer_div">
+                <p class="price_p">${{deals.price}}</p>
+                
+                <!-- "Add to Cart" Button -->
+               
+              </div>
+            </div>
+            <div class="col-12 custm_padding" *ngIf="!isAddedMap[deals.id]; else quantityControls">
+              <button class="add_to_cart_btn_bg" (click)="addToCart(deals)">
+                Add To Cart
+              </button>
+            </div>
+            
+            <ng-template #quantityControls>
+              <div class="col-12 custm_padding">
+                <button class="add_to_cart_btn_bg2">
+                  <span class="remove_item_btn" (click)="removeFromCart(deals)">-</span>
+                  {{ getQuantity(deals.id) }}
+                  <span class="add_item_btn" (click)="addToCart(deals)">+</span>
+                </button>
+              </div>
+            </ng-template>
+        
+          </div>
+        </swiper-slide>
+      </swiper-container>
+  
+   
+      
+    </div>
+      <!-- Add to Cart Button -->
+    
+      <div class="bg_white margin_bottm_4">
+          <div class="features_product_div bg_white">
+            <div class="slider_heading_div">   
+                <h3>Brands in this Category</h3>
+                <!-- <p>See all</p> -->
+            </div>
+            <div class="features_product_slider_div bg_white"> 
+              <swiper-container class="mySwiper" slides-per-view="4" space-between="5"  autoplay="false"  [breakpoints]="{
+                '640': { 'slidesPerView': 6, 'spaceBetween': 5 },
+                '768': { 'slidesPerView': 6, 'spaceBetween': 5 },
+                '1024': { 'slidesPerView': 8, 'spaceBetween': 5 }
+              }">
+                <swiper-slide *ngFor="let item of category_realted_brands">
+                  <div class="slide-content brand_bt_cat_outer_div">
+                    <div class="icon-circle" (click)="navigateToBrands(item.id)">
+                      <img [src]="baseUrl+item.brand_logo" alt="{{ item.brand_logo }}">                  
+                    </div>
+                    <p>{{ item.name }}</p>
+                  </div>
+                </swiper-slide>        
+              </swiper-container>
+            </div>
+          </div>
+        </div>
+      </div>
+   </div>
+ 
+ 
+</ion-content>
+<div class="add-to-cart-footer" *ngIf="property_detail">
+  <div class="add_to_cart_outer_div">
+    <div class="col-6">
+      <p> ${{ getTotalPrice(property_detail)}}</p>
+      <p>Inclusive of all Taxes</p>
+    </div>
+    <div class="col-6">
+      <div class="frozen_food_div">        
+          <div >
+            <div *ngIf="!isAddedMap[property_detail.id]; else quantityControls" class="d-flex justify-content-end">
+              <button class="add_to_cart_btn_bg_bottom" (click)="addToCart(property_detail)">
+                Add To Cart
+              </button>
+            </div>
+            
+            <ng-template #quantityControls>
+                <div class="d-flex justify-content-end">
+                  <button class="add_to_cart_btn_bg2_bottom">
+                    <span class="remove_item_btn_bottom" (click)="removeFromCart(property_detail)">-</span>
+                    {{ getQuantity(property_detail.id) }}
+                    <span class="add_item_btn_bottom" (click)="addToCart(property_detail)">+</span>
+                  </button>
+                </div>
+             
+            
+            </ng-template> 
+          </div>    
+      </div>
+    </div>
+  
+  </div>
+</div>
+
+<app-footer-tabs></app-footer-tabs>

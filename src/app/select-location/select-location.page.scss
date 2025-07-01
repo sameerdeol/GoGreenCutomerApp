@@ -1,0 +1,131 @@
+.location_white_bg {
+    height: 100%;
+    background-image: url(../../assets/welcome/white_ellipse_square.webp);
+    background-size: 150%;
+    background-position: top center;
+    background-repeat: no-repeat;
+    position: fixed;
+    bottom: -50%;
+    padding-top: 50px !important;
+    padding: 30px;
+    transition: 0.3s;
+    width: 100%;
+    z-index: 99999;
+}
+.location_white_bg2 {
+    height: 100%;
+    background-image: url(../../assets/welcome/manual_loc_ellipse.webp);
+    background-size: 150%;
+    background-position: top center;
+    background-repeat: no-repeat;
+    position: fixed;
+    bottom: -100%;
+    padding-top: 50px !important;
+    padding: 30px;
+    transition: 0.3s;
+    width: 100%;
+    z-index: 99999;
+}
+.select_loc {
+    bottom: -30% !important;
+    z-index: 99999999;
+}
+.select_loc:after {
+    content: "x";
+    background-color: #088B46;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    width: fit-content;
+    padding: 5px 15px 10px 15px;
+    font-size: 20px;
+    position: absolute;
+    top: -5%;
+    left: 45%;
+}
+.btn_enable_loc {
+    border-radius: 28px;
+    overflow: hidden;
+}
+.loc_disabled_main {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+.curr_loc_one {
+    text-transform: unset !important;
+    --background: #fff;
+    width: fit-content;
+    margin: auto;
+    border: 1px solid #088B46;
+    border-radius: 25px;
+    overflow: hidden;
+    --padding-bottom: 10px;
+    --padding-top: 10px;
+    --padding-start: 15px;
+    --padding-end: 15px;
+    font-size: 12px;
+}
+.map-container.black_overlay:after {
+    content: '';
+    background: #00000069;
+    height: 100vh;
+    width: 100%;
+    display: block;
+    z-index: 9;
+    position: absolute;
+    top: 0;
+}
+.loc_manual {
+    text-transform: unset !important;
+    --background: #fff;
+    border: 1px solid #088B46;
+    border-radius: 25px;
+    overflow: hidden;
+    --padding-bottom: 15px;
+    --padding-top: 15px;
+    --padding-start: 15px;
+    --padding-end: 15px;
+}
+.location_twobtn_main {
+    width: 70%;
+    margin: auto;
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+}
+.curr_loc_two {
+    text-transform: unset !important;
+    --padding-bottom: 15px;
+    --padding-top: 15px;
+    --padding-start: 15px;
+    --padding-end: 15px;
+    border-radius: 25px;
+    overflow: hidden;
+    border: 1px solid #088B46;
+}
+.location_cont {
+    text-align: center;
+    width: 75%;
+    margin: auto;
+}
+.location_cont p:last-child {
+    font-size: 14px;
+}
+.location_search {
+    position: absolute;
+    width: 100%;
+    top: 10%;
+    left: 0;
+}
+.location_search .search_bar {
+    width: 90%;
+    margin: auto;
+    padding: 0;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 0 7px #ccc;
+}

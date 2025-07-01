@@ -1,0 +1,132 @@
+
+
+<ion-content [fullscreen]="true">
+  <app-header></app-header>
+  <div class="page_outer_div">
+   <div class="location_search">
+     <input class="search_bar" type="search" placeholder="Search your product..">
+     <ion-icon class="search-icon" name="search-outline"></ion-icon>
+   </div>
+ 
+   <!-- <div class="outer_category_div"> 
+     <swiper-container class="mySwiper" slides-per-view="5" space-between="10"  autoplay="false">
+       <swiper-slide *ngFor="let item of sliderItems ">
+         <div class="slide-content ">
+           <div class="icon-circle">
+           <ion-icon [name]="item.icon"></ion-icon>
+           <p>{{ item.name }}</p>
+         </div>
+         </div>
+       </swiper-slide>
+     </swiper-container>
+   </div> -->
+   <div class="outer_category_div">
+    <swiper-container class="mySwiper" slides-per-view="4" space-between="10"   [breakpoints]="{
+      '640': { 'slidesPerView': 6, 'spaceBetween': 10 },
+      '768': { 'slidesPerView': 6, 'spaceBetween': 10 },
+      '1024': { 'slidesPerView': 8, 'spaceBetween': 10 }
+    }">
+
+      <!-- Optional Static Slide -->
+      <swiper-slide (click)="selectCategory2(-1)" >
+        <div class="slide-content" (click)="navigateToAllCat()">
+          <div class="icon-circle">
+            <img src="assets/all-cat.svg" alt="Static Slide" class="svg-icon">
+            <p>All</p>
+          </div>
+        </div>
+      </swiper-slide>
+    
+      <!-- Dynamic Slides -->
+      <swiper-slide *ngFor="let item of categories; let i = index" (click)="selectCategory(i, item.id, item.name)" >
+        <div class="slide-content">
+          <div class="icon-circle">
+            <img [src]="baseUrl + item.category_logo" alt="{{ item.name }}" class="svg-icon" />
+            <p>{{ item.name }}</p>
+          </div>
+        </div>
+      </swiper-slide>
+    </swiper-container>
+    
+  </div>
+
+   <div class="pickup_drop_outer_div">
+     <div class="heading_pickup">
+       <p class="text_font font_weight">Pickup & Drop: Fast, Easy & Convenient</p>
+       <p class="text_font">Effortless delivery with real-time tracking for ultimate convenience.</p>
+     </div>
+
+     <p class="label_heading">Pickup Address</p>
+     <div class="display_flex">     
+      <input type="text">
+      <ion-icon name="location-outline"></ion-icon>
+     </div>
+
+     <p class="label_heading">Drop Address</p>
+     <div class="display_flex">     
+      <input type="text">
+      <ion-icon name="location-outline"></ion-icon>
+     </div>
+
+     <p class="label_heading">Comments</p>
+     <div>     
+      <textarea></textarea>
+  
+     </div>
+     <div>
+      <ion-button class="welcome_submit mt_1" expand="block" shape="round" >Place Order</ion-button>
+     </div>
+   </div>
+   
+ 
+ 
+ 
+   <div class="features_product_div">
+    <div class="slider_heading_div">   
+        <h3>Features Products</h3>
+        <p>See all</p>
+    </div>
+    <div class="features_product_slider_div"> 
+      <swiper-container class="mySwiper" slides-per-view="3" space-between="5"  autoplay="false"  [breakpoints]="{
+        '640': { 'slidesPerView': 5, 'spaceBetween': 10 },
+        '768': { 'slidesPerView': 5, 'spaceBetween': 10 },
+        '1024': { 'slidesPerView': 6, 'spaceBetween': 10 }
+      }">
+        <swiper-slide *ngFor="let features_product of allfeaturesproducts" >
+          <div class="slide-content slide_div slide_content">
+            <div class="whishlist_img_div">
+              <!-- <img src="assets/whishlist.svg"> -->
+              <button
+              class="heart-button"
+              [class.filled]="features_product.isFavorite"
+              (click)="toggleFavoritefeatured(features_product)"
+              aria-label="Toggle Favorite"
+            >
+              ❤
+            </button>
+            </div>
+            <div class="image_wrapper">
+              <img [src]="baseUrl+features_product.featured_image"  alt="">     
+            </div>
+                
+
+          <div class="product_desc">
+            <p class="product_heading_desc">{{features_product.name}}</p>
+            <p>{{features_product.description}}</p>
+          </div>
+          <div class="price_outer_div">
+             <p>${{features_product.price}}</p>
+             <button class="add_to_cart_btn">add to cart</button>
+          </div>
+          </div>
+        </swiper-slide>    
+      </swiper-container>
+    </div>
+    </div>
+ 
+       
+  </div>
+ 
+ </ion-content>
+ <app-footer-tabs></app-footer-tabs>
+ 

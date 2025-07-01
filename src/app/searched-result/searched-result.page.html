@@ -1,0 +1,282 @@
+<!-- <ion-header [translucent]="true" class="mineee">
+  <ion-toolbar>
+    <div class="header">
+      <div class="col1">
+        <a href="../home" class="">
+        <img src="../../assets/home/backbutton.svg" class="avatarprofile" alt="avatarprofile" title="avatarprofile">
+      </a>
+      </div>
+      <div class="col2">
+        <p class="profile">ALL CATEGORY</p>
+      </div>
+      <div class="col2"></div>
+    </div>
+  </ion-toolbar>
+</ion-header> -->
+<ion-content [fullscreen]="true">
+  <div class="page_outer_div">
+    <div class="display_flex align_items_center">
+      <div class="left_arrow_div"> <img src="assets/left-arrow-green.svg" (click)="goBack()" ></div>
+      <p class="white_bg_header">{{categoryName}}</p>
+      <div class="header_search_img ">
+      </div>
+    </div>
+</div>
+  <div class="location_search">
+    <input class="search_bar" type="search" placeholder="Search your product.." [(ngModel)]="searchKeyword"
+    (ngModelChange)="onSearchChange($event)">
+    <ion-icon class="search-icon" name="search-outline"></ion-icon>
+  </div>
+  <div *ngIf="showSearchResults" class="search-result-dropdown p-3">
+    <div *ngFor="let product of searchedProduct" class="search-result-item">
+      <!-- <img [src]="baseUrl+product.featured_image" alt="Product" class="product-image" />
+      <span class="product-title">{{ product.name }}</span> -->
+      <div class="display_flex_only ms-11 my-2" (click)="navigateToproduct(product.id)">
+        <div class="fixed_width">
+          <img [src]="baseUrl + product.featured_image" alt="">
+        </div>
+      
+        <div class="w-75  ml-4">
+          <p class="mb-0 text_font">{{ product.title }}</p>
+          <p class="mb-0 text_font">{{ product.subtitle }}</p>
+          <p class="text_gogreen font_weight mb-0 text_font">${{ product.price }}</p>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="showSearchResults && searchedProduct.length === 0 && searchKeyword.trim()" class="no-result text-muted text-center my-3">
+      No products found.
+    </div>
+  </div>
+  <div *ngIf="!searchKeyword.trim()">
+  <!-- <div class="page_outer_div"> -->
+    <!-- <div class="location_search">
+      <input class="search_bar" type="search" placeholder="Search your product..">
+      <i class="fa-solid fa-magnifying-glass search-icon forproducts"></i>
+  </div> -->
+  
+
+
+
+  <div class="filter">
+    <!-- Price Dropdown -->
+     <div class="filterdiv">
+      <div class="filter_dropdowns">
+        <div class="dropdown-header" (click)="toggleDropdown('price')">
+          Price ($) 	<ion-icon name="chevron-down"></ion-icon>
+        </div>
+
+        <div *ngIf="activeDropdown === 'price'" class="dropdown-content">
+          <label *ngFor="let option of ['$0 - $50', '$50 - $100', '$100 - $200']">
+            <input type="checkbox" (change)="onFilterChange($event, 'price', option)"> {{ option }}
+          </label>
+          <button (click)="applySelection()">OK</button>
+        </div>
+      </div>
+
+<!-- Discount Dropdown -->
+    <div class="filter_dropdowns">
+      <div class="dropdown-header" (click)="toggleDropdown('discount')">
+        Discount 	<ion-icon name="chevron-down"></ion-icon>
+      </div>
+
+      <div *ngIf="activeDropdown === 'discount'" class="dropdown-content">
+        <label *ngFor="let option of ['10% and above', '20% and above', '30% and above']">
+          <input type="checkbox" (change)="onFilterChange($event, 'discount', option)"> {{ option }}
+        </label>
+        <button (click)="applySelection()">OK</button>
+      </div>
+    </div>
+
+
+    <div class="filter_dropdowns">
+      <div class="dropdown-header" (click)="toggleDropdown('rating')">
+        Rating 	<ion-icon name="chevron-down"></ion-icon>
+      </div>
+
+      <div *ngIf="activeDropdown === 'rating'" class="dropdown-content">
+        <label *ngFor="let option of [1, 2, 3, 4, 5]">
+          <input type="checkbox" (change)="onFilterChange($event, 'rating', option.toString())"> 
+          <span *ngFor="let star of [].constructor(option); let i = index">
+            <ion-icon name="star"></ion-icon>
+          </span>
+          {{ option }} Star
+        </label>
+        <button (click)="applySelection()">OK</button>
+      </div>    
+    </div>
+  </div>   
+  <P (click)="toggleFilter()"><img src="../../assets/round_check.svg" alt="" >All Filter</P>
+  </div>
+  <div class="page_outer_div">
+    <swiper-container
+      class="mySwiper"
+      [slidesPerView]="3"
+      [spaceBetween]="16"
+      [grid]="{ rows: 2, fill: 'row' }"
+      [pagination]="true"
+      [autoplay]="{ delay: 2500, disableOnInteraction: false }"
+    >
+      <swiper-slide *ngFor="let item of ALlSearchedVendors">
+        <div class="restaurant-card">
+          <img [src]="baseUrl + item.image" alt="{{ item.name }}" />
+          <p class="restaurant-name">{{ item.name }}</p>
+        </div>
+      </swiper-slide>
+    </swiper-container>
+  </div>
+
+
+<div class="sidebarmenu" [class.show]="isFilterVisible">
+  <div class="firstclear">
+    <p class="filter">Filters</p>
+    <p class="clear" (click)="clearAllFilter()">CLEAR ALL</p>
+  </div>
+
+  <div class="filteroptions">
+    <div class="category">
+      <p (click)="showCategory('Discount')" [class.active]="activeCategory === 'Discount'">Discount</p>
+      <div class="bottom-borderr"></div>
+      <div class="bottom-borderr"></div>
+      <p (click)="showCategory('Brand')" [class.active]="activeCategory === 'Brand'">Brand</p>
+      <div class="bottom-borderr"></div>
+      <p (click)="showCategory('Price_range')" [class.active]="activeCategory === 'Price_range'">Price Range</p>
+      <div class="bottom-borderr"></div>
+      <p (click)="showCategory('Delivery_type')" [class.active]="activeCategory === 'Delivery_type'">Delivery Type</p>
+      <div class="bottom-borderr"></div>
+      <p (click)="showCategory('Star_rating')" [class.active]="activeCategory === 'Star_rating'">Rating</p>
+      <div class="bottom-borderr"></div>
+      <p (click)="showCategory('Category')" [class.active]="activeCategory === 'Category'">Category</p>
+      <div class="bottom-borderr"></div>
+      <p (click)="showCategory('Short_By')" [class.active]="activeCategory === 'Short_By'">Sort By</p>
+     
+    </div>
+
+    <!-- Subcategories -->
+    <div *ngIf="activeCategory === 'Discount'" class="subcategory">
+      <p>
+        <input type="checkbox" [checked]="tempSelectedDiscountThresholds.includes(10)" 
+        (change)="onTempDiscountFilterChange($event, 10)"> 10% and above
+      </p>
+      <div class="bottom-borderrblack"></div>
+      <p>
+        <input type="checkbox" [checked]="tempSelectedDiscountThresholds.includes(20)" 
+        (change)="onTempDiscountFilterChange($event, 20)"> 20% and above
+      </p>
+      <div class="bottom-borderrblack"></div>
+      <p>
+        <input type="checkbox" [checked]="tempSelectedDiscountThresholds.includes(30)" 
+        (change)="onTempDiscountFilterChange($event, 30)"> 30% and above
+      </p>
+      <div class="bottom-borderrblack"></div>
+      <p>
+        <input type="checkbox" [checked]="tempSelectedDiscountThresholds.includes(40)" 
+        (change)="onTempDiscountFilterChange($event, 40)"> 40% and above
+      </p>
+      <div class="bottom-borderrblack"></div>
+    </div>
+
+    <div *ngIf="activeCategory === 'Short_By'" class="subcategory">
+      <p><input type="checkbox"> Price - Low to High</p>
+      <div class="bottom-borderrblack"></div>
+      <p><input type="checkbox"> Price - High to Low</p>
+      <div class="bottom-borderrblack"></div>
+      <p><input type="checkbox"> Popularity Newest First</p>
+      <div class="bottom-borderrblack"></div>
+    </div>
+
+    <div *ngIf="activeCategory === 'Brand'" class="subcategory">
+      <div *ngFor="let brand of PrinAllBrands">
+        <p>
+          <input type="checkbox" [value]="brand.id"  [checked]="tempSelectedBrandIds.includes(brand.id)" 
+          (change)="onTempBrandChange($event, brand.id)">
+          {{ brand.name }}
+        </p>
+        <div class="bottom-borderrblack"></div>
+      </div>
+    </div>
+
+    <div *ngIf="activeCategory === 'Price_range'" class="subcategory">
+      <p>
+        <input 
+      type="checkbox" 
+      [checked]="isPriceRangeSelected(0, 50)"
+      (change)="onTempPriceRangeChange($event, {min: 0, max: 50})"> $0 - $50
+      </p>
+      <div class="bottom-borderrblack"></div>
+      <p>
+        <input 
+      type="checkbox" 
+      [checked]="isPriceRangeSelected(50, 100)"
+      (change)="onTempPriceRangeChange($event, {min: 50, max: 100})"> $50 - $100
+      </p>
+      <div class="bottom-borderrblack"></div>
+      <p>
+        <input 
+        type="checkbox" 
+        [checked]="isPriceRangeSelected(100, 200)"
+        (change)="onTempPriceRangeChange($event, {min: 100, max: 200})"> $100 - $200
+      </p>
+      <div class="bottom-borderrblack"></div>
+    </div>
+
+    <div *ngIf="activeCategory === 'Delivery_type'" class="subcategory">
+      <p>
+        <input 
+          type="checkbox" 
+          [checked]="tempSelectedDeliveryTypes.includes(0)" 
+          (change)="onTempDeliveryTypeChange($event, 0)"> Normal Delivery
+      </p>
+      <div class="bottom-borderrblack"></div>
+    
+      <p>
+        <input 
+          type="checkbox" 
+          [checked]="tempSelectedDeliveryTypes.includes(1)" 
+          (change)="onTempDeliveryTypeChange($event, 1)"> Fast Delivery
+      </p>
+      <div class="bottom-borderrblack"></div>
+    </div>
+
+    <div *ngIf="activeCategory === 'Star_rating'" class="subcategory">
+      <p><input type="checkbox"> 1 Star</p>
+      <div class="bottom-borderrblack"></div>
+      <p><input type="checkbox"> 2 Stars</p>
+      <div class="bottom-borderrblack"></div>
+      <p><input type="checkbox"> 3 Stars</p>
+      <div class="bottom-borderrblack"></div>
+      <p><input type="checkbox"> 4 Stars</p>
+      <div class="bottom-borderrblack"></div>
+      <p><input type="checkbox"> 5 Stars</p>
+      <div class="bottom-borderrblack"></div>
+    </div>
+
+    <div *ngIf="activeCategory === 'Category'" class="subcategory">
+      <div *ngFor="let cat of Allcategories">
+        <p>
+          <input 
+            type="checkbox" 
+            [checked]="tempSelectedCategoryIds.includes(cat.id)" 
+            (change)="onTempCategoryChange($event, cat.id)">
+          {{ cat.name }}
+        </p>
+        <div class="bottom-borderrblack"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="closeapply">
+    <div class="close" (click)="closeFilter($event)">
+      <a id="closeFilter">CLOSE</a>
+    </div>
+    <div (click)="applyFilter()"class="apply">
+      <a >APPLY</a>
+    </div>
+  </div>
+</div>
+  
+</div>
+
+ </ion-content>
+
+ <app-footer-tabs></app-footer-tabs>
+ 

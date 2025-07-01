@@ -1,0 +1,138 @@
+.welcome_second {
+    height: 100%;
+    background-image: url(../../assets/welcome/white_ellipse_square.webp);
+    background-size: 140%;
+    background-position: top center;
+    background-repeat: no-repeat;
+    position: relative;
+    // top: -100px;
+    padding-top: 90px;
+}
+p{
+    font-size: 14px;
+}
+.welcome_ingredients {
+    margin-top: -62px;
+    width: 100%;
+}
+.delivery_man {
+    width: 80%;
+}
+.delivery_man_main {
+    text-align: center;
+    position: fixed;
+    top: 0%;
+    width: 100%;
+    animation: leafMove 1.5s ease-out forwards;
+    margin-top: 2rem;
+}
+.content_welcome {
+    padding: 15px;
+}
+.login_welcome a {
+    margin-top: 15px;
+    font-family: opensans_semibold;
+    text-decoration: none;
+    border-radius: 30px;
+    display: block;
+    padding: 13px;
+    width: 100%;
+    font-size: 14px;
+}
+.sign_up_welcome a {
+    margin-top: 15px;
+    font-family: opensans_semibold;
+    text-decoration: none;
+    font-size: 14px;
+}
+.welcome_footer {
+    margin-top: 30px;
+}
+@keyframes leafMove {
+    from {
+        transform: translateX(-900px); /* Start from left */
+    }
+    to {
+        transform: translateX(0); /* Move to normal position */
+    }
+}
+.welcome_form {
+    width: 87%;
+}
+.welcome_number {
+    border: 1px solid;
+    border-radius: 25px;
+    overflow: hidden;
+}
+.country_drop{
+    --background: #088B46;
+}
+ion-list.drop_list{
+    background: #088B46;
+    padding: 0 !important;
+}
+.drop_list ion-select{
+    color: white;
+}
+.welcome_submit {
+    height: 10px; 
+    width: 100%;
+    height: 45px;
+    min-height: unset;
+    color: white;
+    text-transform: capitalize;
+    margin-top: 13px;
+    border-radius: 35px;
+    background-color: #088B46;
+
+}
+ion-button{
+    --color: white !important;
+}
+.search-icon {
+    position: relative;
+    top: -30px;
+    left: 15px;
+}
+.phone-input {
+    display: flex;
+    align-items: center;
+    border: 1px solid #088b46;
+    border-radius: 25px;
+    background-color: white;
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+  }
+  
+  .country-code {
+    background-color: #088b46;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 25px 0 0 25px;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  
+  input {
+    border: none;
+    outline: none;
+    padding: 10px;
+    flex-grow: 1;
+    font-size: 16px;
+    color: #909593;
+    background: white;
+  }
+  
+  .clear-icon {
+    color: gray;
+    cursor: pointer;
+    font-size: 15px;
+    margin-right: 12px;
+  }
+  .country-code-dropdown {
+    padding: 11px;
+    background: #088b46;
+    border: none;
+    outline: none;
+}

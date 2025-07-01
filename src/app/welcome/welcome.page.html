@@ -1,0 +1,44 @@
+<ion-content [fullscreen]="true">
+    <ion-toolbar>
+      <div class="welcome_main h_100vh bg_gogreen">
+        <div>
+          <img src="../../assets/welcome/welcome_ingredients.svg" class="welcome_ingredients" alt="welcome_ingredients" title="welcome_ingredients">
+        </div>
+        <div class="welcome_second">
+          <div class="delivery_man_main">
+            <img src="../../assets/welcome/delivery_man.svg" class="delivery_man" alt="delivery_man" title="delivery_man">
+          </div>
+          <div class="content_welcome">
+            <div class="order_in_seconds_main text_center">
+              <img src="../../assets/welcome/order_in_seconds.svg" class="order_in_seconds" alt="order_in_seconds" title="order_in_seconds">
+            </div>
+            <div class="login_welcome d_flex justify_content_center">
+                <div class="welcome_form" >
+        
+                  <div class="phone-input">
+                    <select [(ngModel)]="selectedCountryCode" class="country-code-dropdown">
+                      <option *ngFor="let code of countryCodes" [value]="code">{{ code }}</option>
+                    </select>
+                  
+                    <input type="tel" placeholder="Enter phone number" [(ngModel)]="phoneNumber" maxlength="10">
+                  
+                    <span class="clear-icon" *ngIf="phoneNumber" (click)="clearNumber()">&#x2715;</span>
+                  </div>                                              
+                    <button class="welcome_submit" (click)="Login()">Continue</button>
+                </div>
+            </div>
+            <div class="sign_up_welcome d_flex justify_content_center">
+              
+            </div>
+            <div class="welcome_footer">
+              <p class="text_grey opensans_semibold text_center">
+                By logging in or registering, you agree to our <br>
+                <a class="text_gogreen text_dec_none" href="../login">Terms of service</a> and <a class="text_gogreen text_dec_none" href="../login">Privacy policy</a>.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </ion-toolbar>
+</ion-content>

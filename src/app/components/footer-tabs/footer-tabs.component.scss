@@ -1,0 +1,118 @@
+// .footer-tabs {
+//     position: fixed;
+//     bottom: 0;
+//     left: 0;
+//     width: 100%;
+//     background-color: white;
+//     box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
+//     z-index: 1000;
+//   }
+  
+//   ion-tab-bar {
+//     background: white;
+//     height: 60px;
+//     display: flex;
+//     justify-content: space-around;
+//     align-items: center;
+//   }
+  
+//   ion-tab-button {
+//     color: #888; /* Default color */
+//     flex-direction: column;
+//     font-size: 12px;
+//   }
+  
+//   ion-tab-button ion-icon {
+//     font-size: 24px;
+//   }
+  
+//   ion-tab-button[aria-selected="true"] {
+//     color: #008000; /* Active color */
+//     font-weight: bold;
+//   }
+  
+//   ion-tab-button[aria-selected="true"]::after {
+//     content: "";
+//     display: block;
+//     width: 40px;
+//     height: 3px;
+//     background-color: black;
+//     margin-top: 3px;
+//   }
+.cart_badge{
+    color: #ffff;
+    background-color: #088b46;
+    position: absolute;
+    top: 0px;
+}
+p{
+    color: #8e8e8e;
+    margin: 0;
+    font-size: 14px;
+}
+.tabs_outer_div{
+    display: flex;
+    justify-content: space-around;
+    background-color: white;
+    padding: 13px;
+}
+ion-icon {
+    font-size: 26px;
+    color: black;
+}
+.icon_outer_div{
+    text-align: center;
+    padding: 10px;
+    text-align: center;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+
+.cart_img{
+    width: 36px;
+}
+
+// .icon_outer_div.active {
+//     background-color: white;
+//   }
+  
+//   .icon_outer_div img {
+//     width: 24px;
+//     height: 24px;
+//     transition: filter 0.3s;
+//   }
+  
+//   .icon_outer_div.active img {
+//     filter: invert(37%) sepia(90%) saturate(408%) hue-rotate(96deg) brightness(75%) contrast(102%);
+//   }
+  
+//   .icon_outer_div p {
+//     margin: 0;
+//     transition: color 0.3s;
+//   }
+  
+//   .icon_outer_div.active p {
+//     color: #088B46; /* Desired active text color */
+//   }
+//   .svg-icon {
+//     filter: invert(37%) sepia(90%) saturate(408%) hue-rotate(96deg) brightness(75%) contrast(102%);
+// }
+// .icon_outer_div.active-tab {
+//   color: #4CAF50; /* Active text color */
+// }
+
+// .icon_outer_div.active-tab img {
+//   filter: none; /* Remove grayscale for active icon */
+// }
+// .icon_outer_div img {
+//   width: 24px;
+//   height: 24px;
+//   filter: grayscale(100%);
+//   transition: filter 0.3s ease;
+// }
+.active-text {
+  color: #088b46; // Active color (change to your desired color)
+  
+}

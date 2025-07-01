@@ -1,0 +1,301 @@
+ion-content{
+    --background: white;
+  }
+
+  .location_search {
+    // position: absolute;
+    // width: 90%;
+    // top: 10%;
+    // left: 5%;
+    color: black;
+    margin-top: 12px;
+}
+.location_search .search_bar {
+    width: 100%;
+    margin: auto;
+    padding: 9px;
+    border-radius: 26px;
+    overflow: hidden;
+    background: white;
+    color: black;
+    border: 1px solid gray;
+    padding-left: 47px;
+    box-shadow: 2px 2px 2px #b1adad;
+}
+.search-icon {
+    position: relative;
+    color: #088b46 !important;
+    bottom: 30px;
+    left: 5%;
+}
+ion-icon.ios.hydrated {
+    color: black;
+}
+.display_flex ion-icon{
+    color: #088b46;
+    font-size: 30px;
+}
+
+
+swiper-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .brand_outer_div{
+    margin: 26px 0px 26px 0px !important;
+  }
+  .slide-content {
+    text-align: center;
+  }
+  
+  
+  .icon-circle {
+    width: 70px;
+    height: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid green;
+    background-color: transparent !important;
+    color: green;
+    font-size: 14px;
+    padding: 7px;
+    box-shadow: none !important;
+}
+  
+  .icon-circle ion-icon {
+    font-size: 20px;
+    color: green;
+  }
+  
+  .icon-circle p {
+    margin-top: 0px;
+    font-size: 10px;
+    color: green;
+    font-weight: 500;
+    margin-bottom: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+  }
+  
+  .icon-circle::part(native) {
+    background-color: transparent !important;
+    box-shadow: none !important;
+  }
+  
+  swiper-container::part(pagination) {
+    position: relative;
+    left: 36%;
+  }
+  
+  /* Styling for all bullets */
+  swiper-container::part(bullet) {
+    width: 10px;
+    height: 10px;
+    background-color: #D9D9D9; /* Default bullet color */
+    opacity: 0.5;
+    border-radius: 50%;
+    margin: 5px;
+    display: inline-block; /* Ensure proper alignment */
+    vertical-align: middle; /* Align with other bullets */
+  }
+  
+  /* Ensure active bullet is the same size and position */
+  swiper-container::part(bullet-active) {
+    background-color: #008000; /* Active bullet color */
+    opacity: 1;
+    transform: none !important; /* Remove any automatic scaling */
+    vertical-align: middle !important; /* Align with other bullets */
+  }
+  
+  .slider_heading_div h3{
+    color: black;
+    font-size: 17px;
+    margin-top: 0;
+    font-weight: 600;
+  }
+  .features_product_div {
+    padding-right: 9px;
+}
+  .slider_heading_div p{
+    color: #008000 !important;
+    font-size: 14px !important;
+    margin-top: 0 !important;
+  }
+  .slider_heading_div {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #D9D9D9;
+    margin-bottom: 12px;
+}
+
+.features_product_slider_div p {
+    color: black;
+    font-size: 10px;
+    margin: 0;
+}
+.features_product_slider_div img{
+    width: 70%;
+}
+.price_outer_div{
+    display: flex;
+    justify-content: space-between;
+    margin: 4px 0px 4px 0px;
+    align-items: center;
+    width: 100%;
+}
+.add_to_cart_btn{
+    background: #088b46;
+    border-radius: 12px;
+    font-size: 10px;
+    padding: 8px;
+    margin: 0;
+}
+.slide_div{
+    border: 1px solid gray;
+    border-radius: 3px;
+    width: 100%;
+    padding: 4px;
+    padding-top: 12px;
+}
+.product_desc p{
+  text-align: left;
+}
+.product_desc p{
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    width: 100%; 
+}
+.product_heading_desc{
+    font-size: 13px !important;
+}
+.popular_brand_div {
+    margin-top: 13px;
+}
+.kitchen_outer_div{
+    margin-top: 13px;
+}
+.beauty_outer_div{
+    margin-top: 13px;
+}
+.frozen_food_div{
+    margin-top: 13px;
+}
+p{
+    color: black;
+}
+.beauty_outer_div p {
+    color: black;
+    font-size: 10px;
+    margin: 3px 0px 8px 0px;
+}
+
+
+.pickup_drop_outer_div {
+    padding: 8px;
+    border: 1px solid gray;
+    border-radius: 4px;
+    background: #EFFAF4;
+    margin: 14px 0px 14px 0px;
+}
+input[type="text"] {
+    background: white;
+    border: 1px solid gray;
+    border-radius: 4px;
+    width: 90%;
+    line-height: 2;
+    color: black;
+}
+textarea {
+    background: white;
+    border: 1px solid gray;
+    border-radius: 4px;
+    width: 100%;
+    color: black;
+}
+.welcome_submit{
+    font-size: 14px;
+    color: white;
+}
+.label_heading{
+  margin: 10px 0px 10px 0px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.slide_content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.image_wrapper {
+  width: 70px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.image_wrapper img {
+  width: 100%; /* Ensures image fits the container */
+  height: 100%;
+  object-fit: cover; /* Ensures image fills the space while maintaining aspect ratio */
+  border-radius: 10px; /* Optional: Matches container */
+}
+
+.whishlist_img_div{
+  position: relative;
+  left: 38%;
+}
+.whishlist_img_div img{
+ width: 60%;
+}
+.heart-button {
+  background: none;
+  border: none;
+  color: #ccc; /* Unfilled heart color */
+  cursor: pointer;
+  font-size: 24px;
+  transition: color 0.3s;
+}
+
+.heart-button.filled {
+  color: #088b46; /* Filled heart color */
+}
+
+.heart-button:focus {
+  outline: none;
+}
+@media (min-width: 480px) and (max-width: 767px) {
+  .search-icon {
+    position: relative;
+    color: #088b46 !important;
+    bottom: 30px;
+    left: 3%;
+}
+
+}
+
+/* For screen width between 768px and 1023px */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .search-icon {
+    position: relative;
+    color: #088b46 !important;
+    bottom: 30px;
+    left: 2%;
+}
+
+}

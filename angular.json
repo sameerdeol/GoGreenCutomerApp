@@ -31,21 +31,27 @@
                 "output": "./svg"
               }
             ],
-            "styles": ["src/global.scss", "src/theme/variables.scss"],
-            "scripts": []
+            "styles": [
+                      "node_modules/bootstrap/dist/css/bootstrap.min.css",
+                      "src/global.scss",
+                      "src/theme/variables.scss"
+                    ],
+            "scripts": [ "node_modules/jquery/dist/jquery.min.js",
+            "node_modules/popper.js/dist/umd/popper.min.js",
+            "node_modules/bootstrap/dist/js/bootstrap.min.js"]
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "6mb",
+                  "maximumError": "7mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "5kb",
+                  "maximumError": "10kb"
                 }
               ],
               "fileReplacements": [
@@ -111,8 +117,12 @@
                 "output": "./svg"
               }
             ],
-            "styles": ["src/global.scss", "src/theme/variables.scss"],
-            "scripts": []
+            "styles": [  "node_modules/bootstrap/dist/css/bootstrap.min.css",
+            "src/global.scss",
+            "src/theme/variables.scss"],
+            "scripts": [  "node_modules/jquery/dist/jquery.min.js",
+            "node_modules/popper.js/dist/umd/popper.min.js",
+            "node_modules/bootstrap/dist/js/bootstrap.min.js"]
           },
           "configurations": {
             "ci": {
@@ -136,7 +146,8 @@
   "cli": {
     "schematicCollections": [
       "@ionic/angular-toolkit"
-    ]
+    ],
+    "analytics": false
   },
   "schematics": {
     "@ionic/angular-toolkit:component": {

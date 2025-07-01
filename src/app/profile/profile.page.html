@@ -1,0 +1,81 @@
+
+
+<ion-content [fullscreen]="true">
+  <div class="green_header">
+    <div class="page_outer_div ">
+      <!-- <div class="display_flex align_items_center">
+        <div (click)="navigateToAccount()"> <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon></div>
+        <p>Profile</p>
+        <div>
+          <ion-icon slot="icon-only" name="search-outline"></ion-icon>
+          <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+        </div>
+      </div> -->
+      <div class="display_flex align_items_center ">
+        <div class="left_arrow_div"> <img src="assets/white_bg_left_arrow.svg" (click)="goBack()" ></div>
+        <p class="white_bg_header">Profile</p>
+        <div class="header_search_img ">
+        </div>
+      </div>
+      <div class="display_flex_only justify_content_center mt-4">
+        <div 
+          class="profile_div gender-card" 
+          [ngClass]="{'active': selectedGender === 'male'}"
+          (click)="selectGender('male')"
+        >
+          <div class="img_circle"  [ngClass]="{'active-circle': selectedGender === 'male'}" >
+            <img src="assets/men.png" alt="">
+          </div>
+          <p [ngClass]="{'active-circle-p': selectedGender === 'male'}">Men</p>
+        </div>
+      
+        <div 
+          class="profile_div gender-card" 
+          [ngClass]="{'active': selectedGender === 'female'}"
+          (click)="selectGender('female')"
+        >
+          <div class="img_circle"  [ngClass]="{'active-circle': selectedGender === 'female'}" >
+            <img src="assets/women.png" alt="">
+          </div>
+          <p [ngClass]="{'active-circle-p': selectedGender === 'female'}" >Women</p>
+        </div>
+      </div>
+      <div *ngIf="genderError" style="color: red; text-align: center; margin-top: 8px;">
+        {{ genderError }}
+      </div>
+      
+    </div>
+  </div>
+  <div class="page_outer_div">
+    <div>
+      <div class="form_label">First Name</div>
+      <input type="text" id="firstname" placeholder="First Name" [(ngModel)]="firstName">
+
+      <div class="form_label">Last Name</div>
+      <input type="text" id="lastname" placeholder="Last Name" [(ngModel)]="lastName">
+  
+      <div class="form_label">Your Phone Number</div>
+      <input type="text" id="phone" placeholder="Phone"  [(ngModel)]="phoneNumber" 
+      disabled >
+      <div *ngIf="phoneError"  class="text-danger text-center">{{ phoneError }}</div>
+  
+      <div class="form_label">Email ID</div>
+      <input type="email" id="email" placeholder="Email" [(ngModel)]="email">
+      <div *ngIf="emailError"  class="text-danger text-center">{{ emailError }}</div>
+  
+      <div class="form_label">Date Of Birth</div>
+      <input type="text" id="dob" placeholder="dd/mm/yyyy" [(ngModel)]="dob">
+      <div *ngIf="dobError" class="text-danger text-center">{{ dobError }}</div>
+    </div>
+  
+    <div>
+      <ion-button class="welcome_submit mt_4" expand="block" id="submitBtn">
+        Save
+      </ion-button>
+    </div>
+  </div>
+  
+  
+ 
+</ion-content>
+<app-footer-tabs></app-footer-tabs>

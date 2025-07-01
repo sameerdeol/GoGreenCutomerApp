@@ -1,0 +1,16 @@
+.slide-container {
+    padding: 20px;
+    border-radius: 20px 20px 0 0;
+    background: #fff;
+    height: 40vh;
+    animation: slideUp 0.3s ease-in-out;
+  }
+  
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }

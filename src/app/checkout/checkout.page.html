@@ -1,0 +1,124 @@
+
+
+<ion-content [fullscreen]="true">
+  
+  <div class="page_outer_div">
+    <div class="row header_border">
+      <div class="col-4 left_arrow_img_outer_div">
+        <img src="assets/green-left-arrow.svg" (click)="navigateToViewCart()">
+      </div>
+      <div class="col-4 header_heading_outer">
+        <p class="header_heading">
+          Checkout
+        </p>
+      </div>
+      <!-- <div class="col-4"></div> -->
+    </div>
+    <div class="row margin_top_botom">
+     <div class="col-6 color_black font_weight padding_0">Shipping Address</div>
+     <div class="col-6 add_address_outer_div padding_0">
+      <div class="add_addres_btn" (click)="navigateTOlocationPAge()">
+        <img src="assets/add_address.svg" alt="">
+        Add Address
+      </div>
+     </div>
+    </div>
+   
+    <div class="radio_outer_div">
+      <!-- Loop through savedUserAddress and display each address dynamically -->
+      <div *ngFor="let address of savedUserAddress; let i = index" class="display_flex addres_bg">
+        <div>
+          <label class="font_weight">Delivering to  {{ 
+            address.type === 1 ? 'Home' : 
+            address.type === 2 ? 'Office' : 
+            address.type === 3 ? 'Hotel' : 
+            'Other' 
+          }}</label>  <!-- Use the label if available, otherwise show a default label -->
+          <p class="primary_font_size">{{ address.address }}</p> <!-- Show the address details -->
+        </div>
+    
+        <!-- Bind the checkbox to the selected option -->
+        <input type="checkbox" 
+               [checked]="selectedOption === 'option' + i" 
+               (change)="selectOnlyOne('option' + i,address.id)">
+      </div>
+    </div>
+</div>
+  <div class="payment_details_div primary_font_size">
+    <div class="payment_detail_btn">
+      <div class="text_align_center">Payment Details</div>
+    </div>
+    <div class="row paddingtop_20">
+       <div class="col-6">Items</div>
+       <div class="col-6 text_end">${{totalamountWithDilevryCharges}}</div>
+    </div>
+    <div class="row">
+      <div class="col-6">Dilevery</div>
+      <div class="col-6 text_end">{{deliveryOption}} Dilevery</div>
+   </div>
+   <div class="row">
+    <div class="col-6">Coupon Code</div>
+    <div class="col-6 text_end">--</div>
+ </div>
+ <div class="row">
+  <div class="col-6">Total</div>
+  <div class="col-6 text_end">${{totalamountWithDilevryCharges}}</div>
+</div>
+  </div>
+
+  <div class="arriving_outer_div">
+    <div class="arriving_div">
+      <p class="font_weight">Arriving in 20 min</p>
+      <p  class="text_font">Fast, Easy, and Secure - Complete your purchase</p>
+  
+      <div class="display_flex_checkbox ">
+        <input type="checkbox" [checked]="selectedDelvieryOption === 'today'" (change)="selectOnlyOnedilvery('today',$event)">  
+        <div class="delivery_type">
+          <label class="font_weight">Today Delivery</label>
+          <p class="text_font">Arriving in 20 min</p>
+        </div>     
+      </div>
+      <div class="display_flex_checkbox ">
+        <input type="checkbox" [checked]="selectedDelvieryOption === 'nottoday'" (change)="selectOnlyOnedilvery('nottoday',$event)">  
+        <div class="delivery_type">
+          <label class="font_weight">Select Date and Time</label>
+          <p class="text_font">Get your order delivered on your schedule—choose your date & time</p>
+        </div>     
+      </div>
+      <div class="text_align_center">
+        <ion-datetime-button datetime="datetime" [disabled]="selectedDelvieryOption === 'today'"></ion-datetime-button>
+      
+        <ion-modal [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime
+              id="datetime"
+              [value]="selectedDateTime"
+              (ionChange)="onDateTimeChange($event)"
+              [disabled]="selectedDelvieryOption === 'today'">
+            </ion-datetime>
+          </ng-template>
+        </ion-modal>
+      </div>
+      <input type="textarea" placeholder="write your comments">
+      
+    </div>
+  </div>
+
+
+  
+
+
+ 
+ </ion-content>
+ <div class="add-to-cart-footer">
+  <div class="add_to_cart_outer_div">
+    <div class="col-12">
+      <div class="footer_proceed_btn">
+        <button (click)="navigateTofinalCheckout()">Proceed To Buy</button>
+      </div>
+  
+    </div>
+  </div>
+</div>
+ <app-footer-tabs></app-footer-tabs>
+ 

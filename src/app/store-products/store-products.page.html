@@ -1,0 +1,89 @@
+<ion-content fullscreen>
+  <!-- Hero Image -->
+  <div class="header_bg_img">
+    <div class="page_outer_div ">
+      <div class="display_flex align_items_center">
+        <div class="left_arrow_div"> <img src="assets/left-arrow-green.svg" (click)="goback()"></div>
+        
+        <div class="header_search_img ">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Foreground Content -->
+  <div class="main_content">
+    <!-- Store Info -->
+    <div class="outer-most-div">
+      <div class="img-outer-div">
+        <img src="assets/brand.png" alt="">
+      </div>
+    </div>
+
+    <!-- Product List -->
+    <div class="restrao_details">
+      <h2 class="text_gogreen text-center margin_0 font-weight-bold">SPRING SUSHI</h2>
+      <p class="gray_text text-center margin_0 text_font">Japenese Food </p>
+      <p class="gray_text text-center margin_0 text_font">3.5 Rating</p>
+    </div>
+    <div class="d_flex justify-content-between align-items-center">
+      <ion-icon class="color_black font-24" name="share-social-outline"></ion-icon>
+      <p class="gray_text text-center margin_0 text_font">Vegitarian Freindy, Eat Phir Repeat</p>
+      <ion-icon class="color_black font-24" name="bookmark-outline"></ion-icon>
+    </div>
+    <ion-list [class.mb_14rem]="showCartPopup">
+
+      <ion-item class="mb-3 mt-3" lines="none" *ngFor="let product of allProducts">
+        <div slot="start" class="product_img_div">
+          <img [src]="baseUrl+product.featured_image" />
+        </div>
+        <ion-label>
+          <h3 class="text_gogreen">{{product.title}}</h3>
+          <p class="text_font">J{{product.subtitle}}</p>
+          <div class="d_flex justify-content-between align-items-center">
+            <h2 class="color_black font-weight-bold">${{ product.price }}</h2>
+            <div class=" custm_padding" *ngIf="!isAddedMap[product.id]; else quantityControls">
+              <button class="add_to_cart_btn_bg" (click)="addToCart(product)">
+                Add To Cart
+              </button>
+            </div>
+            
+            <ng-template #quantityControls>
+              <div class=" custm_padding">
+                <button class="add_to_cart_btn_bg2">
+                  <span class="remove_item_btn" (click)="removeFromCart(product)">-</span>
+                  {{ getQuantity(product.id) }}
+                  <span class="add_item_btn" (click)="addToCart(product)">+</span>
+                </button>
+              </div>
+            </ng-template> 
+          </div>
+          
+        </ion-label>
+  
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>
+<div 
+class="cart-popup" 
+[ngClass]="{ 'slide-out': isSlidingOut }" 
+*ngIf="showCartPopup" [class.show-popup]="showCartPopup">
+
+<div class="display_flex left_right_padding align_items_center">
+  <p>
+    <ion-icon name="cart-outline"></ion-icon> 
+    {{ totalQuantity }} item(s) added to cart
+  </p>
+
+  <div class="view_cart_div_btn">
+    <button (click)="navigateToViewCart()">view cart</button>
+    <ion-icon 
+      (click)="removeCartStorage()" 
+      class="remove_item_icon" 
+      name="close-circle-outline">
+    </ion-icon>
+  </div>
+</div>
+</div>
+<app-footer-tabs></app-footer-tabs>

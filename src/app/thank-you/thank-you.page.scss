@@ -1,0 +1,82 @@
+.thank-you-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+    text-align: center;
+  }
+  
+  .checkmark-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 1s ease-in-out;
+    position: absolute; /* Added to center the div */
+    top: 50%; /* Positioning it vertically in the middle */
+    left: 50%; /* Positioning it horizontally in the middle */
+    transform: translate(-50%, -50%); /* Adjusts position to truly center it */
+  }
+  
+  .checkmark {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #4CAF50;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: checkmarkAnimation 1s ease-in-out forwards;
+  }
+  
+  .checkmark svg {
+    width: 60%;
+    height: 60%;
+  }
+  
+  .circle {
+    stroke: #fff;
+    stroke-width: 2;
+    fill: none;
+  }
+  
+  .check {
+    stroke: #fff;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 50;
+    stroke-dashoffset: 50;
+    animation: drawCheckmark 0.5s ease-out 0.5s forwards;
+  }
+  
+  @keyframes checkmarkAnimation {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes drawCheckmark {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  
+  .thank-you-message {
+    margin-top: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .sub-message {
+    font-size: 16px;
+    color: #666;
+  }
+  

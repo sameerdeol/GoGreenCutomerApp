@@ -1,0 +1,673 @@
+ion-content{
+  --background: white;
+  --padding-bottom:80px;
+}
+
+.location_search {
+  color: black;
+  margin-top: 12px;
+  position: relative;
+  width: 90%;
+  margin: 10px auto;
+}
+.location_search .search_bar {
+  width: 100%;
+  margin: auto;
+  padding: 9px;
+  border-radius: 26px;
+  overflow: hidden;
+  background: white;
+  color: black;
+  border: 1px solid gray;
+  padding-left: 47px;
+  box-shadow: 2px 2px 2px #b1adad;
+}
+ion-icon.search-icon.ios.hydrated {
+  position: relative;
+  color: #088b46;
+  bottom: 30px;
+  left: 5%;
+}
+ion-icon.ios.hydrated {
+  color: black;
+}
+
+.add_to_cart_btn{
+  background: #088b46;
+  border-radius: 12px;
+  font-size: 10px;
+  padding: 8px;
+  margin: 0;
+}
+.slide_div{
+  border: 1px solid gray;
+  border-radius: 3px;
+  width: 100%;
+  padding: 4px;
+  padding-top: 12px;
+}
+.product_desc p{
+text-align: left;
+}
+.product_desc p{
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis; 
+  width: 100%; 
+}
+
+p{
+  color: black;
+}
+
+.margin_top_13px{
+  margin: 0px 0px 0px 20px;
+}
+.margin_top_12px{
+  margin-top: 12px;
+}
+
+
+input::placeholder {
+  color: #acacac;
+}
+textarea::placeholder {
+  color: #acacac;
+}
+
+app-footer-tabs {
+  position: fixed;
+  width: 100%;
+  bottom: 0px;
+  left: 0;
+  box-shadow: 0px 10px 10px 10px #0000003d;
+}
+
+// /////////////////////////////////
+
+i.fa-solid.fa-magnifying-glass.search-icon.forproducts {
+  position: absolute;
+  top: 13px;
+  bottom: 0;
+  left: 15px;
+  font-size: 18px;
+  color: #088B46;
+}
+.border_bottom {
+  border: 1px solid #E4E4E4;
+  margin-bottom: 10px;
+}
+.filter p {
+  background: #088B46;
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  width: 100%;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+.filter {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+.filter img {
+  padding-right: 8px;
+  width: 16%;
+}
+
+.sidebarmenu {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  background: #ffffff;
+  top: 0;
+  bottom: 0;
+  z-index: 9999;
+}
+.firstclear {
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+  padding: 0px 20px 8px 20px;
+}
+p.filter {
+  font-size: 13px;
+  margin-bottom: 0px;
+}
+p.clear {
+  margin-bottom: 0px;
+  font-size: 13px;
+  color: #F81818;
+  font-weight: 600;
+}
+.filteroptions {
+  display: flex;
+  justify-content: space-between;
+  height: 100%;
+}
+.category {
+  width: 40%;
+  background: #088b46;
+}
+.category p {
+  font-size: 13px;
+  color: #ffffff;
+  font-weight: 500;
+  margin-bottom: 0px;
+  padding: 10px 0px 10px 12px;
+}
+.bottom-borderr {
+  border-bottom: 1px solid white;
+}
+
+ion-checkbox {
+  --size: 32px;
+  --checkbox-background-checked: #6815ec;
+}
+
+ion-checkbox::part(container) {
+  border-radius: 6px;
+  border: 2px solid #6815ec;
+}
+
+input[type="checkbox"] {
+  appearance: none; /* Remove default styles */
+  width: 18px;
+  height: 18px;
+  border: 1px solid #D9D9D9;
+  background-color: white;
+  cursor: pointer;
+  position: relative;
+  margin-right: 10px;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #088b46;
+    border-color: #088b46;
+}
+
+input[type="checkbox"]::before {
+  content: "✔";
+  color: white;
+  font-size: 14px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+
+input[type="checkbox"]:checked::before {
+  display: block;
+}
+.subcategory {
+  width: 60%;
+  background: white;
+
+}
+.subcategory p {
+  font-size: 13px;
+  color: black;
+  margin-bottom: 0px;
+  padding: 10px 0px 10px 20px;
+  display: flex;
+  align-items: center;
+}
+.bottom-borderrblack {
+  border: 1px solid #D9D9D9;
+}
+
+.closeapply {
+  position: fixed;
+  bottom: 96px;
+  width: 100%;
+  height: 70px;
+  display: flex;
+  justify-content: space-around;
+  background: white;
+  align-items: center;
+  border-top: 1px solid #8E8E8E;
+}
+
+.close {
+  width: 50%;
+  text-align: center;
+  padding: 23px 0px 23px 0px;
+  border-right: 1px solid #8E8E8E;
+}
+.close a {
+  color: black;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 0px 0px 0px 0px;
+}
+.apply {
+  width: 50%;
+  text-align: center;
+  padding: 23px 0px 23px 0px;
+}
+.apply a {
+  color: #088b46;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+// 
+.sidebarmenu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: white;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  transform: translateX(-100%); /* Initially hidden */
+  transition: transform 0.4s ease-in-out;
+}
+
+.sidebarmenu.show {
+  transform: translateX(0); /* Moves into view */
+}
+.category p.active {
+  color: #088b46;
+  background: white;
+  font-weight: bold;
+}
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 5px;
+  width: 150px;
+  cursor: pointer;
+}
+
+/* Ensure first option remains visible */
+select:focus option[value=""] {
+  display: none;
+}
+
+.filter_dropdowns {
+  position: relative;
+}
+
+.dropdown-header {
+  padding: 7px;
+  border: 1px solid #ccc;
+  border-radius: 0px;
+  background-color: white;
+  cursor: pointer;
+  display: flex;
+  font-size: 13px;
+  height: 40px;
+  justify-content: space-between;
+  width: 97px;
+  align-items: center;
+  font-weight: 600;
+  color: black;
+}
+
+.dropdown-content {
+     position: absolute;
+     border: 1px solid #ccc;
+     background-color: white;
+     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+     border-radius: 5px;
+     padding: 10px;
+     z-index: 1000;
+     width: 150px;
+     max-width: 700px;
+}
+
+label {
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: black;
+}
+.mb_8rem{
+ margin-bottom: 8rem !important;
+}
+
+
+.filterdiv {
+  display: flex;
+}
+i.fa-solid.fa-angle-down {
+  margin-left: 6px;
+}
+i.fa-solid.fa-star {
+  color: gold;
+}
+.location_search {
+  color: black;
+  margin-top: 12px;
+  height: 40px;
+}
+.header_heading{
+  color: #088B46;
+  font-weight: 600;
+  font-size: 13px;
+  margin: 0;
+
+}
+.left_arrow_div img{
+  width: 60%;
+}
+.left_arrow_div{
+ width: 13%;
+}
+.header_search_img img{
+  width: 60%;
+}
+.header_search_img{
+  width: 18%;
+  display: flex;
+}
+.white_bg_header {
+  margin: 0;
+  font-weight: 600;
+  color: #008a4a;
+}
+.header_heading_outer{
+  padding: 0;
+  text-align: center;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+ 
+}
+.search-result-dropdown img{
+  width: 133px;
+  height: 86px;
+  object-fit: contain;
+}
+.search-result-dropdown p{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+.fixed_width{
+  width: 80px;
+}
+.location_search .search_bar {
+  width: 100%;
+  margin: auto;
+  padding: 9px;
+  border-radius: 26px;
+  overflow: hidden;
+  background: white;
+  color: black;
+  border: 1px solid gray;
+  padding-left: 47px;
+  box-shadow: 2px 2px 2px #b1adad;
+}
+.search-icon {
+  position: relative;
+  color: #088b46;
+  bottom: 30px;
+  left: 5%;
+}
+.product-card-horizontal {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 15px;
+}
+
+.card-content-wrapper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.product-img-horizontal {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  padding: 10px;
+  background: #fff;
+}
+
+.product-details {
+  flex: 1;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.price-cart-horizontal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.price {
+  font-weight: bold;
+  font-size: 16px;
+}
+.product_head_p p{
+  font-size: 13px;
+  margin: 0;
+  font-size: 10px;
+  font-weight: 500;
+  margin-bottom: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 60%;
+}
+.product_head_p p:nth-child(2) {
+  margin-top: 0px;
+  font-size: 10px;
+  font-weight: 500;
+  margin-bottom: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 60%;
+}
+.product_inner_div {
+  border: 1px solid #C7C7C7;
+  padding: 8px;
+  width: 100%;
+  border-radius: 5px;
+}
+.imgouter_div{
+  margin: auto;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.custm_padding{
+  padding: 0px !important;
+}
+
+.text_align_end{
+  text-align: end;
+}
+
+.padding_for_products {
+  padding: 10px 15px 10px 15px;;
+}
+
+ .add_to_cart_btn_bg {
+  padding: 13px 0px 13px 0px;
+  background-color: #088B46;
+  color: white;
+  border-radius: 35px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  }
+  .add_to_cart_btn_bg2{
+    padding: 4px 6px 4px 6px;
+    background-color: #088B46;
+    color: #ffffff;
+    border-radius: 35px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+  }
+  .add_item_btn, .remove_item_btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    background-color: #ffffff;
+    color: #088b46;
+    font-size: 22px;
+    font-weight: bold;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    text-align: center;
+}
+.heart-button {
+  background: none;
+  border: none;
+  color: #ccc; /* Unfilled heart color */
+  cursor: pointer;
+  font-size: 24px;
+  transition: color 0.3s;
+  margin: 0 !important;
+}
+
+.heart-button.filled {
+  color: #088b46; /* Filled heart color */
+}
+
+.heart-button:focus {
+  outline: none;
+}
+.whishlist_img_div{
+  position: relative;
+  left: 88%;
+  top: -6px;
+}
+
+ion-card {
+     border-radius: 0px;
+     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+     margin: 8px;
+     border: 1px solid #ddd;
+     overflow: hidden;
+     background-color: #fff;
+     transition: transform 0.3s ease, box-shadow 0.3s ease;
+     cursor: pointer; /* optional, to show it's clickable */
+}
+.img_outer_div {
+  height: 90px; /* or any fixed height you prefer */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: #ffffff; /* optional, for cleaner look */
+  border: 1px solid #E4E4E4;
+}
+
+.img_outer_div img {
+  max-height: 100%;
+  max-width: 80%;
+  object-fit: contain; /* or use 'cover' if you want it cropped instead */
+}
+.cart-popup {
+  // z-index: 99999;
+  width: 100%;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 16px;
+  position: fixed;
+  bottom: -100%;  /* Initially off-screen (below the viewport) */
+  left: 0;
+  right: 0;
+  background: url(/assets/cart_bg.svg);
+  background-size: cover;
+  padding: 55px 0px 77px 0px;
+  transform: translateY(0%); /* No translation initially */
+  opacity: 0;  /* Make the popup initially invisible */
+  transition: transform 0.4s ease-out, opacity 0.4s ease-out; /* Smooth transition */}
+.cart-popup.show-popup {
+  bottom: 40px; 
+  opacity: 1;  /* Make the popup visible */
+}
+.cart-popup.slide-out {
+  transform: translateY(100%);
+  opacity: 0;
+}
+.left_right_padding{
+  padding: 0px 15px 0px 15px;
+}
+.cart-popup p{
+  color: white;
+  display: flex;
+  margin-bottom: 0;
+}
+.cart-popup button{
+  color: #088B46;
+  background-color: white;
+  padding: 12px;
+  border-radius: 25px;
+  margin-right: 4px;
+}
+.view_cart_div_btn{
+  display: flex;
+  align-items: center;
+}
+.left_right_padding ion-icon{
+  font-size: 25px;
+  color: white;
+  margin-right: 8px;
+}
+ion-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+@media (min-width: 480px) and (max-width: 767px) {
+  .search-icon {
+    position: relative;
+    color: #088b46 !important;
+    bottom: 30px;
+    left: 3%;
+}
+
+}
+
+/* For screen width between 768px and 1023px */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .search-icon {
+    position: relative;
+    color: #088b46 !important;
+    bottom: 30px;
+    left: 2%;
+}
+
+}

@@ -1,0 +1,47 @@
+
+
+<ion-content [fullscreen]="true">
+  <div class="green_header">
+    <div class="page_outer_div ">
+      <div class="display_flex align_items_center">
+        <div> <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon></div>
+        <p>Your Address</p>
+        <div>
+          <!-- <ion-icon slot="icon-only" name="search-outline"></ion-icon>
+          <ion-icon slot="icon-only" name="notifications-outline"></ion-icon> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page_outer_div bordr_bottom_gray">
+    <div>
+      <div class="form_label">Add New Address</div>
+      <input type="text" placeholder="Add New Address">
+    </div>  
+  </div>
+  <div class="page_outer_div ">
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="address" id="home" checked>
+      <label class="form-check-label fw-bold text-success" for="home">Home</label>
+    </div>
+    <div class="input-group address-container mb-3">
+        <input type="text" class="form-control"  id="homeAddress" value="3029 Paradise Crescent, Hauterive, Quebec G5C 1M1, Canada" readonly>
+        <ion-icon name="create-outline"></ion-icon>
+    </div>
+
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="address" id="home" checked>
+      <label class="form-check-label fw-bold text-success" for="home">Office</label>
+    </div>
+    <div class="input-group address-container mb-3">
+        <input type="text" class="form-control"  id="homeAddress" value="3029 Paradise Crescent, Hauterive, Quebec G5C 1M1, Canada" readonly>
+        <ion-icon name="create-outline"></ion-icon>
+    </div>
+    
+  
+  </div>
+  <div class="position_fixed">
+    <ion-button class="welcome_submit text_gogreen mt_4" expand="block">Save</ion-button>
+  </div>
+</ion-content>
+<app-footer-tabs></app-footer-tabs>

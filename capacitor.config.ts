@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'gogreen',
+  appId: 'go.green.customer',
+  appName: 'Go Green',
   webDir: 'www'
 };
 

@@ -1,0 +1,177 @@
+<ion-content [fullscreen]="true">
+  <!-- (ionRefresh)="doRefresh($event)" -->
+  <ion-refresher slot="fixed" (ionRefresh)="refreshPage($event)">
+    <ion-refresher-content pullingIcon="arrow-down" pullingText="Pull to refresh" refreshingSpinner="circles"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+  <app-header></app-header>
+
+  <div class="page_outer_div mb-6rem">
+
+    <!-- 🔍 Search Bar -->
+    <div class="location_search loction_outer">
+      <div class="shimmer" *ngIf="isLoading" style="width: 100%; height: 45px; border-radius: 25px;"></div>
+      <div *ngIf="!isLoading">
+        <input class="search_bar" type="search" placeholder="Search your product.." [(ngModel)]="searchKeyword"
+          (ngModelChange)="onSearchChange($event)" />
+
+        <ion-icon class="search-icon" name="search-outline"></ion-icon>
+      </div>
+      <!-- SEARCH RESULT DROPDOWN -->
+      <div *ngIf="showSearchResults" class="search-result-dropdown">
+        <div *ngFor="let product of searchedProduct" class="search-result-item">
+          <div class="display_flex_only ms-11 my-2 border_bottom_gray align-items-center pb-2" (click)="navigateTosearchedResult(product)"
+              >
+            <div class="fixed_width">
+              <img [src]="product.image ? (baseUrl + product.image) : 'assets/noimage.jpg'" alt="">
+            </div>
+            <div class="w-75 ml-4">
+              <p class="mb-0 text_font">{{ product.title }}</p>
+              <!-- <p class="mb-0 text_font">{{ product.subtitle }}</p> -->
+              <!-- <p *ngIf="product.price" class="text_gogreen font_weight mb-0 text_font">${{ product.price }}</p> -->
+              <span class="badge badge-secondary">{{ product.type }}</span>
+            </div>
+          </div>
+        </div>
+      
+        <div *ngIf="!isLoading && searchedProduct.length === 0 && searchKeyword.trim()" 
+             class="no-result text-muted text-center my-3">
+          No products found.
+        </div>
+      </div>
+      
+    </div>
+
+    <!-- <ion-button expand="block" (click)="openSlide()">Show Slide</ion-button> [ngClass]="{ 'active-slide': selectedIndex === -1 }"-    [ngClass]="{ 'active-slide': selectedIndex === i }"->
+  
+    <!-- Categories -->
+    <div *ngIf="!searchKeyword.trim()">
+
+
+      <div class="outer_category_div">
+        <swiper-container *ngIf="!isLoading" class="mySwiper" slides-per-view="4" space-between="10" [breakpoints]="{
+        '640': { 'slidesPerView': 6, 'spaceBetween': 10 },
+        '768': { 'slidesPerView': 6, 'spaceBetween': 10 },
+        '1024': { 'slidesPerView': 8, 'spaceBetween': 10 }
+      }">
+
+          <!-- Optional Static Slide -->
+          <swiper-slide (click)="selectCategory2(-1)">
+            <div class="slide-content" (click)="navigateToAllCat()">
+              <div class="icon-circle">
+                <img src="assets/all-cat.svg" alt="Static Slide" class="svg-icon">
+                <p>All</p>
+              </div>
+            </div>
+          </swiper-slide>
+
+          <!-- Dynamic Slides -->
+          <swiper-slide *ngFor="let item of categories; let i = index" (click)="selectCategory(i, item.id, item.name)">
+            <div class="slide-content">
+              <div class="icon-circle">
+                <img [src]="baseUrl + item.category_logo" alt="{{ item.name }}" class="svg-icon" />
+                <p>{{ item.name }}</p>
+              </div>
+            </div>
+          </swiper-slide>
+        </swiper-container>
+
+
+        <div class="d-flex" *ngIf="isLoading">
+          <div class="shimmer" *ngFor="let i of [1,2,3,4]"
+            style="width: 60px; height: 60px; border-radius: 50%; margin: 10px;"></div>
+        </div>
+      </div>
+
+      <!-- 🖼️ Banners -->
+      <div class="home_slidr_outer_div">
+        <swiper-container *ngIf="!isLoading" class="mySwiper" slides-per-view="1" space-between="2" pagination="true"
+          autoplay="true">
+          <swiper-slide *ngFor="let item of bannerImg; let i = index">
+            <div class="slide-klm">
+              <img [src]="baseUrl + item.image_url" alt="">
+            </div>
+          </swiper-slide>
+        </swiper-container>
+        <div class="shimmer" *ngIf="isLoading" style="height: 180px; width: 100%; border-radius: 10px;"></div>
+
+      </div>
+      <!-- 🖼️ Banners Ends-->
+
+      <!-- Groceries SUb CAtegories --- -->
+      <div class="search_by_category_div margin_top_13px" *ngIf="!isLoading && categoryOneData">
+        <div class="slider_heading_div">
+          <h3>{{categoryOneData[0].category_name}}</h3>
+          <p (click)="navigateToSubCAtPage(categoryOneData[0].category_id, categoryOneData[0].category_name)">See all
+          </p>
+        </div>
+        <div class="search_by_category_slider_div">
+          <swiper-container class="mySwiper" slides-per-view="4" space-between="10" autoplay="false" [breakpoints]="{
+          '640': { 'slidesPerView': 5, 'spaceBetween': 10 },
+          '768': { 'slidesPerView': 5, 'spaceBetween': 10 },
+          '1024': { 'slidesPerView': 5, 'spaceBetween': 10 }
+        }">
+            <swiper-slide *ngFor="let cat1 of categoryOneData">
+              <div class="slide-content"
+                (click)="navigateToSubCAtProducts(cat1.id, categoryOneData[0].category_name, 'subCatID')">
+                <div class="img_outer_bg">
+                  <img [src]="baseUrl+ cat1.subcategory_logo" alt="">
+                </div>
+                <p>{{cat1.name}}</p>
+              </div>
+            </swiper-slide>
+          </swiper-container>
+          <div *ngIf="isLoading" class="d-flex">
+            <div class="shimmer" *ngFor="let i of [1,2,3,4]" style="width: 100px; height: 60px;  margin: 10px;"></div>
+          </div>
+        </div>
+      </div>
+      <!-- End Groceries SUb CAtegories --- -->
+
+      <!-- 🛍️ Featured Products -->
+      <div class="features_product_div" *ngIf="Allvendors?.length>0">
+        <div class="slider_heading_div">
+          <h3>All Stores</h3>
+          <p>See all</p>
+        </div>
+
+        <ion-card *ngFor="let item of Allvendors" class="mb-3"  (click)="navigateToVendorStore(item)">
+          <div class="whishlist_img_div">
+
+            <button class="heart-button" (click)="toggleFavoritefeatured(item)">
+              <img [src]="item.is_favourite == 1 ? 'assets/heart-filled.svg' : 'assets/heart-empty.svg'" alt="Favorite"
+                class="heart-img" />
+            </button>
+
+          </div>
+          <div class="d-flex justify-content-center w-100">
+            <img alt="vendor" class="vendor_store_img"
+              [src]="item.profile_pic ? baseUrl + item.profile_pic : 'assets/noimage.jpg'" />
+          </div>
+
+          <ion-card-header>
+            <div class="d-flex align-items-center frequently-ordered-div">
+              <img src="assets/frequently-ordered-icon.svg" alt="">
+              <p class="mb-0 text-white">FREQUENTLY REORDERED</p>
+            </div>
+            <div class="d-flex align-items-center">
+              <img src="assets/timer-icon.svg" alt="">
+              <p class="mb-0 font-weight-bold text-gray">TIMING . 09:00AM TO 09:00PM</p>
+            </div>
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="font-weight-bold vendor-heading-primary">{{item.store_name}}</div>
+              <div class="vendor_rating">3.9 <ion-icon class="text-white" name="star"></ion-icon></div>
+            </div>
+          </ion-card-header>
+          <ion-card-content class="text_gogreen">
+            60% OFF up to $250.
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+    </div>
+
+  </div>
+</ion-content>
+<app-footer-tabs></app-footer-tabs>

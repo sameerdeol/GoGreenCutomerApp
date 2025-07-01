@@ -1,0 +1,212 @@
+
+
+<ion-content [fullscreen]="true">
+  <div class="page_outer_div ">
+    <div class="display_flex align_items_center">
+      <div class="left_arrow_div"> <img src="assets/left-arrow-green.svg" (click)="goback()" ></div>
+      <p class="white_bg_header">{{categoryName}}</p>
+      <div class="header_search_img ">
+      </div>
+    </div>
+  </div>
+  <div class="page_outer_div">
+   <div class="location_search">
+     <input class="search_bar" type="search" placeholder="Search your product.." [(ngModel)]="searchKeyword" (ngModelChange)="onSearchChange($event)">
+     <ion-icon class="search-icon" name="search-outline"></ion-icon>
+   </div>
+
+   <div *ngIf="showSearchResults" class="search-result-dropdown">
+    <div class="search-result-item">
+      <!-- <img [src]="baseUrl+product.featured_image" alt="Product" class="product-image" />
+      <span class="product-title">{{ product.name }}</span> -->
+      <div class="row no-gutters">
+        <div
+          class="col-3 px-0 mb-2"
+          *ngFor="let product of searchedProduct; let i = index"
+          (click)="selectCategory(i, product.id, product.name)"
+        >
+          <div class="slide-content d-flex justify-content-center">
+            <div
+              class="icon-circle"
+             
+            >
+              <img
+                [src]="baseUrl + product.subcategory_logo"
+                alt="{{ product.name }}"
+                class="svg-icon"
+              />
+              <p>{{ product.name }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+   
+    </div>
+    <div *ngIf="showSearchResults && searchedProduct.length === 0 && searchKeyword.trim()" class="no-result text-muted text-center my-3">
+      No Sub Category found.
+    </div>
+  </div>
+  <div *ngIf="!searchKeyword.trim()">
+
+
+  <div class="outer_category_div">
+    <swiper-container  class="mySwiper" slides-per-view="4" space-between="10" [breakpoints]="{
+      '640': { 'slidesPerView': 5, 'spaceBetween': 10 },
+      '768': { 'slidesPerView': 5, 'spaceBetween': 10 },
+      '1024': { 'slidesPerView': 5, 'spaceBetween': 10 }
+    }">
+
+      <!-- Optional Static Slide -->
+      <swiper-slide (click)="selectCategory2(-1)" [ngClass]="{ 'active-slide': selectedIndex === -1 }">
+        <div class="slide-content" (click)="navigateToAllCat()">
+          <div class="icon-circle">
+            <img src="assets/all-cat.svg" alt="Static Slide" class="svg-icon">
+            <p>All</p>
+          </div>
+        </div>
+      </swiper-slide>
+    
+      <!-- Dynamic Slides -->
+      <swiper-slide *ngFor="let item of categories; let i = index" (click)="selectCategory(i, item.id, item.name)" [ngClass]="{ 'active-slide': selectedIndex === i }">
+        <div class="slide-content">
+          <div class="icon-circle">
+            <img [src]="baseUrl + item.category_logo" alt="{{ item.name }}" class="svg-icon" />
+            <p>{{ item.name }}</p>
+          </div>
+        </div>
+      </swiper-slide>
+    </swiper-container>
+    
+  </div>
+ 
+
+   <!-- 1st slider -->
+   <div class="search_by_category_div margin_top_13px" *ngIf=" subcategories" >
+    <div class="slider_heading_div">   
+        <h3>{{subcategories[0].category_name}}</h3>
+    </div>
+    <div class="search_by_category_slider_div "> 
+      <swiper-container class="mySwiper" slides-per-view="4" space-between="10"  autoplay="false"[breakpoints]="{
+        '640': { 'slidesPerView': 5, 'spaceBetween': 10 },
+        '768': { 'slidesPerView': 5, 'spaceBetween': 10 },
+        '1024': { 'slidesPerView': 5, 'spaceBetween': 10 }
+      }">
+        <swiper-slide *ngFor="let slide of subcategories; let i = index">
+          <div class="slide-content" (click)="navigateToinerAllProducts(subcategories[i].id, subcategories[i].category_name)"> 
+            <div class="img_outer_bg">
+              <img [src]="baseUrl+ slide.subcategory_logo" alt="">    
+            </div>        
+          <p>{{slide.name}}</p>
+          </div>
+        </swiper-slide>
+      </swiper-container>
+    
+    </div>
+    </div>
+    <div *ngIf="!subcategories" class="no-products-message">
+      <p>No products found.</p>
+    </div>
+     <!-- 1st slider End -->
+
+ 
+    <div class="home_slidr_outer_div">
+      <swiper-container class="mySwiper"  slides-per-view="1" space-between="15"  autoplay="false" pagination="false">
+        <swiper-slide *ngFor="let item of bannerImg" >
+          <div class="slide-klm">
+            <img [src]="baseUrl+item.image_url"  alt="">
+          </div>  
+        </swiper-slide>
+      </swiper-container>
+    </div>
+
+    <div class="features_product_div" *ngIf="bestSeller.length>0" [ngClass]="{ 'margin_bottom_5': showCartPopup }">
+      <div class="slider_heading_div">
+        <h3>{{bestSeller[0].heading}}</h3>
+        <p (click)="navigateToAllProducts2(bestSeller[0].category_id, bestSeller[0].category_name, 'dealsProduct',bestSeller[0].heading)">See all</p>
+      </div>
+      <swiper-container  class="mySwiper" slides-per-view="3" space-between="5" [breakpoints]="{
+        '640': { 'slidesPerView': 5, 'spaceBetween': 10 },
+        '768': { 'slidesPerView': 5, 'spaceBetween': 10 },
+        '1024': { 'slidesPerView': 5, 'spaceBetween': 10 }
+      }">
+        <swiper-slide *ngFor="let bestsell of bestSeller; let i = index">
+          <div class="slide-content slide_div slide_content">
+            <div class="whishlist_img_div">
+              <!-- <img src="assets/whishlist.svg"> -->
+              <button
+              class="heart-button"
+              (click)="toggleFavoritefeatured(bestsell,bestsell.id,bestsell.is_favourite)"
+            >
+            <img 
+            [src]="bestsell.is_favourite === 1 ? 'assets/heart-filled.svg' : 'assets/heart-empty.svg'" 
+            alt="Favorite" 
+            class="heart-img"
+          />
+            </button>
+            </div>
+            <div class="image_wrapper" (click)="navigateToproduct(bestsell.id)" >
+              <img [src]="baseUrl + bestsell.featured_image" alt="">
+            </div>
+            <div class="product_desc display_flex">
+              <div class="width_50">
+                <p class="product_heading_desc">{{bestsell.title}}</p>
+                <p class="product_sub_heading_desc">{{bestsell.subtitle}}</p>
+              </div>
+          
+              <div class="price_outer_div">
+                <p class="price_p">${{bestsell.price}}</p>
+                
+                <!-- "Add to Cart" Button -->
+               
+              </div>
+            </div>
+            <div class="col-12 custm_padding" *ngIf="!isAddedMap[bestsell.id]; else quantityControls">
+              <button class="add_to_cart_btn_bg" (click)="addToCart(bestsell)">
+                Add To Cart
+              </button>
+            </div>
+            
+            <ng-template #quantityControls>
+              <div class="col-12 custm_padding">
+                <button class="add_to_cart_btn_bg2">
+                  <span class="remove_item_btn" (click)="removeFromCart(bestsell)">-</span>
+                  {{ getQuantity(bestsell.id) }}
+                  <span class="add_item_btn" (click)="addToCart(bestsell)">+</span>
+                </button>
+              </div>
+            </ng-template>
+        
+          </div>
+        </swiper-slide>
+      </swiper-container>
+
+      
+    </div>
+
+  </div>
+  </div>
+  <div 
+  class="cart-popup" 
+  [ngClass]="{ 'slide-out': isSlidingOut }" 
+  *ngIf="showCartPopup" [class.show-popup]="showCartPopup">
+  
+  <div class="display_flex left_right_padding align_items_center">
+    <p>
+      <ion-icon name="cart-outline"></ion-icon> 
+      {{ totalQuantity }} item(s) added to cart
+    </p>
+
+    <div class="view_cart_div_btn">
+      <button (click)="navigateToViewCart()">view cart</button>
+      <ion-icon 
+        (click)="removeCartStorage()" 
+        class="remove_item_icon" 
+        name="close-circle-outline">
+      </ion-icon>
+    </div>
+  </div>
+</div>
+ </ion-content>
+ <app-footer-tabs></app-footer-tabs>
+ 

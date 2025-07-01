@@ -1,0 +1,131 @@
+.welcome_second {
+    height: 100%;
+    background-image: url(../../assets/welcome/gree_welcome.png);
+    background-size: 140%;
+    background-position: top center;
+    background-repeat: no-repeat;
+    position: relative;
+    top: 0px;
+    padding-top: 25px;
+}
+.welcome_ingredients {
+    width: 60%;
+    margin: auto;
+    padding: 20px;
+}
+.delivery_man {
+    width: 90%;
+}
+.delivery_man_main {
+    text-align: center;
+    position: absolute;
+    top: -15%;
+    width: 100%;
+    animation: leafMove 1.5s ease-out forwards;
+}
+.content_welcome {
+    padding: 15px;
+}
+.login_welcome a {
+    margin-top: 15px;
+    font-family: opensans_semibold;
+    text-decoration: none;
+    border-radius: 30px;
+    display: block;
+    padding: 13px;
+    width: 90%;
+}
+.sign_up_welcome a {
+    margin-top: 15px;
+    font-family: opensans_semibold;
+    text-decoration: none;
+}
+.welcome_footer {
+    margin-top: 30px;
+}
+.msg_main {
+    animation: topmove 1s ease-in-out forwards, jumpLoop 1s ease-in-out infinite 1s;
+}
+@keyframes topmove {
+    from {
+        transform: translateY(-900px); /* Start from top */
+    }
+    to {
+        transform: translateY(0); /* Move to normal position */
+    }
+}
+@keyframes jumpLoop {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-20px); } /* Move up */
+    100% { transform: translateY(0); } /* Come back down */
+}
+.welcome_form {
+    width: 87%;
+}
+.welcome_number {
+    border: 1px solid;
+    border-radius: 25px;
+    overflow: hidden;
+}
+.country_drop{
+    --background: #088B46;
+}
+ion-list.drop_list{
+    background: #088B46;
+    padding: 0 !important;
+}
+.drop_list ion-select{
+    color: white;
+}
+.welcome_submit {
+    padding-bottom: 15px;
+    padding-top: 15px;
+    border-radius: 30px;
+    background: #fff !important;
+    color: #088B46;
+    width: 80%;
+    margin: auto;
+}
+.otp_feild {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 25px;
+    font-weight: 900;
+    border: 0px !important;
+    outline: none !important;
+    background: white;
+    color: black;
+}
+.otp_main {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    padding: 7px 13px;
+    border: 1px solid #fff;
+    margin: auto;
+    border-radius: 40px;
+    margin-top: 30px;
+}
+.verification_heading {
+    font-size: 25px;
+    margin: 10px 0;
+}
+.verify_number {
+    width: 66%;
+    margin: auto;
+}
+.otp_time_resend_main {
+    position: absolute;
+    width: 100%;
+    bottom: -27px;
+    color: #fff;
+    z-index: 99;
+    font-size: 13px;
+}
+ion-toolbar{
+    --background: white;
+}

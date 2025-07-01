@@ -1,0 +1,35 @@
+<div class="footer-tabs">
+  <div class="tabs_outer_div">
+
+    <!-- Home -->
+    <ion-tab-button  class="icon_outer_div" (click)="navigateToHome()">
+      <img [src]="activeTab === 'home' ? '/assets/home-active.svg' : '/assets/home.svg'" alt="Home">
+      <p [class.active-text]="activeTab === 'home'">Home</p>
+    </ion-tab-button>
+
+    <!-- Categories -->
+    <ion-tab-button  class="icon_outer_div" (click)="navigateToAllCategories()">
+      <img [src]="activeTab === 'categories' ? '/assets/categories-active.svg' : '/assets/categories.svg'" alt="Categories">
+      <p [class.active-text]="activeTab === 'categories'">Categories</p>
+    </ion-tab-button>
+
+    <!-- Wishlist -->
+    <ion-tab-button  class="icon_outer_div" (click)="navigateToOrders()">
+      <img [src]="activeTab === 'view-cart' ? '/assets/cart-active.svg' : '/assets/cart.svg'" alt="view-cart" class="cart_img">
+      <p [class.active-text]="activeTab === 'view-cart'">Orders</p>
+       <ion-badge class="cart_badge">47</ion-badge>
+    </ion-tab-button>
+    <!-- <ion-tab-button tab="3">
+      <ion-icon name="calendar"></ion-icon>
+      <ion-label>Calendar</ion-label>
+      <ion-badge color="danger">47</ion-badge>
+    </ion-tab-button> -->
+
+    <!-- My Account -->
+    <ion-tab-button  class="icon_outer_div" (click)="navigateToAccount()">
+      <img [src]="activeTab === 'account' ? '/assets/account-active.svg' : '/assets/account.svg'" alt="My Account">
+      <p [class.active-text]="activeTab === 'account'">My Account</p>
+    </ion-tab-button>
+
+  </div>
+</div>
