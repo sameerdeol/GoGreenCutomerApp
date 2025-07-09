@@ -471,6 +471,7 @@ text-align: center;
   border-radius: 25px;
   background: #008a4a;
   width: 100%;
+  color: #fff;
 }
 .color_black{
   color: black;
@@ -526,7 +527,8 @@ text-align: center;
   color: white;
   padding: 8px;
   width: 40%;
-  border-radius: 4px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
   text-align: center;
 }
 .text_end{
@@ -601,7 +603,6 @@ text-align: center;
   width: 100%; /* Ensures image fits the container */
   height: 100%;
   object-fit: cover; /* Ensures image fills the space while maintaining aspect ratio */
-  border-radius: 10px; /* Optional: Matches container */
 }
 .price_outer_div{
   display: flex;

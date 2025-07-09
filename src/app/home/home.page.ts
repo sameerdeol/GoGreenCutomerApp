@@ -26,6 +26,8 @@ register();
 
  // ✅ Properly typed object
 export class HomePage implements OnInit {
+  currency = environment.currencySymbol;
+
   categoryImagesLoaded: any[]=[];
   bannerImagesLoaded: any[]=[];
   featuredImagesLoaded: any[]=[];
@@ -77,6 +79,14 @@ export class HomePage implements OnInit {
 
   showSearchResults: boolean = false;
 
+  currentText = '';
+  animationClass = 'animate__fadeInUp';
+  
+  suggestions = ['bread', 'milk', 'rice', 'tomatoes', 'eggs'];
+  index = 0;
+  intervalId: any;
+  animationKey = 0;
+
   async init() {
     await this.storage.create();
   }
@@ -93,6 +103,7 @@ export class HomePage implements OnInit {
   }
  
   async ngOnInit() {
+     this.startRotatingSuggestions();
     await this.loadCartFromStorage();
     const user_id = await this.storage.get('userID');
     const token = await this.storage.get('auth_token');
@@ -114,6 +125,18 @@ export class HomePage implements OnInit {
     this.dynamicCategory4();
     this.getAllVendors();
   }
+
+  startRotatingSuggestions() {
+  this.currentText = this.suggestions[0];
+  this.animationKey = Date.now(); // unique to trigger animation
+
+  this.intervalId = setInterval(() => {
+    this.index = (this.index + 1) % this.suggestions.length;
+
+    this.currentText = this.suggestions[this.index];
+    this.animationKey = Date.now(); // update to trigger animation
+  }, 2000); // use 3000ms for smoother feel
+}
   async addToCart(product: any) {
     const existingItem = this.cartItems.find(item => item.id === product.id);
     //  console.log('product title',product.title)

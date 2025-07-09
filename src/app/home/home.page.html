@@ -12,11 +12,29 @@
     <!-- 🔍 Search Bar -->
     <div class="location_search loction_outer">
       <div class="shimmer" *ngIf="isLoading" style="width: 100%; height: 45px; border-radius: 25px;"></div>
-      <div *ngIf="!isLoading">
+      <!-- <div *ngIf="!isLoading">
         <input class="search_bar" type="search" placeholder="Search your product.." [(ngModel)]="searchKeyword"
           (ngModelChange)="onSearchChange($event)" />
 
         <ion-icon class="search-icon" name="search-outline"></ion-icon>
+      </div> -->
+      <div class="input-wrapper">
+        <!-- Fake Placeholder -->
+      <div class="fake-placeholder animate__animated"
+            [@.disabled]="false"
+            [ngClass]="animationClass"
+            [attr.data-key]="animationKey"
+            *ngIf="!searchKeyword">
+          Search for {{ currentText }}
+        </div>
+
+
+        <!-- Real Input -->
+        <input class="search_bar"
+              type="search"
+              [(ngModel)]="searchKeyword"
+              (ngModelChange)="onSearchChange($event)" />
+                <ion-icon class="search-icon" name="search-outline"></ion-icon>
       </div>
       <!-- SEARCH RESULT DROPDOWN -->
       <div *ngIf="showSearchResults" class="search-result-dropdown">
@@ -165,7 +183,7 @@
             </div>
           </ion-card-header>
           <ion-card-content class="text_gogreen">
-            60% OFF up to $250.
+            60% OFF up to {{currency}}250.
           </ion-card-content>
         </ion-card>
       </div>

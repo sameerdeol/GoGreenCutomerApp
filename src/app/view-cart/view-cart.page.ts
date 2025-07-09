@@ -21,6 +21,8 @@ import { Storage } from '@ionic/storage-angular';
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ViewCartPage implements OnInit {
+
+  currency = environment.currencySymbol;
   cartItems: any[] = [];
   selectedItems: any = {};
   selectAll: boolean = false;
@@ -154,8 +156,8 @@ export class ViewCartPage implements OnInit {
   async updateTotalQuantity() {
     this.totalQuantity = this.activeCart.reduce((total, item) => total + item.quantity, 0);
     this.totalAmount = this.activeCart.reduce((total, item) => total + (item.price * item.quantity), 0);
-    console.log('activecart-',this.activeCart)
-     console.log('totalamount on update', this.totalAmount)
+    // console.log('activecart-',this.activeCart)
+    //  console.log('totalamount on update', this.totalAmount)
     await this.storage.set('totalAmountWithDeleveryCharges', this.totalAmount.toFixed(2) );
     this.cdr.detectChanges();
   }
@@ -277,7 +279,7 @@ export class ViewCartPage implements OnInit {
     const user_id = this.userID;
     this.apiservice.add_to_favourties(user_id,product_id).subscribe((response: any) => {  
       if(response){
-        console.log('Favorite API Response-',response)
+        // console.log('Favorite API Response-',response)
       }
       },
     );

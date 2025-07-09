@@ -41,7 +41,7 @@
           <h3 class="text_gogreen">{{product.title}}</h3>
           <p class="text_font">J{{product.subtitle}}</p>
           <div class="d_flex justify-content-between align-items-center">
-            <h2 class="color_black font-weight-bold">${{ product.price }}</h2>
+            <h2 class="color_black font-weight-bold">{{currency}}{{ product.price }}</h2>
             <div class=" custm_padding" *ngIf="!isAddedMap[product.id]; else quantityControls">
               <button class="add_to_cart_btn_bg" (click)="addToCart(product)">
                 Add To Cart

@@ -4,6 +4,7 @@
 
 export const environment = {
   production: true,
+  currencySymbol: '$',
   baseurl: "https://cx.ekarigar.com/delievery-app/",
   firebaseConfig: {
     apiKey: 'AIzaSyDnWTuaGv6VNtjxkGo_Nk3C80lUxkI53EM',

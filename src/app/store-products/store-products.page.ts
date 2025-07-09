@@ -32,6 +32,8 @@ export class StoreProductsPage implements OnInit {
   showCartPopup: boolean = false;
   isSlidingOut = false;
 
+  currency = environment.currencySymbol;
+
   constructor(private router: Router, private apiservice: ApiserviceService,private route: ActivatedRoute,private storage: Storage,private location : Location) { 
     this.init();
   }

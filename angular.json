@@ -34,7 +34,8 @@
             "styles": [
                       "node_modules/bootstrap/dist/css/bootstrap.min.css",
                       "src/global.scss",
-                      "src/theme/variables.scss"
+                      "src/theme/variables.scss",
+                      "node_modules/animate.css/animate.min.css"
                     ],
             "scripts": [ "node_modules/jquery/dist/jquery.min.js",
             "node_modules/popper.js/dist/umd/popper.min.js",
@@ -119,7 +120,8 @@
             ],
             "styles": [  "node_modules/bootstrap/dist/css/bootstrap.min.css",
             "src/global.scss",
-            "src/theme/variables.scss"],
+            "src/theme/variables.scss",
+          "node_modules/animate.css/animate.min.css"],
             "scripts": [  "node_modules/jquery/dist/jquery.min.js",
             "node_modules/popper.js/dist/umd/popper.min.js",
             "node_modules/bootstrap/dist/js/bootstrap.min.js"]

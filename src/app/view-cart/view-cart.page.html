@@ -25,7 +25,7 @@
   </div>
   <div class="row border_bottom">
     <div class="col-4 color_black text_font font_weight">Total Amount</div>
-    <div class="col-4 color_black text_font font_weight" >{{ totalAmount }}</div>
+    <div class="col-4 color_black text_font font_weight" >{{currency}}{{ totalAmount }}</div>
     <div class="page_outer_div">
       <div class="display_flex align_flex_start">
         <img class="round_check_img" src="assets/round_check.svg" alt="">
@@ -64,7 +64,7 @@
           <div>
             <p>{{ item.title }}</p>
             <p>{{ item.subtitle }}</p>
-            <p>{{ item.price }}</p>
+            <p>{{currency}}{{ item.price }}</p>
           </div>
         </div>
     
@@ -84,7 +84,7 @@
           </div>
 
           <div class="col-4 save_later_btn padding_0">
-            <button (click)="saveForLater(item)">Save For Later</button>
+            <button (click)="saveForLater(item)">Whishlist</button>
           </div>
 
         </div>
@@ -104,7 +104,7 @@
   </div>
   <div class="row paddingtop_20 mt-2">
      <div class="col-6">Items</div>
-     <div class="col-6 text_end">${{totalAmount}}</div>
+     <div class="col-6 text_end">{{currency}}{{totalAmount}}</div>
   </div>
   <div class="row mt-2">
     <div class="col-6">
@@ -117,7 +117,7 @@
         <label class="font_weight">Fast Dilevery</label>  
       </div>     
     </div>
-    <div class="col-6 text_end">$3</div>
+    <div class="col-6 text_end">{{currency}}3</div>
  </div>
  <div class="row mt-2">
   <div class="col-6">
@@ -130,7 +130,7 @@
     </div>
     
   </div>
-  <div class="col-6 text_end">$0</div>
+  <div class="col-6 text_end">{{currency}}0</div>
 </div>
  <!-- <div class="row">
   <div class="col-6">Coupon Code</div>
@@ -138,7 +138,7 @@
 </div> -->
 <div class="row mt-2">
 <div class="col-6">Total</div>
-<div class="col-6 text_end">${{ finalTotal.toFixed(2) }}</div>
+<div class="col-6 text_end">{{currency}}{{ finalTotal.toFixed(2) }}</div>
 </div>
 <div class="row">
    <div class="col-12 text_end">
@@ -188,7 +188,7 @@
             </div>
         
             <div class="price_outer_div">
-              <p class="price_p">${{features_product.price}}</p>
+              <p class="price_p">{{currency}}{{features_product.price}}</p>
           
             </div>
           </div>
@@ -252,7 +252,7 @@
             </div>
         
             <div class="price_outer_div">
-              <p class="price_p">${{deals.price}}</p>
+              <p class="price_p">{{currency}}{{deals.price}}</p>
               
               <!-- "Add to Cart" Button -->
              

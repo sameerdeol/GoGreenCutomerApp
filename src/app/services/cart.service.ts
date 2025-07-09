@@ -12,6 +12,7 @@ export class CartService {
 
   updateTotalQuantity() {
     this.totalQuantity = this.cartItems.reduce((total, item) => total + item.quantity, 0);
+    console.log("totalQuantity in cart service : ",this.totalQuantity)
   }
 
   updateIsAddedMap() {
