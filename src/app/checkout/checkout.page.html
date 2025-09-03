@@ -28,20 +28,23 @@
       <!-- Loop through savedUserAddress and display each address dynamically -->
       <div *ngFor="let address of savedUserAddress; let i = index" class="display_flex addres_bg">
         <div>
-          <label class="font_weight">Delivering to  {{ 
+          <label class="font_weight">{{ 
             address.type === 1 ? 'Home' : 
             address.type === 2 ? 'Office' : 
             address.type === 3 ? 'Hotel' : 
             'Other' 
           }}</label>  <!-- Use the label if available, otherwise show a default label -->
           <p class="primary_font_size">{{ address.address }}</p> <!-- Show the address details -->
+      
         </div>
     
         <!-- Bind the checkbox to the selected option -->
         <input type="checkbox" 
                [checked]="selectedOption === 'option' + i" 
                (change)="selectOnlyOne('option' + i,address.id)">
+       
       </div>
+     
     </div>
 </div>
   <div class="payment_details_div primary_font_size">
@@ -66,7 +69,7 @@
 </div>
   </div>
 
-  <div class="arriving_outer_div">
+<div class="arriving_outer_div">
     <div class="arriving_div">
       <p class="font_weight">Arriving in 20 min</p>
       <p  class="text_font">Fast, Easy, and Secure - Complete your purchase</p>

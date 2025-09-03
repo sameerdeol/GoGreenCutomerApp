@@ -1,0 +1,68 @@
+<!-- all-address.page.html -->
+<app-common-header></app-common-header>
+
+<ion-content>
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Loading addresses...</p>
+  </div>
+
+  <!-- Address List -->
+  <ion-list *ngIf="!isLoading && savedUserAddress && savedUserAddress.length > 0">
+    <ion-item-sliding *ngFor="let address of savedUserAddress; trackBy: trackByFn">
+      
+      <!-- Main Item Content -->
+      <ion-item>
+        <ion-icon name="location-outline" slot="start" color="primary"></ion-icon>
+        
+        <ion-label>
+          <div class="address-header">
+            <h2>{{ address.address && address.address.length > 50 ? (address.address | slice:0:50) + '...' : address.address }}</h2>
+            <ion-chip [color]="getTypeColor(address.type)" size="small">
+              {{ getAddressType(address.type) }}
+            </ion-chip>
+          </div>
+          
+          <div class="address-details">
+            <p><ion-icon name="business-outline"></ion-icon> Floor: {{ address.floor || 'N/A' }}</p>
+            <p *ngIf="address.landmark">
+              <ion-icon name="flag-outline"></ion-icon> {{ address.landmark }}
+            </p>
+          </div>
+        </ion-label>
+        
+        <ion-buttons slot="end">
+          <ion-button fill="clear" (click)="editAddress(address)">
+            <ion-icon name="create-outline" color="primary"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" (click)="deleteUserAddress(address.id)">
+            <ion-icon name="trash-outline" color="danger"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+
+      <!-- Sliding Options (Alternative approach) -->
+      <ion-item-options side="end">
+        <ion-item-option color="primary" (click)="editAddress(address)">
+          <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+        </ion-item-option>
+        <ion-item-option color="danger" (click)="deleteUserAddress(address.id)">
+          <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+      
+    </ion-item-sliding>
+  </ion-list>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!isLoading && (!savedUserAddress || savedUserAddress.length === 0)">
+    <ion-icon name="location-outline" size="large" color="medium"></ion-icon>
+    <h3>No addresses found</h3>
+    <p>Add your first address to get started</p>
+    <ion-button fill="outline" routerLink="/add-address">
+      <ion-icon name="add" slot="start"></ion-icon>
+      Add Address
+    </ion-button>
+  </div>
+</ion-content>

@@ -1,6 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { AlertController, IonicModule } from '@ionic/angular';
 // import { HeaderComponent } from '../components/header/header.component';
 import { CommonModule } from '@angular/common';
 
@@ -25,13 +25,16 @@ export class FinalCheckoutPage implements OnInit {
   totalamountWithDilevryCharges: any;
   verb: any;
 
-
+  selectedDeliveryOption: any;
   selectedTime: any;
   selectedAmPm: any;
   userID: any;
   cartitems: any[]=[];
   loading: boolean = false;
-  constructor(private router: Router,private storage: Storage,private apiservice: ApiserviceService) { 
+  constructor(private router: Router,
+    private storage: Storage,
+    private apiservice: ApiserviceService,
+    private alertController: AlertController) { 
     this.init();
   }
   async init() {
@@ -41,10 +44,17 @@ export class FinalCheckoutPage implements OnInit {
     const user_id = await this.storage.get('userID');
     this.userID =  user_id;
     this.cartitems =  await this.storage.get('cartItems');
-    
+    const deilveryoption = await this.storage.get('selectedDeliveryOption');
+    if(deilveryoption == "Fast"){
+      this.selectedDeliveryOption = 1;
+    }else{
+      this.selectedDeliveryOption = 0;
+    }
+    console.log('this.selectedDeliveryOption', this.selectedDeliveryOption)
+
     if (this.cartitems && Array.isArray(this.cartitems)) {
       this.cartitems = this.cartitems.map(item => {
-        const { id, ...rest } = item;
+        const { id,image, ...rest } = item;
         return {
           ...rest,
           product_id: id
@@ -77,14 +87,29 @@ export class FinalCheckoutPage implements OnInit {
     this.router.navigate(['/checkout']);
   }
   async navigateTothankyoupage() {
+    const userID = this.userID;
+     if (!userID) {
+    // ✅ Show alert if user not logged in
+    const alert = await this.alertController.create({
+      header: 'Login Required',
+      message: 'Please login to proceed with your order.',
+      buttons: ['OK']
+    });
+    await alert.present();
+    return; // stop function execution
+  }
     this.loading = true; // Show loader
   
-    const userID = this.userID;
+    
     const cart = this.cartitems;
     const payment_method = 'COD';
     const user_address_id = await this.storage.get('saveAddressID');
+    console.log("user_address_id",user_address_id)
+    const vendor_id = this.cartitems[0].vendor_id;
+
+    const is_fast_delivery = this.selectedDeliveryOption;
   
-    this.apiservice.insert_order_cod(userID, cart, payment_method, user_address_id).subscribe(
+    this.apiservice.insert_order_cod(userID, cart, payment_method, user_address_id,vendor_id,is_fast_delivery ).subscribe(
       (response) => {
         this.loading = false; // Hide loader when done
   

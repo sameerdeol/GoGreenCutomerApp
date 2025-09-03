@@ -7,5 +7,19 @@
     --ion-background-color: #ffffff !important;
     --ion-item-background: #CEE8DA !important;
     --ion-color-light: #CEE8DA !important;
-   
+    --dark-green: #608773;
+    --red: #AF3833;
+    --secondary-color: #CA2C2C;
+    --light-bg: #088B460D;
+    --text-color: #000000;
+    --ion-secondary-color: #ffffff;
+    --ion-color-base: #088B46;
 }
+
+    $primary-color: var(--ion-color-primary);
+    $secondary-color: var(--ion-secondary-color);
+    $danger: var(--red);
+    $textColor: var(--text-color);
+
+
+

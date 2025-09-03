@@ -8,6 +8,7 @@ import { ProductDetailPageRoutingModule } from './product-detail-routing.module'
 
 import { ProductDetailPage } from './product-detail.page';
 import { HeaderComponent } from '../components/header/header.component';
+import { CommonHeaderComponent } from '../components/common-header/common-header.component';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { HeaderComponent } from '../components/header/header.component';
     FormsModule,
     IonicModule,
     ProductDetailPageRoutingModule,
-    HeaderComponent
+    HeaderComponent,
+    CommonHeaderComponent
   ],
 
 })

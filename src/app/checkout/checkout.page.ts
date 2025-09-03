@@ -39,12 +39,17 @@ export class CheckoutPage implements OnInit {
   }
 
   async ngOnInit() {
+    const nav = this.router.getCurrentNavigation();
+    if (nav?.extras.state) {
+      this.totalamountWithDilevryCharges = nav.extras.state['totalPrice'];
+      this.deliveryOption = nav.extras.state['deliveryOption'];
+    }
     this.getCustomerAddress();
     this.addressType = await this.storage.get('selectedTypeText');
     this.fulladdress = await this.storage.get('fullAddress');
     const savedDate = await this.storage.get('selectedDate');
     const savedTime = await this.storage.get('selectedTime');
-    await this.storage.set('SelectedDeliveryOption', this.selectedDelvieryOption);
+
     // If both exist, combine them to set the value for the datetime picker.
     if (savedDate && savedTime) {
       this.selectedDateTime = `${savedDate}T${savedTime}`;
@@ -54,8 +59,8 @@ export class CheckoutPage implements OnInit {
       await this.storage.set('selectedDate', parts[0]);
       await this.storage.set('selectedDate', parts[1]);
     }
-    this.deliveryOption = await this.storage.get('selectedDeliveryOption');
-    this.totalamountWithDilevryCharges = await this.storage.get('totalAmountWithDeleveryCharges');
+    
+   
   }
 
   async onDateTimeChange(event: CustomEvent) {

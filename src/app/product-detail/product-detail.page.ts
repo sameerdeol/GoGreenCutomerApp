@@ -1,146 +1,174 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { HeaderComponent } from '../components/header/header.component';
-import { CommonModule,Location  } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { register } from 'swiper/element/bundle';
 import { FooterTabsComponent } from '../components/footer-tabs/footer-tabs.component';
-import { HttpClient } from '@angular/common/http';
 import { ApiserviceService } from '../services/apiservice.service';
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
+import { CommonHeaderComponent } from '../components/common-header/common-header.component';
+import { getLowestPriceVariant } from 'src/app/utils/utils';
+import { CartService } from '../services/cart.service';
+import { Subscription } from 'rxjs';
 register();
+
 @Component({
   selector: 'app-product-detail',
   templateUrl: './product-detail.page.html',
   styleUrls: ['./product-detail.page.scss'],
   standalone: true,
   providers: [Storage],
-  imports: [IonicModule, FormsModule, CommonModule, FooterTabsComponent], 
+  imports: [IonicModule, FormsModule, CommonModule, FooterTabsComponent, CommonHeaderComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ProductDetailPage implements OnInit {
 
-  constructor(private route: ActivatedRoute,private apiservice: ApiserviceService,private location: Location,private storage: Storage,private router: Router) {
+  constructor(private location: Location,
+    private storage: Storage,
+    private router: Router,
+    private cartService: CartService,) {
     this.init();
-   }
+
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation?.extras?.state) {
+      this.productDetails = navigation.extras.state['product'];
+      this.product_id = this.productDetails.id;
+      console.log("vendorDetails", this.productDetails)
+    }
+    this.cartSubscription = this.cartService.cartQuantity$.subscribe(quantity => {
+      this.cartQuantity = quantity;
+
+    });
+  }
+
+  cartQuantity: number = 0;
+  private cartSubscription: Subscription = new Subscription();
+  selectedAddon: any;
+  selectedVariant: any;
   property_detail: any;
   productId: any;
-  allweeklydeals: any;
-  category_id: Number = 21;
-  category_realted_brands: any;
   baseUrl = environment.baseurl;
+  currency = environment.currencySymbol;
   userID: any;
-  itemCount: number = 0;
-  addToCartVisible: boolean = true;
-
   cartState: CartState = {};
-  isAdded: any; 
+  isAdded: any;
   price: number = 0;
   quantity: number = 0;
   totalQuantity: number = 0;
-  totalAmount: number = 0;
-  showCartPopup: boolean = false;
-  showAddTOCart: boolean = false;
-
-  // totalQuantity: number = 0;
-  // totalAmount: number = 0;
-  relatedBrandInfo:any;
+  product_id: number = 0;
   cartItems: any[] = [];
-  isAddedMap: { [key: string]: boolean } = {}; 
-
+  productDetails: any;
+  isAddedMap: { [key: string]: boolean } = {};
+  selectedVariatnPrice: number = 0;
+  showVariantAndAddons: boolean = false;
+  showViewCart: boolean = false;
   rating = 5;
   stars = [1, 2, 3, 4, 5];
 
-  // quantity : number = 0;
+
   async init() {
     await this.storage.create();
   }
   async ionViewWillEnter() {
     await this.loadCartFromStorage(); // Re-load on every visit to this page
   }
+
+  ngOnDestroy(): void {
+    // Clean up subscription to prevent memory leaks
+    if (this.cartSubscription) {
+      this.cartSubscription.unsubscribe();
+    }
+  }
   async ngOnInit() {
     const user_id = await this.storage.get('userID');
-    this.userID =  user_id;
-    // if (this.userID) {
-    //   this.cartState = await this.storage.get(`cart_${this.userID}`) || {};
-  
-    // }
-    // console.log('token in AppComponent:', token.value);
-    // = this.route.snapshot.paramMap.get('id');
-    // const product_id = await this.storage.get('product_id');
-    // this.productId = product_id;
-    // console.log('product_id:', product_id);
-    this.initializeCartState(); 
-    this.getproductDetail();
-    this.getAllweeklyDeals();
-    this.getAllCategoryRealtedBrnads();
+    this.userID = user_id;
+    this.cartQuantity = this.cartService.getCurrentQuantity();
+    
+    if (this.productDetails?.variants?.length > 0) {
+      const lower = getLowestPriceVariant(this.productDetails.variants);
+      this.selectedVariant = lower.id;
+      this.selectedVariatnPrice = Number(lower.price);
+    }
+
+    const storedCart = await this.storage.get('cartItems');
+    const alreadyInCart = storedCart.some((item: { id: any; }) => item.id === this.productDetails.id);
+
+    if (alreadyInCart) {
+      this.showVariantAndAddons = true;
+    }
   }
 
   goBack() {
     this.location.back();
   }
-
-  toggleFavoritefeatured(features_product: any, product_id: any, is_favourite: any): void {
-    features_product.is_favourite = features_product.is_favourite === 1 ? 0 : 1;
-    if (features_product.is_favourite === 1) {
-      this.markfavourite(product_id);
-    } else {
-      this.unmarkfavourite(product_id);
-    }
-  }
-  async navigateToproduct(id: any){
-    console.log('clickerd')
-    await this.storage.set('product_id', id);
-    this.getproductDetail();
-    // this.router.navigate(['/product-detail']);
+  viewCart(){
+    this.router.navigate(['/view-cart']);
   }
 
-  markfavourite(product_id: any){
-    const user_id = this.userID;
-    this.apiservice.add_to_favourties(user_id,product_id).subscribe((response: any) => {  
-      if(response){
-        console.log('Favorite API Response-',response)
-      }
-      },
-    );
-  }
-  unmarkfavourite(product_id: any){
-    const user_id = this.userID;
-    this.apiservice.remove_to_favourties(user_id,product_id).subscribe((response: any) => {  
-      if(response){
-        console.log('Unremove Favorite API Response-',response)
-      }
-      },
-    );
-  }
-  navigateToinerAllDeals(category_id: any, dealsProduct: any){
-    this.router.navigate(['/inner-product-page'], { queryParams: { id: category_id, type: dealsProduct } });
-  }
   setRating(value: number) {
     this.rating = value;
     console.log('⭐ Selected rating:', this.rating);
   }
-  initializeCartState() {
-    const sliderNames = ["categoryTwoData", "allweeklydeals", "product", "allfeaturesproducts"];
-  
-    sliderNames.forEach((slider) => {
-      this.cartState[slider] = {
-        isAdded: [],
-        quantities: [],
-        prices: [], // ✅ Ensure prices array is always initialized
-        images: [],
-        name: [],
-        description: [],
-        category_id: [],
-        id: []
-      };
-    });
+
+  toggleVariant(variant: any, productId: number) {
+    this.selectedVariant = variant.id;
+
+    const cartItemIndex = this.cartItems.findIndex(item => item.id === productId);
+    if (cartItemIndex !== -1) {
+      const cartItem = this.cartItems[cartItemIndex];
+      cartItem.variant_id = variant.id;
+      cartItem.variant_price = variant.price; // ← add this
+      console.log('🧩 Variant added to cart item:', cartItem);
+      this.storage.set('cartItems', this.cartItems);
+    }
   }
+
+  clear(item: string) {
+    if (item === 'Addon') {
+      this.selectedAddon = null;
+
+      const productId = this.productDetails.id;
+      const cartItemIndex = this.cartItems.findIndex(item => item.id === productId);
+
+      if (cartItemIndex !== -1) {
+        const cartItem = this.cartItems[cartItemIndex];
+        cartItem.addons = []; // ✅ Clear all addons
+        this.storage.set('cartItems', this.cartItems); // ✅ Persist updated cart
+        console.log(`🧹 Cleared addons for product ID ${productId}:`, cartItem);
+      }
+    }
+
+    console.log('🛒 Cart after clearing:', this.cartItems);
+  }
+  async toggleAddon(addon: any) {
+    this.selectedAddon = addon.id;
+    console.log('selectedAddon', this.selectedAddon);
+
+    const productId = this.productDetails.id;
+    const cartItemIndex = this.cartItems.findIndex(item => item.id === productId);
+
+    if (cartItemIndex !== -1) {
+      const cartItem = this.cartItems[cartItemIndex];
+
+      // ✅ Make sure variant_id is set properly
+      cartItem.variant_id = this.selectedVariant || null;
+
+      // ✅ Only keep the newly selected addon
+      cartItem.addons = [{
+        addon_id: addon.id,
+        price: addon.price
+      }];
+
+      console.log('🧩 Updated Addons for product:', cartItem);
+      await this.storage.set('cartItems', this.cartItems);
+    }
+  }
+
   async addToCart(product: any) {
     const existingItem = this.cartItems.find(item => item.id === product.id);
-  
+
     if (existingItem) {
       existingItem.quantity += 1;
     } else {
@@ -149,27 +177,38 @@ export class ProductDetailPage implements OnInit {
         id: product.id,
         quantity: 1,
         price: product.price,
-        image: product.featured_image
+        image: product.featured_image,
+        variant_id: this.selectedVariant?.id || null,
+        variant_price: Number(this.selectedVariant?.price || '0'),
+        vendor_id: product.vendor_id,
+        addons: [],
+        title: product.name, // 👈 add name
+        subtitle: product.description,
       });
     }
     // this.showPopup();
     this.updateTotalQuantity();
     this.isAddedMap[product.id] = true;
+    this.showViewCart = true;
+    this.showVariantAndAddons = true;
     await this.storage.set('cartItems', this.cartItems);
     console.log('🛒 Added:', this.cartItems);
   }
 
   async removeFromCart(product: any) {
     const index = this.cartItems.findIndex(item => item.id === product.id);
-  
+
     if (index !== -1) {
       if (this.cartItems[index].quantity > 1) {
         this.cartItems[index].quantity -= 1;
       } else {
         this.cartItems.splice(index, 1);
         this.isAddedMap[product.id] = false;
+        this.showViewCart = false;
+        this.clear('Addon');
+        this.showVariantAndAddons = false;
       }
-  
+
       await this.storage.set('cartItems', this.cartItems);
       console.log('❌ Removed:', this.cartItems);
     }
@@ -181,67 +220,51 @@ export class ProductDetailPage implements OnInit {
     return item ? item.quantity : 0;
   }
   getTotalPrice(product: any): number {
-    const quantity = this.getQuantity(product.id);
-    return quantity * product.price;
+    const cartItem = this.cartItems.find(item => item.id === product.id);
+    if (!cartItem) return 0;
+    const quantity = cartItem.quantity || 1;
+    let total = product.price;
+
+    if (cartItem.variant_price) {
+      total = parseFloat(cartItem.variant_price);
+    }
+
+    if (cartItem.addons && cartItem.addons.length > 0) {
+      cartItem.addons.forEach((addon: { price: any; }) => {
+        total += parseFloat(addon.price);
+      });
+    }
+    return parseFloat((total * quantity).toFixed(2)); // ✅ round to 2 decimals
   }
-  updateTotalQuantity() {
+
+  async updateTotalQuantity() {
     this.totalQuantity = this.cartItems.reduce((total, item) => total + item.quantity, 0);
+    await this.storage.set('totalQuantityFromCart', this.totalQuantity);
+    this.cartService.setCartItems(this.cartItems); // add quanity gloably 
   }
+
   async loadCartFromStorage() {
     const storedCart = await this.storage.get('cartItems');
     this.cartItems = storedCart || [];
     this.updateTotalQuantity();
-  
+
     // Update isAddedMap
     this.isAddedMap = {};
+    this.showViewCart = false;
     this.cartItems.forEach(item => {
       this.isAddedMap[item.id] = true;
+      this.showViewCart = true;
+      this.showViewCart = true;
     });
-  
+
     console.log('🛒 Cart loaded from storage:', this.cartItems);
   }
-  navigateToBrands(brandID: Number){
-    // console.log('brandID--',brandID)
-    this.router.navigate(['/inner-product-page'], { queryParams: { id: brandID, type: 'brandProducts' } });
-  }
-  
- getBrandImgAndNAme(brandId: any){
-  this.apiservice.get_brand_by_brand_id(brandId).subscribe((response)=>{
-    this.relatedBrandInfo = response.productBrand;
-    console.log('brand',this.relatedBrandInfo);
- })
- }
-  async getproductDetail(){
-    const id = await this.storage.get('product_id');
-    console.log('product_id:', id);
-    this.apiservice.get_product_details(id).subscribe((response)=>{
-       this.property_detail = response.product;
-       console.log('res',this.property_detail);
-       const brandId =  response.product.brand_id;
-       this.getBrandImgAndNAme(brandId);
-      
-    })
-  }
-  getAllweeklyDeals(){
-    const userID = this.userID;
-    this.apiservice.get_all_weekly_deals(userID).subscribe((response)=>{
-      this.allweeklydeals = response.data;
-      
-    })
-  }
-  getAllCategoryRealtedBrnads(){
-    this.apiservice.get_category_realted_brnads(this.category_id).subscribe((response: any)=>{
-      this.category_realted_brands = response.productBrands;
-      console.log(this.category_realted_brands)
-    })
-  }
+
   ngAfterViewInit() {
     document.querySelectorAll('ion-accordion').forEach((accordion) => {
       (accordion as HTMLElement).style.setProperty('--color', 'black');
     });
   }
-
-
 
 }
 interface CartState {

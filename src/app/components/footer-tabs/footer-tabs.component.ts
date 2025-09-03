@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { filter, Subscription } from 'rxjs';
+import { CartService } from '../../services/cart.service';
+import { Storage } from '@ionic/storage-angular';
+
 @Component({
   selector: 'app-footer-tabs',
   templateUrl: './footer-tabs.component.html',
@@ -11,11 +14,14 @@ import { filter } from 'rxjs/operators';
   standalone: true,
   imports: [IonicModule, FormsModule, CommonModule], // Import IonicModule here
 })
-export class FooterTabsComponent  implements OnInit {
+export class FooterTabsComponent implements OnInit, OnDestroy {
 
   activeTab: string = '';
+  cartQuantity: number = 0;
+  private cartSubscription: Subscription = new Subscription();
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private cartService: CartService, private storage: Storage) {
+        this.init();
     // Detect route change and update activeTab
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
@@ -31,10 +37,31 @@ export class FooterTabsComponent  implements OnInit {
           this.activeTab = 'account';
         }
       });
+
+    // Subscribe to cart quantity updates
+    this.cartSubscription = this.cartService.cartQuantity$.subscribe(quantity => {
+      this.cartQuantity = quantity;
+      // console.log('🛒 Footer received cart quantity update:', quantity);
+    });
   }
-  ngOnInit(): void {
-    
+
+    async init() {
+    await this.storage.create();
   }
+
+  async ngOnInit(): Promise<void> {
+    // Initialize with current cart quantity
+    this.cartQuantity = this.cartService.getCurrentQuantity();
+
+  }
+
+  ngOnDestroy(): void {
+    // Clean up subscription to prevent memory leaks
+    if (this.cartSubscription) {
+      this.cartSubscription.unsubscribe();
+    }
+  }
+
   navigateToHome() {
     this.router.navigate(['/home']);
   }

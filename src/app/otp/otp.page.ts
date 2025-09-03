@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { CommonModule,Location } from '@angular/common';
 import { ApiserviceService } from '../services/apiservice.service';
+
 @Component({
   selector: 'app-otp',
   templateUrl: './otp.page.html',
@@ -23,8 +24,14 @@ export class OtpPage implements OnInit {
   UserID:any;
   savedUserAddress: any;
   addressOfUser: any[] = [];
+  is_address_saved_already: any;
+  is_new_user: any;
 
-  constructor(private router: Router, private fb: FormBuilder,private storage: Storage,private apiservice:ApiserviceService) {
+  constructor(private router: Router, 
+    private fb: FormBuilder,
+    private storage: Storage,
+    private apiservice:ApiserviceService,
+   ) {
     this.init();
 
     this.otpForm = this.fb.group({
@@ -39,7 +46,9 @@ export class OtpPage implements OnInit {
     this.phoneNumber =   await this.storage.get('phoneNumber');
     this.UserID = await this.storage.get('userID');
     this.prefix =  await this.storage.get('selectedCountryCode');
-    this.getCustomerAddress();
+    this.is_address_saved_already = await this.storage.get('is_address_saved_already')
+    this.is_new_user = await this.storage.get('is_new_user');
+    // this.getCustomerAddress();
     if (this.phoneNumber && this.prefix) {
       this.startCountdown();
     }
@@ -78,31 +87,7 @@ export class OtpPage implements OnInit {
     this.startCountdown();
   }
 
-  async getCustomerAddress(){
-    console.log('addess api run')
-    const user_id =  this.UserID;
-    this.apiservice.get_User_address(user_id).subscribe(async (response)=>{
-      // console.log('get address',response)
-    
-      if(response.success === true){
-        this.savedUserAddress = 1;
-        this.addressOfUser = response.address;
-        const addressType = response.address?.type;
 
-        const typeText = 
-          addressType === 1 ? 'Home' :
-          addressType === 2 ? 'Office' :
-          addressType === 3 ? 'Hotel' :
-          'Other';
-  
-        await this.storage.set('selectedTypeText', typeText);
-        console.log('get address',response)
-
-      }else{
-        this.savedUserAddress = 0;
-      }
-    })
-  }
   moveFocus(event: any, nextElementId: string | null, prevElementId: string | null) {
     if (event.inputType === "deleteContentBackward" && prevElementId) {
       // Move focus to the previous input on backspace
@@ -127,11 +112,16 @@ export class OtpPage implements OnInit {
       return;
     }
     console.log('addresvariable',this.savedUserAddress)
-    if(this.savedUserAddress === 1){
-      this.router.navigate(['/home']);
-    }else{
+    if(this.is_new_user == true){
       this.router.navigate(['/location']);
+    }else{
+      this.router.navigate(['/home']);
     }
+    // if(this.is_address_saved_already == true){
+    //   this.router.navigate(['/home']);
+    // }else{
+    //   this.router.navigate(['/location']);
+    // }
     // Add OTP validation here if needed
    
   }

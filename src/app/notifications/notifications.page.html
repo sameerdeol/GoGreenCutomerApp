@@ -1,0 +1,100 @@
+<ion-content [fullscreen]="true">
+  <div class="page_outer_div ">
+
+    <div class="d_flex align_items_center justify-content-between">
+      <div class="left_arrow_div"> <img src="assets/left-arrow-green.svg" (click)="goback()"></div>
+      <p class="white_bg_header">Notifications</p>
+      <div class="header_search_img ">
+      </div>
+    </div>
+
+    <div class="notification-outer-div mt-5">
+
+  
+    <div class="section-heading ion-margin-top">
+      <h6 class="section-title">Today</h6>
+      <div class="section-line"></div>
+    </div>
+
+    <!-- Highlighted Notification (Dinner Reminder) -->
+    <ion-card color="success" class="custom-highlight-card">
+      <ion-item lines="none" class="bg-notification-green">
+        <ion-icon name="notifications" slot="start"></ion-icon>
+
+        <ion-label>
+          <div class="label-header">
+            <h2>Reminder for your Dinner</h2>
+            <ion-note class="note-top">9min ago</ion-note>
+          </div>
+          <p class="text_gogreen">
+            It’s time for your dinner! Take a break, enjoy your meal, and recharge.
+          </p>
+        </ion-label>
+      </ion-item>
+    </ion-card>
+
+    <ion-item class="notification-item bg-green" lines="none">
+      <ion-avatar slot="start">
+        <ion-icon name="notifications-outline" class="icon-avatar"></ion-icon>
+      </ion-avatar>
+
+      <ion-label>
+        <div class="label-header">
+          <h2>Reminder for your Dinner</h2>
+          <ion-note class="note-top">9min ago</ion-note>
+        </div>
+        <p>It’s time for your dinner! Take a break, enjoy your meal, and recharge.</p>
+      </ion-label>
+    </ion-item>
+
+    <ion-item class="notification-item bg-green" lines="none">
+      <ion-avatar slot="start">
+        <ion-icon name="notifications-outline" class="icon-avatar"></ion-icon>
+      </ion-avatar>
+
+      <ion-label>
+        <div class="label-header">
+          <h2>Reminder for your Dinner</h2>
+          <ion-note class="note-top">9min ago</ion-note>
+        </div>
+        <p>It’s time for your dinner! Take a break, enjoy your meal, and recharge.</p>
+      </ion-label>
+    </ion-item>
+
+    <ion-item class="notification-item bg-green" lines="none">
+      <ion-avatar slot="start">
+        <ion-icon name="notifications-outline" class="icon-avatar"></ion-icon>
+      </ion-avatar>
+
+      <ion-label>
+        <div class="label-header">
+          <h2>Reminder for your Craving</h2>
+          <ion-note class="note-top">9min ago</ion-note>
+        </div>
+        <p>Craving alert! Time to treat yourself to something delicious — you’ve earned it!</p>
+      </ion-label>
+    </ion-item>
+
+    <!-- Yesterday Section -->
+    <div class="section-heading ion-margin-top">
+      <h6 class="section-title">Yesterday</h6>
+      <div class="section-line"></div>
+    </div>
+
+    <ion-item class="notification-item bg-green" lines="none">
+      <ion-avatar slot="start">
+        <ion-icon name="notifications-outline" class="icon-avatar"></ion-icon>
+      </ion-avatar>
+
+      <ion-label>
+        <div class="label-header">
+          <h2>Your Order has been shipped</h2>
+          <ion-note class="note-top">9min ago</ion-note>
+        </div>
+        <p>It’s on its way — get ready to receive your package soon!</p>
+      </ion-label>
+    </ion-item>
+
+    </div>
+  </div>
+</ion-content>

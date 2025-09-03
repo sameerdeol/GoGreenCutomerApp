@@ -112,7 +112,7 @@
     <div class="col-12">
       <div class="footer_proceed_btn">
         <button [disabled]="loading" (click)="navigateTothankyoupage()">
-          <ng-container *ngIf="!loading; else loadingTpl">Proceed To Buy</ng-container>
+          <ng-container *ngIf="!loading; else loadingTpl">Confirm Order</ng-container>
           <ng-template #loadingTpl>
             <span class="loader"></span> Processing...
           </ng-template>

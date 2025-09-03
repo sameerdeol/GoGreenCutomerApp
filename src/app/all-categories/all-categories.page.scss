@@ -2,32 +2,181 @@ ion-content{
     --background: white;
   }
 
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInUp 0.6s ease-in-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
   .location_search {
-    // position: absolute;
-    // width: 90%;
-    // top: 10%;
-    // left: 5%;
-    color: black;
-    margin-top: 12px;
+      height: 45px;
+      .search_bar {
+          width: 100%;
+          margin: auto;
+          padding: 10px 10px 10px 40px;
+          border-radius: 5px;
+          overflow: hidden;
+          background: #f3f3f3;
+          color: black;
+          border: none;
+          transition: all 0.3s ease;
+          box-shadow: none;
+          
+          &:focus {
+            outline: none;
+            box-shadow: none !important;
+          }
+          
+          &::placeholder {
+            color: transparent;
+          }
+      }
+      .input-wrapper {
+        position: relative;
+        width: 100%;
+        height: 45px;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          .search_bar {
+            border-color: #088b46;
+            box-shadow: 0 0 0 1px rgba(8, 139, 70, 0.2), 2px 2px 2px #b1adad;
+          }
+          
+          .search-icon {
+            transform: scale(1.05);
+          }
+        }
+        
+        &:focus-within {
+          .fake-placeholder {
+            color: #088b46;
+            transform: translateY(-50%) scale(0.95);
+          }
+          
+          .search_bar {
+            border-color: #088b46;
+            box-shadow: 0 0 0 2px rgba(8, 139, 70, 0.1);
+          }
+        }
+      }
+      .search-result-dropdown{
+        padding-bottom: 80px;
+                .fixed_width {
+                      width: 60px;
+                      height: 60px;
+                      border: 1px solid #cdcdcd;
+                      border-radius: 5px;
+                      background-color: #f3f3f3;
+                      display: flex;                /* Centering helper */
+                      justify-content: center;     /* Horizontal center */
+                      align-items: center;         /* Vertical center */
+                      overflow: hidden; 
+                                  img {
+                                    max-width: 100px;
+                                    max-height: 100px;
+                                    object-fit: contain;        
+                                  }           
+                    }
+
+                  
+                    p{
+                      white-space: nowrap;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                      width: 100%;
+                      color: #5a5959;
+                      font-size: 16px;
+                      font-weight: 600;
+                      text-transform: capitalize;
+                    }
+      }
+      .search-icon {
+        position: relative;
+        color: #088b46 !important;
+        bottom: 32px;
+        left: 4%;
+        font-size: 21px;
+        transition: all 0.3s ease;
+        
+        .input-wrapper:focus-within & {
+          color: #088b46 !important;
+          transform: scale(1.1);
+        }
+      }
+    } 
+.empty_search_box {
+  display: flex;
+  flex-direction: column;     /* Stack icon and text vertically */
+  justify-content: center;    /* Vertical center */
+  align-items: center;        /* Horizontal center */
+  text-align: center;
+  color: #6e6e6e;
+  height: 100%;               /* Take full height of parent */
+  min-height: 300px;          /* Optional: fallback height */
 }
-.location_search .search_bar {
-    width: 100%;
-    margin: auto;
-    padding: 9px;
-    border-radius: 26px;
-    overflow: hidden;
-    background: white;
-    color: black;
-    border: 1px solid gray;
-    padding-left: 47px;
-    box-shadow: 2px 2px 2px #b1adad;
+
+.empty_search_box ion-icon {
+  font-size: 100px;           /* Reduce if 200px is too large */
+  color: #6e6e6e;
+  margin-bottom: 10px;        /* Space between icon and text */
 }
-// ion-icon.search-icon.ios.hydrated {
-//     position: relative;
-//     color: #088b46;
-//     bottom: 30px;
-//     left: 5%;
-// }
+.fake-placeholder {
+  position: absolute;
+  left: 50px;
+  top: 23%;
+  transform: translateY(-50%);
+  color: #999;
+  pointer-events: auto; // Changed to auto so it can be clicked
+  z-index: 2;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  cursor: text; // Show text cursor to indicate it's clickable
+  
+  // Animate.css integration
+  &.animate__fadeInUp {
+    animation-duration: 0.6s;
+    animation-fill-mode: both;
+  }
+  
+  &.animate__fadeOutUp {
+    animation-duration: 0.4s;
+    animation-fill-mode: both;
+  }
+  
+  // Custom animation for smooth text transitions
+  &.animate__fadeInUp {
+    animation-name: fadeInUp;
+  }
+  
+  &.animate__fadeOutUp {
+    animation-name: fadeOutUp;
+  }
+  
+  .typing-cursor {
+    animation: blink 1s infinite;
+    color: #088b46;
+    font-weight: bold;
+  }
+  
+  // Hover effect to indicate it's clickable
+  &:hover {
+    color: #088b46;
+    transform: translateY(-50%) scale(1.02);
+  }
+} 
 ion-icon.ios.hydrated {
     color: black;
 }
@@ -271,3 +420,58 @@ p.white_bg_header {
 }
 
 }
+
+ .Recomended_vendor_div{
+      margin-top: 10px;
+          .slide-box{
+                  text-align: center;
+                  width: 100%; 
+                  border-radius: 5px;
+                  border: 2px solid #ededed;
+                  // background: #f1f1f1;
+                 
+                  .recomended_slider_div{
+                        
+                        padding: 6px;
+                        border-radius: 5px;
+                             img{
+                                  border-radius: 5px;
+                                  width: 100px;
+                                  height: 90px;
+                                  object-fit: cover;
+                                }
+                  }
+                   
+                    .recommended_store_name{
+                      text-transform: capitalize;
+                      padding: 3px !important;
+                      font-size: 13px;
+                      color: #000000;     
+                      margin-bottom: 0;
+                      white-space: nowrap;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                      width: 100%;
+                      text-align: justify;
+                    }
+                   
+                    .distance{
+                      font-size: 12px;
+                      color: #5a5959;
+                    }
+          }
+          h4{
+              font-size: 14px;
+              color: #000000;
+              font-weight: 600;
+              margin-bottom: 10px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              width: 100%;
+              text-align: justify;
+              text-transform: capitalize;
+              border-left: 4px solid green;
+              padding-left: 9px;
+          }
+    }

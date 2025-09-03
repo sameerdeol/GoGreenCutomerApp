@@ -1,0 +1,70 @@
+<ion-header>
+  <div class="header_div">
+    <ion-buttons slot="start">
+      <ion-button  class="clear" (click)="clearAll()">Clear All</ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button class="Apply" (click)="applyFilters()">Apply</ion-button>
+    </ion-buttons>
+  </div>
+
+
+ 
+</ion-header>
+
+<ion-content>
+  <!-- PRICE -->
+  <div class="filter-section">
+    <h3>Price</h3>
+    <div class="filter-options">
+      <button *ngFor="let option of priceOptions" 
+        [ngClass]="{'selected': selectedPrice === option}"
+        (click)="toggleSelection('price', option)">
+        <span>{{ option }}</span>
+        <ion-icon *ngIf="selectedPrice === option" name="close" class="filter-close" (click)="removeSelection($event, 'price')"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- DISCOUNTS -->
+  <div class="filter-section">
+    <h3>Discounts</h3>
+    <div class="filter-options">
+      <button *ngFor="let option of discountOptions" 
+        [ngClass]="{'selected': selectedDiscount === option}"
+        (click)="toggleSelection('discount', option)">
+        <span>{{ option }}</span>
+        <ion-icon *ngIf="selectedDiscount === option" name="close" class="filter-close" (click)="removeSelection($event, 'discount')"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- FAST DELIVERY -->
+  <div class="filter-section">
+    <h3>Fast Delivery</h3>
+    <div class="filter-options">
+      <button *ngFor="let option of deliveryOptions" 
+        [ngClass]="{'selected': selectedDelivery === option}"
+        (click)="toggleSelection('delivery', option)">
+        <span>{{ option }}</span>
+        <ion-icon *ngIf="selectedDelivery === option" name="close" class="filter-close" (click)="removeSelection($event, 'delivery')"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- RATING -->
+  <div class="filter-section">
+    <h3>Rating</h3>
+    <div class="filter-options">
+      <button *ngFor="let option of ratingOptions" 
+        [ngClass]="{'selected': selectedRating === option}"
+        (click)="toggleSelection('rating', option)">
+        <span>{{ option }}</span>
+        <ion-icon *ngIf="selectedRating === option" name="close" class="filter-close" (click)="removeSelection($event, 'rating')"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+</ion-content>
+
+

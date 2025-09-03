@@ -1,3 +1,6 @@
+@use 'src/theme/variables' as vars;
+@use 'src/theme/mixins' as mix;
+
 .welcome_second {
     height: 100%;
     background-image: url(../../assets/welcome/white_ellipse_square.webp);
@@ -34,7 +37,7 @@
     text-transform: capitalize;
     margin-top: 13px;
     border-radius: 35px;
-    background-color: #088B46;
+    background-color: vars.$primary-color;
 }
 .login_welcome a {
     margin-top: 15px;
@@ -51,7 +54,7 @@
     margin-top: 15px;
     font-family: opensans_semibold;
     text-decoration: none;
-    color: #088b46;
+    color: vars.$primary-color;
     font-size: 14px;
 }
 .welcome_footer {

@@ -26,6 +26,7 @@ import {
   paperPlaneSharp,
   archiveSharp
 } from 'ionicons/icons';
+import { FormsModule } from '@angular/forms';
  
 addIcons({
   'bookmark-sharp': bookmarkSharp,
@@ -43,13 +44,14 @@ addIcons({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(),
+    IonicModule.forRoot({ mode: 'md' }),
     IonicStorageModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireMessagingModule,
     AngularFireAuthModule,
+    FormsModule
     
   ],
   providers: [

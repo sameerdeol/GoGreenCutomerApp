@@ -15,21 +15,59 @@
             <div class="login_welcome d_flex justify_content_center">
                 <div class="welcome_form" >
         
-                  <div class="phone-input">
-                    <select [(ngModel)]="selectedCountryCode" class="country-code-dropdown">
-                      <option *ngFor="let code of countryCodes" [value]="code">{{ code }}</option>
-                    </select>
                   
-                    <input type="tel" placeholder="Enter phone number" [(ngModel)]="phoneNumber" maxlength="10">
-                  
-                    <span class="clear-icon" *ngIf="phoneNumber" (click)="clearNumber()">&#x2715;</span>
-                  </div>                                              
-                    <button class="welcome_submit" (click)="Login()">Continue</button>
+                                                         
+                  <!-- <ion-item class="phone-input ion-no-padding" lines="none">
+                    <ion-select
+                      interface="popover"
+                      [(ngModel)]="selectedCountryCode"
+                      class="country-code-select"
+                      placeholder="+1"
+                    >
+                      <ion-select-option *ngFor="let code of countryCodes" [value]="code">
+                        {{ code }}
+                      </ion-select-option>
+                    </ion-select>
+
+                    <ion-input
+                      type="tel"
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                      [(ngModel)]="phoneNumber"
+                      maxlength="10"
+                      placeholder="Enter phone number"
+                      clearInput="true"
+                    ></ion-input>
+                  </ion-item> -->
+                <div class="phone-input-container">
+                    <div class="prefix-box">
+                      <ion-select [(ngModel)]="selectedCountryCode" interface="popover">
+                        <ion-select-option *ngFor="let code of countryCodes" [value]="code">
+                          {{ code }}
+                        </ion-select-option>
+                      </ion-select>
+                    </div>
+
+                    <input
+                      type="tel"
+                      [(ngModel)]="phoneNumber"
+                      class="phone-number-input"
+                      placeholder="Enter Phone Number"
+                       maxlength="10"
+                    /> 
+
+                    <ion-icon
+                      *ngIf="phoneNumber"
+                      name="close-circle"
+                      class="clear-icon"
+                      (click)="phoneNumber = ''"
+                    ></ion-icon>
+                  </div>
+
+                  <button class="welcome_submit" (click)="Login()">Continue</button>
                 </div>
             </div>
-            <div class="sign_up_welcome d_flex justify_content_center">
-              
-            </div>
+    
             <div class="welcome_footer">
               <p class="text_grey opensans_semibold text_center">
                 By logging in or registering, you agree to our <br>

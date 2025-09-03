@@ -1,315 +1,120 @@
-
 <ion-content [fullscreen]="true">
-  <div class="page_outer_div">
-  <!-- <div class="row">
-    <div class="col-4 left_arrow_img_outer_div">
-      <img src="assets/green-left-arrow.svg" (click)="goBack()">
-    </div>
-    <div class="col-4 header_heading_outer">
-      <p class="header_heading">
-        Cart
-      </p>
-    </div>
+  <app-common-header></app-common-header>
 
-  </div> -->
-  <div class="row header_border">
-    <div class="col-4 left_arrow_img_outer_div">
-      <img src="assets/green-left-arrow.svg" (click)="goBack()">
-    </div>
-    <div class="col-4 header_heading_outer">
-      <p class="header_heading">
-        Cart
-      </p>
-    </div>
-    <!-- <div class="col-4"></div> -->
-  </div>
-  <div class="row border_bottom">
-    <div class="col-4 color_black text_font font_weight">Total Amount</div>
-    <div class="col-4 color_black text_font font_weight" >{{currency}}{{ totalAmount }}</div>
-    <div class="page_outer_div">
-      <div class="display_flex align_flex_start">
-        <img class="round_check_img" src="assets/round_check.svg" alt="">
-        <p class="Sustainable_heading text_font">Sustainable & Super Fast – Go Green Delivers in No Time!<br><span class="color_black margin_0 text_font">Quick, reliable, and eco-conscious—experience the future of delivery today</span> </p>
-       </div>
-      <div>
-        
+  <div class="page_outer_div">
+    <div class="row border_bottom">
+      <div class="page_outer_div">
+        <div class="display_flex align_flex_start">
+          <img class="round_check_img" src="assets/round_check.svg" alt="">
+          <p class="Sustainable_heading text_font">
+            Sustainable & Super Fast – Go Green Delivers in No Time!<br>
+            <span class="color_black margin_0 text_font">
+              Quick, reliable, and eco-conscious—experience the future of delivery today
+            </span>
+          </p>
+        </div>
+      </div>
+      <div class="proceed_to_buy_header_btn"  *ngIf="cartItems.length > 0">
+        <button (click)="navigateToCheckout()">Proceed To Buy</button>
       </div>
     </div>
-   
-    <div class="proceed_to_buy_header_btn">
-      <button (click)="navigateToCheckout()">Procced To Buy</button>
-    </div>
   </div>
-  
-  <div class="outer_div_padding">
-    <label>
-      <input
-      type="checkbox"
-      [(ngModel)]="selectAll"
-      (change)="toggleSelectAll()"  
-    />
-      Select All
-    </label>
-    
-    <div class="view_cart_item_div" *ngFor="let item of cartItems">
-      <input
-      type="checkbox"
-      [(ngModel)]="selectedItemMap[item.id]"
-      (change)="onItemCheckboxChange(item)"
-    />
-    
-      <div class="view_cart_outer_div">
-        <div class="display_flex_only">
-          <img [src]="baseUrl + item.image" alt="" class="mr-2">
-          <div>
-            <p>{{ item.title }}</p>
-            <p>{{ item.subtitle }}</p>
-            <p>{{currency}}{{ item.price }}</p>
-          </div>
-        </div>
-    
-        <div class="row">
-          <div class="col-4">
-            <div class="custm_padding">
-              <button class="add_to_cart_btn_bg2" >
+
+  <!-- ✅ Show cart details only if items exist -->
+  <div *ngIf="cartItems.length > 0; else showemptycart">
+    <div class="outer_div_padding">
+      <label>
+        <input type="checkbox" [(ngModel)]="selectAll" (change)="toggleSelectAll()" />
+        Select All
+      </label>
+
+      <div class="view_cart_item_div" *ngFor="let item of cartItems">
+        <input type="checkbox" [(ngModel)]="selectedItemMap[item.id]" (change)="onItemCheckboxChange(item)" />
+
+        <div class="view_cart_outer_div">
+          <div class="display_flex_only">
+            <div class="checkout_item_outer_div">
+              <img [src]="item.image" alt="" class="mb-2">
+              <button class="add_to_cart_btn_bg2">
                 <span class="remove_item_btn" (click)="removeFromCart(item)">-</span>
                 {{ getQuantity(item.id) }}
                 <span class="add_item_btn" (click)="addToCart(item)">+</span>
               </button>
             </div>
-          </div>
 
-          <div class="col-4 save_later_btn ">
-            <button (click)="deleteItemFromCart(item)">Delete</button>
+            <div>
+              <p>{{ item.title }}</p>
+              <p class="description_text">{{ item.subtitle }}</p>
+              <p class="font_weight">{{currency}}{{ getItemTotal(item) }}</p>
+            </div>
           </div>
-
-          <div class="col-4 save_later_btn padding_0">
-            <button (click)="saveForLater(item)">Whishlist</button>
-          </div>
-
         </div>
       </div>
     </div>
-  
-    <ng-template #emptyCart>
-      <p>Your cart is empty.</p>
-    </ng-template>
-  </div>
- 
- 
-</div>
-<div class="payment_details_div primary_font_size">
-  <div class="payment_detail_btn">
-    <div class="text_align_center">Payment Details</div>
-  </div>
-  <div class="row paddingtop_20 mt-2">
-     <div class="col-6">Items</div>
-     <div class="col-6 text_end">{{currency}}{{totalAmount}}</div>
-  </div>
-  <div class="row mt-2">
-    <div class="col-6">
-      <div class="display_flex_only margin_bottom_2">
-        <input type="radio"
-        name="delivery" 
-        [(ngModel)]="selectedDeliveryOption" 
-        [value]="'Fast'" 
-        (change)="updateTotalWithDelivery()" class="custom-radio" >
-        <label class="font_weight">Fast Dilevery</label>  
-      </div>     
-    </div>
-    <div class="col-6 text_end">{{currency}}3</div>
- </div>
- <div class="row mt-2">
-  <div class="col-6">
-    <div class="display_flex_only margin_bottom_2">
-      <input type="radio" name="delivery" 
-      [(ngModel)]="selectedDeliveryOption" 
-      [value]="'Normal'" 
-      (change)="updateTotalWithDelivery()" class="custom-radio">
-      <label class="font_weight">Normal Dilevery</label>  
-    </div>
-    
-  </div>
-  <div class="col-6 text_end">{{currency}}0</div>
-</div>
- <!-- <div class="row">
-  <div class="col-6">Coupon Code</div>
-  <div class="col-6 text_end">WE3455GH</div>
-</div> -->
-<div class="row mt-2">
-<div class="col-6">Total</div>
-<div class="col-6 text_end">{{currency}}{{ finalTotal.toFixed(2) }}</div>
-</div>
-<div class="row">
-   <div class="col-12 text_end">
-      <button (click)="navigateToCheckout()" class="bottom_proceed_to_buy">Proceed To Buy</button>
-   </div>
-</div>
-</div>
 
-
-
-
-<div class="page_outer_div">
-  <div class="features_product_div">
-    <div class="slider_heading_div">
-      <h3>Featured Items You May Like</h3>
-      <p (click)="navigateToinerAllFeaturesProducts(allfeaturesproducts[0].category_id, 'featuresProduct')">See all</p>
-    </div>
-  
-    <swiper-container class="mySwiper" slides-per-view="3" space-between="5" [breakpoints]="{
-      '640': { 'slidesPerView': 5, 'spaceBetween': 10 },
-      '768': { 'slidesPerView': 5, 'spaceBetween': 10 },
-      '1024': { 'slidesPerView': 5, 'spaceBetween': 10 }
-    }">
-      <swiper-slide *ngFor="let features_product of allfeaturesproducts; let i = index">
-        <div class="slide-content slide_div slide_content">
-          <div class="whishlist_img_div">
-            <!-- <img src="assets/whishlist.svg"> -->
-            <button
-            class="heart-button"
-            (click)="toggleFavoritefeatured(features_product,features_product.id, features_product.is_favourite)"
-          >
-          <img 
-          [src]="features_product.is_favourite === 1 ? 'assets/heart-filled.svg' : 'assets/heart-empty.svg'" 
-          alt="Favorite" 
-          class="heart-img"
-        />
-          </button>
-          </div>
-          <div class="image_wrapper" (click)="navigateToproduct(features_product.id)" >
-            <img  [src]="baseUrl+features_product.featured_image" alt="">     
-          </div>
-          
-          <div class="product_desc display_flex">
-            <div class="width_50">
-              <p class="product_heading_desc">{{features_product.title}}</p>
-              <p class="product_sub_heading_desc">{{features_product.subtitle}}</p>
-            </div>
-        
-            <div class="price_outer_div">
-              <p class="price_p">{{currency}}{{features_product.price}}</p>
-          
-            </div>
-          </div>
-          <div class="col-12 custm_padding" *ngIf="!isAddedMap[features_product.id]; else quantityControls">
-            <button class="add_to_cart_btn_bg" (click)="addToCart(features_product)">
-              Add To Cart
-            </button>
-          </div>
-          
-          <ng-template #quantityControls>
-            <div class="col-12 custm_padding">
-              <button class="add_to_cart_btn_bg2">
-                <span class="remove_item_btn" (click)="removeFromCart(features_product)">-</span>
-                {{ getQuantity(features_product.id) }}
-                <span class="add_item_btn" (click)="addToCart(features_product)">+</span>
-              </button>
-            </div>
-          </ng-template>
-          
-        </div>
-      </swiper-slide> 
-    </swiper-container>
-  
-    <!-- Skeleton for Featured -->
-   
-    
-  </div>
-
-  <div class="features_product_div" *ngIf="allweeklydeals?.length>0">
-    <div class="slider_heading_div">
-      <h3>Deals of the Week</h3>
-      <p (click)="navigateToinerAllDeals(allweeklydeals[0].category_id, 'dealsProduct')">See all</p>
-    </div>
-    <swiper-container class="mySwiper" slides-per-view="3" space-between="5" [breakpoints]="{
-      '640': { 'slidesPerView': 5, 'spaceBetween': 10 },
-      '768': { 'slidesPerView': 5, 'spaceBetween': 10 },
-      '1024': { 'slidesPerView': 5, 'spaceBetween': 10 }
-    }">
-      <swiper-slide *ngFor="let deals of allweeklydeals; let i = index">
-        <div class="slide-content slide_div slide_content">
-          <div class="whishlist_img_div">
-            <!-- <img src="assets/whishlist.svg"> -->
-            <button
-            class="heart-button"
-            (click)="toggleFavoritefeatured(deals,deals.id,deals.is_favourite)"
-          >
-          <img 
-          [src]="deals.is_favourite === 1 ? 'assets/heart-filled.svg' : 'assets/heart-empty.svg'" 
-          alt="Favorite" 
-          class="heart-img"
-        />
-          </button>
-          </div>
-          <div class="image_wrapper" (click)="navigateToproduct(deals.id)" >
-            <img [src]="baseUrl + deals.featured_image" alt="">
-          </div>
-          <div class="product_desc display_flex">
-            <div class="width_50">
-              <p class="product_heading_desc">{{deals.title}}</p>
-              <p class="product_sub_heading_desc">{{deals.subtitle}}</p>
-            </div>
-        
-            <div class="price_outer_div">
-              <p class="price_p">{{currency}}{{deals.price}}</p>
-              
-              <!-- "Add to Cart" Button -->
-             
-            </div>
-          </div>
-          <div class="col-12 custm_padding" *ngIf="!isAddedMap[deals.id]; else quantityControls">
-            <button class="add_to_cart_btn_bg" (click)="addToCart(deals)">
-              Add To Cart
-            </button>
-          </div>
-          
-          <ng-template #quantityControls>
-            <div class="col-12 custm_padding">
-              <button class="add_to_cart_btn_bg2">
-                <span class="remove_item_btn" (click)="removeFromCart(deals)">-</span>
-                {{ getQuantity(deals.id) }}
-                <span class="add_item_btn" (click)="addToCart(deals)">+</span>
-              </button>
-            </div>
-          </ng-template>
+    <!-- Payment Details -->
+    <div class="payment_details_div primary_font_size">
+      <div class="payment_detail_btn">
+        <div class="text_align_center">Payment Details</div>
+      </div>
       
-        </div>
-      </swiper-slide>
-    </swiper-container>
 
- 
-    
+      <div class="row paddingtop_20 mt-2">
+        <div class="col-6 font-weight-bold">Total</div>
+        <div class="col-6 text_end">{{currency}}{{getCartTotal()}}</div>
+      </div>
+
+      <!-- <div class="row mt-2">
+        <div class="col-6 font-weight-bold">Total</div>
+        <div class="col-6 text_end font-weight-bold">{{currency}}{{ getCartTotal() }}</div>
+      </div> -->
+
+        <div class="row mt-2">
+        <div class="col-6">
+          <div class="display_flex_only margin_bottom_2">
+            <input type="radio" name="delivery" [(ngModel)]="selectedDeliveryOption" [value]="'Fast'"
+              (change)="updateTotalWithDelivery()" class="custom-radio">
+            <label class="font_weight">Fast Delivery</label>
+          </div>
+        </div>
+        <div class="col-6 text_end">{{currency}}3</div>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-6">
+          <div class="display_flex_only margin_bottom_2">
+            <input type="radio" name="delivery" [(ngModel)]="selectedDeliveryOption" [value]="'Normal'"
+              (change)="updateTotalWithDelivery()" class="custom-radio">
+            <label class="font_weight">Normal Delivery</label>
+          </div>
+        </div>
+        <div class="col-6 text_end">{{currency}}0</div>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-6 font-weight-bold">Total Bill</div>
+        <div class="col-6 text_end font-weight-bold">{{currency}}{{ getTotalPrice() }}</div>
+      </div>
+      <div class="row">
+        <div class="col-12 text_end">
+          <button (click)="navigateToCheckout()" class="bottom_proceed_to_buy">Proceed To Buy</button>
+        </div>
+      </div>
+    </div>
   </div>
 
-</div>
+  <!-- Empty cart state -->
+  <ng-template #showemptycart>
+    <div class="empty-cart-container animate__animated animate__heartBeat ion-padding">
+      <img src="assets/empty-cart.png" alt="Empty Cart" class="empty-cart-image" />
+      <p>Your cart is empty</p>
+    </div>
+    <div class="start_shopping" (click)="goBack()">
+     <ion-icon name="cart"></ion-icon> 
+     <p>Start Shopping</p>
+    </div>
+  </ng-template>
 
-  <!-- <div class="location_search">
-    <input class="search_bar" type="search" placeholder="Search your product..">
-    <ion-icon class="search-icon" name="search-outline"></ion-icon>
-  </div> -->
-  <!-- <div class="page_outer_div"> -->
-    <!-- <div class="location_search">
-      <input class="search_bar" type="search" placeholder="Search your product..">
-      <i class="fa-solid fa-magnifying-glass search-icon forproducts"></i>
-  </div> -->
+</ion-content>
 
-
-
-
-
-
-
-  
-
-
-
-  <!-- </div> -->
- 
-
-  
-  
- </ion-content>
- 
- <app-footer-tabs></app-footer-tabs>
- 
+<app-footer-tabs></app-footer-tabs>

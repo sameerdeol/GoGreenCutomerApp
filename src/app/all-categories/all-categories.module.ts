@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { AllCategoriesPageRoutingModule } from './all-categories-routing.module';
 
 import { AllCategoriesPage } from './all-categories.page';
+import { CommonHeaderComponent } from '../components/common-header/common-header.component';
 
 
 @NgModule({
@@ -15,7 +16,7 @@ import { AllCategoriesPage } from './all-categories.page';
     FormsModule,
     IonicModule,
     AllCategoriesPageRoutingModule,
-
+    CommonHeaderComponent
   ],
   
   // declarations: [AllCategoriesPage]

@@ -1,0 +1,90 @@
+
+
+<ion-content [fullscreen]="true">
+  <app-common-header></app-common-header>
+  <div class="page_outer_div">
+    <div class="filter_header">
+      <swiper-container class="mySwiper" slides-per-view="2.5" space-between="5" autoplay="false" [breakpoints]="{
+        '640': { 'slidesPerView': 5, 'spaceBetween': 5 },
+        '768': { 'slidesPerView': 5, 'spaceBetween': 5 },
+        '1024': { 'slidesPerView': 5, 'spaceBetween': 5 }
+      }">
+
+        <!-- Dynamic Filter Slides -->
+        <swiper-slide *ngFor="let filter of filters" (click)="OnFilterClick(filter)">
+          <div class="slide-content filter_slide" [class.active]="selectedFilter === filter">
+            <span>{{ filter }}</span>
+          </div>
+        </swiper-slide>
+      </swiper-container>
+
+    </div>
+      <ion-card *ngFor="let order of Orders" class="order_card">
+          <!-- Your Existing Header -->
+        <ion-card-header class="card_header">
+          
+          <div class="header_inner_div">
+          <ion-card-subtitle>{{order.order_uid}}</ion-card-subtitle>
+          <div class="order_status" >Shipped</div>
+          </div>
+        </ion-card-header>
+        <!-- Product Image & Name Row -->
+        <div class="order_top_row">
+          
+          <!-- Single Product -->
+          <ng-container *ngIf="order.products.length === 1">
+            <img [src]="order.products[0].featured_image"
+                alt="{{ order.products[0].product_name }}"
+                class="single-product-image" />
+          </ng-container>
+
+          <!-- Multiple Products -->
+          <ng-container *ngIf="order.products.length > 1">
+            <div class="image_grid_2col">
+              <!-- First image -->
+              <img [src]="order.products[0].featured_image"
+                  alt="{{ order.products[0].product_name }}"
+                  class="grid-image" />
+
+              <!-- Second image with overlay if more than 2 -->
+              <div class="image_wrapper">
+                <img [src]="order.products[1].featured_image"
+                    alt="{{ order.products[1].product_name }}"
+                    class="grid-image" />
+                <div class="extra_count" *ngIf="order.products.length > 2">
+                  +{{ order.products.length - 2 }}
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- Product Info -->
+          <div class="product_info">
+            <div class="product_name">{{ order.products[0].product_name }}</div>
+            <div class="order_meta">
+              {{ order.products.length }} items • Ordered {{ order.created_at | date:'M/d/yyyy' }}
+            </div>
+            <div class="order_price">${{ order.total_price }}</div>
+          </div>
+          
+        </div>
+
+
+
+      
+
+        <!-- Your Existing Content -->
+        <!-- <ion-card-content>
+          {{ order.products[0].product_name }}
+        </ion-card-content> -->
+
+        <!-- Your Existing Footer -->
+        <div class="card_footer">
+          <div class="footer_btn" (click)="onClickViewDetails(order)">View Details</div>
+          <div class="active_footer_btn">Buy Again</div>
+        </div>
+
+      </ion-card>
+
+  </div>
+</ion-content>

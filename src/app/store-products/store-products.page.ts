@@ -1,162 +1,416 @@
-import { SubCategoriesPage } from './../sub-categories/sub-categories.page';
+
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ModalController } from '@ionic/angular';
-import { HeaderComponent } from '../components/header/header.component';
-import { CommonModule,Location } from '@angular/common';
-import { register } from 'swiper/element/bundle';
-import { FooterTabsComponent } from '../components/footer-tabs/footer-tabs.component';
-import { HttpClient } from '@angular/common/http';
+import { CommonModule, Location } from '@angular/common';
+import { SearchModalComponent } from '../components/search-modal/search-modal.component';
 import { ApiserviceService } from '../services/apiservice.service';
+import { CartService } from '../services/cart.service';
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
 import { Storage } from '@ionic/storage-angular';
-
+import { Subscription } from 'rxjs';
+import { FilterModalComponent } from '../components/filter-modal/filter-modal.component';
+import { toggleFavoritefeatured } from '../utils/utils';
+import { Share } from '@capacitor/share';
 @Component({
   selector: 'app-store-products',
   templateUrl: './store-products.page.html',
   styleUrls: ['./store-products.page.scss'],
   standalone: true,
-  imports: [IonicModule, FormsModule, CommonModule, FooterTabsComponent], 
+  imports: [IonicModule, FormsModule, CommonModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class StoreProductsPage implements OnInit {
 
-  allProducts: any[]=[];
-  baseUrl = environment.baseurl;
-  isAddedMap: { [key: string]: boolean } = {}; 
+  allProducts: any[] = [];
+  isAddedMap: { [key: string]: boolean } = {};
   totalQuantity: number = 0;
   totalAmount: number = 0;
   cartItems: any[] = [];
-  showCartPopup: boolean = false;
-  isSlidingOut = false;
-
+  vendorDetails: any;
+  user_id: any;
+  filters = ['50% Off', 'Fast Delivery', '4.0+', '3.5+', 'High to Low', 'Low to High'];
+  expandedProducts: { [key: string]: boolean } = {}; // Track expanded state per product
+  animateCart: boolean = false;
+  cartQuantity: number = 0;
+  private cartSubscription: Subscription = new Subscription();
   currency = environment.currencySymbol;
+  selectedFilters: string[] = [];
+  vendor_id: any;
+  selectedFilterCount: any;
+  showViewCart: boolean = false;
+  filterData = {
+    price: null as string | null,
+    discount: null as string | null,
+    delivery: null as string | null,
+    rating: null as string | null
+  };
 
-  constructor(private router: Router, private apiservice: ApiserviceService,private route: ActivatedRoute,private storage: Storage,private location : Location) { 
+  constructor(private router: Router,
+    private apiservice: ApiserviceService,
+    private cartService: CartService,
+    private storage: Storage,
+    private location: Location,
+    private modalController: ModalController,
+    private modalCtrl: ModalController,) {
+
     this.init();
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation?.extras?.state) {
+      const vendor = navigation.extras.state['vendor'];
+      this.vendor_id = vendor.vendor_id;
+      this.getAllProductsByVendor(this.vendor_id);
+      this.vendorDetails = vendor;
+      console.log("vendorDetails", this.vendorDetails)
+    }
+
+    this.cartSubscription = this.cartService.cartQuantity$.subscribe(quantity => {
+      this.cartQuantity = quantity;
+      // console.log('🛒 Footer received cart quantity update:', quantity);
+    });
+  }
+
+  toggleSlideFilter(filter: string) {
+    if (this.selectedFilters.includes(filter)) {
+      this.selectedFilters = this.selectedFilters.filter(f => f !== filter);
+    } else {
+      this.selectedFilters.push(filter);
+    }
+    this.updateFilterDataFromSlides();
+  }
+  removeSlideFilter(event: Event, filter: string) {
+    event.stopPropagation();
+    this.selectedFilters = this.selectedFilters.filter(f => f !== filter);
+    this.updateFilterDataFromSlides();
+  }
+  updateFilterDataFromSlides() {
+    this.filterData = { price: null, discount: null, delivery: null, rating: null };
+
+    this.selectedFilters.forEach(filter => {
+      if (filter.includes('% Off')) {
+        this.filterData.discount = filter;
+      } else if (filter.toLowerCase().includes('to')) {
+        this.filterData.price = filter;
+      } else if (filter.toLowerCase().includes('delivery')) {
+        this.filterData.delivery = filter;
+      } else if (filter.includes('+')) {
+        this.filterData.rating = filter;
+      }
+    });
+
+    // console.log('Selected Filters JSON:', this.filterData);
+    this.updateSelectedFilterCount();
+    this.filterProducts();
+  }
+  updateFilterData() {
+    // Reset JSON
+    this.filterData = { price: null, discount: null, delivery: null, rating: null };
+
+    // Map selected filters to JSON keys
+    this.selectedFilters.forEach(filter => {
+      if (filter.includes('% Off')) {
+        this.filterData.discount = filter;
+      } else if (filter.toLowerCase().includes('to')) {
+        this.filterData.price = filter;
+      } else if (filter.toLowerCase().includes('delivery')) {
+        this.filterData.delivery = filter;
+      } else if (filter.includes('+')) {
+        this.filterData.rating = filter;
+      }
+    });
+    this.updateSelectedFilterCount();
+    // console.log('Selected Filters JSON:', this.filterData);
+    this.filterProducts();
+  }
+  filterProducts(){
+    const payload: any = {
+    priceSort: this.filterData.price,
+    discount: this.filterData.discount,
+    deliveryType: this.filterData.delivery,
+    rating: this.filterData.rating,
+    vendor_id: this.vendor_id,
+  };
+    // console.log('payload',payload)
+    this.apiservice.filterProducts(payload).subscribe((response)=>{
+      if(response){
+        //  console.log('filtered Products',response)
+         this.allProducts = response;
+      }
+    })
+  }
+  async selectFilter(filter: string) {
+    if (filter === 'Filters') {
+      const modal = await this.modalCtrl.create({
+        component: FilterModalComponent,
+        cssClass: 'half-screen-modal',
+        initialBreakpoint: 0.5,
+        componentProps: {
+          currentFilters: { ...this.filterData }
+        }
+      });
+
+      modal.onDidDismiss().then(result => {
+      const data = result.data;
+      if (data) {
+        this.filterData = data.filters || {};
+        this.selectedFilterCount = data.count || 0;
+
+        if (this.selectedFilterCount > 0) {
+          // console.log('Applied Filters from modal:', this.filterData);
+          this.syncFiltersFromModal(this.filterData);
+        } else {
+          this.clearFilterData();
+        }
+      }
+    });
+
+      await modal.present();
+      return;
+    }
+
+    this.toggleSlideFilter(filter);
+  }
+  clearFilterData() {
+    this.filterData = { price: null, discount: null, delivery: null, rating: null };
+    this.selectedFilters = [];
+     this.selectedFilterCount = 0; 
+  }
+  updateSelectedFilterCount() {
+  this.selectedFilterCount = Object.values(this.filterData).filter(v => v).length;
+  }
+  isFilterActive(): boolean {
+    return Object.values(this.filterData).some(v => v);
+  }
+  syncFiltersFromModal(filters: any) {
+    this.filterData = { ...filters };
+    this.selectedFilters = [];
+
+    if (filters.discount) this.selectedFilters.push(filters.discount);
+    if (filters.price) this.selectedFilters.push(filters.price);
+    if (filters.delivery) this.selectedFilters.push(filters.delivery);
+    if (filters.rating) this.selectedFilters.push(filters.rating);
+    console.log('Selected Filters from Modal:', this.selectedFilters);
+
+    // Call updateFilterData to ensure the filterData object is properly updated
+    this.updateFilterData();
+  }
+  async openSearchModal() {
+    const modal = await this.modalController.create({
+      component: SearchModalComponent,
+      cssClass: 'search-modal',
+      backdropDismiss: true,
+      componentProps: {
+      vendor_id: this.vendor_id   // ✅ pass vendor_id here
+    }
+    });
+
+    await modal.present();
+  }
+
+  getVendorStatus(closeTime: any): string {
+      if (!closeTime) {
+        return ''; // Don't show anything
+      }
+
+    if (!closeTime || typeof closeTime !== 'string' || !closeTime.includes(':')) {
+      console.warn('Invalid closeTime format:', closeTime);
+      return 'Unknown';
+    }
+
+    const [hours, minutes] = closeTime.split(':').map(Number);
+
+    if (isNaN(hours) || isNaN(minutes)) {
+      console.warn('Invalid time values in closeTime:', closeTime);
+      return 'Unknown';
+    }
+
+    const now = new Date();
+    const closeDate = new Date();
+    closeDate.setHours(hours, minutes, 0, 0);
+
+    return now < closeDate ? 'Open now' : 'Closed';
+  }
+
+  toggleExpand(productId: string) {
+    this.expandedProducts[productId] = !this.expandedProducts[productId];
+  }
+
+  isExpanded(productId: string): boolean {
+    return this.expandedProducts[productId] || false;
   }
   async init() {
     await this.storage.create();
   }
-  goback(){
+  goback() {
     this.location.back();
   }
-  ngOnInit() {
-    this.route.queryParams.subscribe(params => {
-      const vendor_id = params['id'];
-      console.log('Vendor ID:', vendor_id);
-      this.getAllProductsByVendor(vendor_id)
-    });
+
+  async ngOnInit() {
+    this.user_id = await this.storage.get('userID');
+    this.cartQuantity = this.cartService.getCurrentQuantity();
+ 
   }
 
+  ngOnDestroy(): void {
+    // Clean up subscription to prevent memory leaks
+    if (this.cartSubscription) {
+      this.cartSubscription.unsubscribe();
+    }
+  }
+  navigateToProduct(product: any) {
+    //  await this.storage.set('product_id', id);
+    this.router.navigate(['/product-detail'], {
+      state: { product: product }
+    });
+  }
+  navigateToOrders() {
+    this.router.navigate(['/view-cart']);
+  }
+  async shareContent() {
+    await Share.share({
+      title: 'check this product',
+      text: 'Check out this amazing Grocesory app!',
+      url: 'https://your-app-link.com',
+      dialogTitle: 'Share via'
+    });
+  }
   async ionViewWillEnter() {
-    await this.loadCartFromStorage(); 
+    await this.loadCartFromStorage();
     const storedCart = await this.storage.get('cartItems');
     this.cartItems = storedCart || [];
-  
-    this.totalQuantity = this.cartItems.reduce((sum, item) => sum + item.quantity, 0);
-    
-    // Show popup if there are items in the cart
-    this.showCartPopup = this.totalQuantity > 0;
-   
+
+    // Update cart service with current cart items
+    this.cartService.setCartItems(this.cartItems);
+    this.totalQuantity = this.cartService.getCurrentQuantity();
   }
+
   async loadCartFromStorage() {
     const storedCart = await this.storage.get('cartItems');
     this.cartItems = storedCart || [];
-    this.updateTotalQuantity();
-  
+
+    // Update cart service with loaded cart items
+    this.cartService.setCartItems(this.cartItems);
+    this.totalQuantity = this.cartService.getCurrentQuantity();
+
     // Update isAddedMap
     this.isAddedMap = {};
+    this.showViewCart = false;
     this.cartItems.forEach(item => {
       this.isAddedMap[item.id] = true;
+      this.showViewCart = true;
+      this.showViewCart = true;
     });
-    // if (this.cartItems.length === 0) {
-    //   this.showCartPopup = false;
-    // }
+
     console.log('🛒 Cart loaded from storage:', this.cartItems);
   }
-  navigateToViewCart(){
+
+  navigateToViewCart() {
     this.router.navigate(['/view-cart']);
   }
-  updateTotalQuantity() {
+
+  async updateTotalQuantity() {
     this.totalQuantity = this.cartItems.reduce((total, item) => total + item.quantity, 0);
+    await this.storage.set('totalQuantityFromCart', this.totalQuantity)
+    // Update cart service
+    this.cartService.setCartItems(this.cartItems);
   }
-  getAllProductsByVendor(vendor_id: any){
+  getAllProductsByVendor(vendor_id: any) {
     const searchTerm = "";
-    this.apiservice.get_allproductsByVendorID(vendor_id, searchTerm).subscribe((response)=>{
-      if(response.success == true){
-         this.allProducts = response.product;
-         console.log("all vendor products",this.allProducts)
+    this.apiservice.get_allproductsByVendorID(vendor_id, searchTerm).subscribe((response) => {
+      if (response.success == true) {
+        this.allProducts = response.product;
+        console.log("all vendor products", this.allProducts)
       }
     })
   }
 
   async addToCart(product: any) {
+    // Check if cart has items from a different vendor
+    if (this.cartItems.length > 0) {
+      const firstCartItem = this.cartItems[0];
+      if (firstCartItem.vendor_id !== product.vendor_id) {
+        // Clear cart items from different vendor
+        console.log('🔄 Clearing cart items from different vendor:', firstCartItem.vendor_id);
+
+        // Reset isAddedMap for all existing cart items
+        this.cartItems.forEach(item => {
+          this.isAddedMap[item.id] = false;
+        });
+
+        // Clear the cart
+        this.cartItems = [];
+      }
+    }
+
     const existingItem = this.cartItems.find(item => item.id === product.id);
-     console.log('product title',product.title)
-     console.log('product subtitle',product.subtitle)
+
     if (existingItem) {
       existingItem.quantity += 1;
     } else {
       this.cartItems.push({
+        vendor_id: product.vendor_id,
         category_id: product.category_id,
         id: product.id,
         quantity: 1,
         price: product.price,
         image: product.featured_image,
-        title: product.title, // 👈 add name
-        subtitle: product.subtitle, 
+        title: product.name, // 👈 add name
+        subtitle: product.description,
+        variant_price: Number(product.price),
       });
     }
-    this.showPopup();
+    this.animateCart = true;
+
     this.updateTotalQuantity();
-    // this.showPopup();
     this.isAddedMap[product.id] = true;
+    this.showViewCart = true;
     await this.storage.set('cartItems', this.cartItems);
     console.log('🛒 Added:', this.cartItems);
   }
 
   async removeFromCart(product: any) {
     const index = this.cartItems.findIndex(item => item.id === product.id);
-  
+
     if (index !== -1) {
       if (this.cartItems[index].quantity > 1) {
         this.cartItems[index].quantity -= 1;
       } else {
         this.cartItems.splice(index, 1);
         this.isAddedMap[product.id] = false;
+        this.showViewCart = false;
       }
-  
+
       await this.storage.set('cartItems', this.cartItems);
       console.log('❌ Removed:', this.cartItems);
     }
-    if (this.cartItems.length === 0) {
-      this.showCartPopup = false;
-    }
+
     this.updateTotalQuantity();
 
   }
-  showPopup() {
-    this.showCartPopup = true;
-  }
+
   getQuantity(productId: number): number {
     const item = this.cartItems.find(i => i.id === productId);
     return item ? item.quantity : 0;
   }
-  async removeCartStorage() {
-    this.isSlidingOut = true;
 
+  async removeCartStorage() {
     setTimeout(async () => {
       await this.storage.remove('cartItems');
       this.cartItems.forEach(item => {
         // Set isAddedMap to true for each item
         this.isAddedMap[item.id] = false;
+        
       });
       this.cartItems = [];
-      this.showCartPopup = false;
-      this.isSlidingOut = false;
+
+      // Update cart service with empty cart
+      this.cartService.setCartItems([]);
     }, 400);
   }
+
+  toggleFav(vendor: any) {
+      toggleFavoritefeatured(vendor, this.user_id, this.apiservice);
+  }
+
 }

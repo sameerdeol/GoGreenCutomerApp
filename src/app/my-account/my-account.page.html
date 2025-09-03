@@ -1,68 +1,37 @@
 
 
 <ion-content [fullscreen]="true">
-  <div class="green_header">
+  <!-- <div class="green_header">
     <div class="page_outer_div ">
       <div class="display_flex align_items_center">
         <div class="left_arrow_div"> <img src="assets/left_arrow.svg" (click)="goback()"></div>
         <p class="header_heding_p">My Account</p>
         <div class="header_search_img ">
-          <!-- <ion-icon slot="icon-only" name="search-outline"></ion-icon> -->
            <img src="assets/common_search_icon.svg" class="search_img">
            <img src="assets/common_bell_icon.svg">
-          <!-- <ion-icon slot="icon-only" name="notifications-outline"></ion-icon> -->
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
+  <app-common-header></app-common-header>
+  
   <div class="page_outer_div bordr_bottom_gray">
-    <ion-grid class="ion_grid_outer_div">
-      <ion-row>
-        <ion-col size="6">
-          <ion-card >
-            <div class="card-content">
-              <ion-icon name="clipboard-outline"></ion-icon>
-              <p>Orders</p>
-              <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
-            </div>
-          </ion-card>
-        </ion-col>
-    
-        <ion-col size="6">
-          <ion-card >
-            <div class="card-content" (click)="navigateTowishlist()">
-              <ion-icon name="heart-outline"></ion-icon>
-              <p>Wishlist</p>
-              <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
-            </div>
-          </ion-card>
-        </ion-col>
-    
-      </ion-row>
-      <ion-row>
-        
-        <ion-col size="6">
-          <ion-card >
-            <div class="card-content" (click)="navigateToProfile()">
-              <ion-icon name="person-outline"></ion-icon>
-              <p>Profile</p>
-              <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
-            </div>
-          </ion-card>
-        </ion-col>
-    
-        <ion-col size="6">
-          <ion-card >
-            <div class="card-content">
-              <ion-icon name="notifications-outline"></ion-icon>
-              <p>Notification</p>
-              <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
-            </div>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-    
+
+   <!-- that div should be here -->
+ <div class="account-quick-links">
+  <div class="quick-link-row" *ngFor="let row of quickLinkData">
+    <div
+      class="quick-link-card"
+      *ngFor="let item of row"
+      (click)="navigateTo(item.route)"
+    >
+      <ion-icon [name]="item.icon"></ion-icon>
+      <span>{{ item.label }}</span>
+      <ion-icon name="chevron-forward-outline" class="arrow"></ion-icon>
+    </div>
+  </div>
+</div>
+
   </div>
   <div class="page_outer_div">
     <div>Account Setting</div>
@@ -76,17 +45,9 @@
             <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
           </div>
       </div> 
-      <div class="12">
-        <div class="card-content" (click)="confirmLogout()">
-          <div class="display_flex align_items_center main_icons">
-            <ion-icon name="information-circle-outline"></ion-icon>
-            <p>Logout</p>
-          </div>          
-          <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
-        </div>
-    </div> 
+     
         <div class="12">
-          <div class="card-content">
+          <div class="card-content" (click)="AllAddress()">
             <div class="display_flex align_items_center main_icons">
               <ion-icon name="notifications-outline"></ion-icon>
               <p>Address</p>
@@ -142,6 +103,10 @@
         </div>    
         <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
       </div>   
+  </div>
+  <div class="logout" (click)="confirmLogout()">
+    <ion-icon name="log-out-outline"></ion-icon>
+    <p>Log Out</p>
   </div>
      </div>
   </div>

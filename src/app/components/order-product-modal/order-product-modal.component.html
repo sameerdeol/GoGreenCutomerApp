@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Order Items</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let p of products">
+      <ion-thumbnail slot="start">
+        <img [src]="p.featured_image" />
+      </ion-thumbnail>
+      <ion-label>
+        <h2>{{ p.product_name }}</h2>
+        <p>{{ p.product_quantity }} × ${{ p.single_item_price }}</p>
+      </ion-label>
+      <ion-note slot="end" color="dark">
+        ${{ p.product_quantity * p.single_item_price }}
+      </ion-note>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="block" color="success" (click)="addAllToCart()">
+      Add All to Cart
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

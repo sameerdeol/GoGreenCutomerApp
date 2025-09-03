@@ -11,6 +11,7 @@ import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
 import { FooterTabsComponent } from '../components/footer-tabs/footer-tabs.component';
+import { CommonHeaderComponent } from "../components/common-header/common-header.component";
 register();
 
 @Component({
@@ -18,11 +19,21 @@ register();
   templateUrl: './my-account.page.html',
   styleUrls: ['./my-account.page.scss'],
   standalone: true,
-    imports: [IonicModule, FormsModule, CommonModule, FooterTabsComponent], 
+    imports: [IonicModule, FormsModule, CommonModule, FooterTabsComponent, CommonHeaderComponent], 
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class MyAccountPage implements OnInit {
 
+  quickLinkData = [
+    [
+      { icon: 'cube-outline', label: 'Orders', route: '/orders' },
+      { icon: 'heart-outline', label: 'Wishlist', route: '/wishlist' },
+    ],
+    [
+      { icon: 'person-outline', label: 'Profile', route: '/profile' },
+      { icon: 'notifications-outline', label: 'Notifications', route: '/notifications' },
+    ]
+  ];
   constructor(private router: Router,private alertCtrl: AlertController,private storage: Storage, private location: Location) { 
     this.init();
   }
@@ -31,11 +42,21 @@ export class MyAccountPage implements OnInit {
   }
   ngOnInit() {
   }
+ 
+  AllAddress(){
+    this.router.navigate(['/all-address']);
+  }
+  navigateTo(route: string) {
+    this.router.navigate([`/${route}`]);
+  }
   navigateToProfile(){
     this.router.navigate(['/profile']);
   }
   navigateTowishlist(){
     this.router.navigate(['/whishlist']);
+  }
+  navigateToOrders(){
+    this.router.navigate(['/orders'])
   }
   async confirmLogout() {
     const alert = await this.alertCtrl.create({

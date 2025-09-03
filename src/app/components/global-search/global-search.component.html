@@ -1,0 +1,158 @@
+<!-- 🔍 Search Bar -->
+<div class="location_search loction_outer">
+
+  <ion-searchbar class="searchBar" mode="md" showCancelButton="focus" placeholder="Search" animated="true"
+    (ionInput)="onSearchChange($event)" (ionCancel)="onBackClick()">
+  </ion-searchbar>
+
+
+  <!-- SEARCH RESULT DROPDOWN -->
+  <div *ngIf="showSearchResults" class="search-result-dropdown">
+    <div *ngFor="let product of searchedProduct" class="search-result-item">
+      <div class="display_flex_only ms-11 my-2 border_bottom_gray align-items-center pb-2"
+        (click)="navigateToVendorSearchedVendors(product)">
+        <div class="fixed_width">
+          <img [src]="product.image?.startsWith('http') ? product.image : (baseUrl + product.image)" alt="">
+        </div>
+        <div class="w-75 ml-2">
+          <p class="mb-0 text_font">{{ product.title }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="searchedProduct.length === 0 && searchKeyword.trim()" class="empty_search_box">
+      <ion-icon name="help-outline"></ion-icon><br>
+      No products found.
+    </div>
+  </div>
+
+  <div class="vendorsOuterDiv" *ngIf="!noVendorsFound && showDesiredData">
+    <!-- End Groceries SUb CAtegories --- -->
+    <div class="recomender_heading">Recommended For You</div>
+    <div class="Recomended_vendor_div home_vendor_swiper_slides">
+      <div class="vendors-scroll-container">
+        <div class="vendors-grid">
+          <div *ngFor="let item of Allvendors; let i = index" class="vendor-card" (click)="handleVendorClick(i, item)"
+             (touchstart)="onVendorTouch(i)"
+            [class.hovering]="hoveredVendorIndex === i">
+
+            <div class="vendor-image-wrapper">
+              <!-- Image Stack for Carousel Effect -->
+              <div class="image-stack">
+                <img *ngFor="let img of getVendorImages(item); let imgIndex = index" [src]="img" alt="vendor image"
+                  class="vendor-image" [style.opacity]="getVendorImageOpacity(i, imgIndex)"
+                  [style.transform]="getVendorImageTransform(i, imgIndex)"
+                  [style.z-index]="getCurrentVendorImageIndex(i) === imgIndex ? 2 : 1" />
+              </div>
+
+              <!-- Dots Pagination (only show if multiple images) -->
+              <div class="dots-pagination" *ngIf="item?.featured_images?.length > 1">
+                <span *ngFor="let img of item.featured_images; let dotIndex = index" class="dot"
+                  [class.active]="getCurrentVendorImageIndex(i) === dotIndex">
+                </span>
+              </div>
+
+              <!-- Favorite Heart Icon -->
+              <div class="favorite-icon" (click)="$event.stopPropagation(); toggleFav(item)">
+                <ion-icon [name]="item.is_favourite === 1 ? 'heart' : 'heart-outline'"
+                  [class.favorited]="item.is_favourite === 1">
+                </ion-icon>
+              </div>
+            </div>
+
+            <div class="vendor-info">
+              <h3 class="vendor-name">{{ item.store_name }}</h3>
+              <p class="delivery-time">
+                <ion-icon name="time-outline"></ion-icon>
+                20-30 mins
+              </p>
+
+              <!-- Additional vendor info if available -->
+              <div class="vendor-details" *ngIf="item.rating || item.delivery_fee">
+                <span class="rating" *ngIf="item.rating">
+                  <ion-icon name="star"></ion-icon>
+                  {{ item.rating }}
+                </span>
+                <span class="delivery-fee" *ngIf="item.delivery_fee">
+                  {{ currency }}{{ item.delivery_fee }} delivery
+                </span>
+              </div>
+
+              <!-- Vendor tags/categories -->
+              <div class="vendor-tags" *ngIf="item.categories?.length">
+                <span class="tag" *ngFor="let category of item.categories.slice(0, 2)">
+                  {{ category.name }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🛍️ All Vendors -->
+    <div class="features_product_div" *ngIf="Allvendors?.length>0">
+      <div class="slider_heading_div">
+        <h3>All Stores</h3>
+      </div>
+
+      <ion-card *ngFor="let item of Allvendors; let i = index"
+        class="mb-3 home_vendor_card_box vendor-card-with-carousel" (click)="handleVendorClick(i, item)"
+         (touchstart)="onVendorTouch(i)">
+
+        <!-- Bookmark/Favorite Button -->
+        <div class="bookmark_outer_div">
+          <button fill="clear" (click)="toggleFav(item); $event.stopPropagation()"
+            class="bookmark-btn m-0 book_mark_button">
+            <ion-icon class="text_gogreen bookmark-filled"
+              [name]="item?.is_favourite == 1 ? 'bookmark' : 'bookmark-outline'">
+            </ion-icon>
+          </button>
+        </div>
+
+        <!-- Image Carousel Container -->
+        <div class="vendor-image-carousel-container w-100 vendor_slider home_all_vendor_big_box">
+          <!-- Image Stack for Carousel Effect -->
+          <div class="store-image-stack">
+            <img *ngFor="let img of getVendorImages(item); let imgIndex = index" [src]="img" alt="vendor store image"
+              class="vendor_store_img box_vendor_images store-carousel-image"
+              [style.opacity]="getVendorImageOpacity(i, imgIndex)"
+              [style.transform]="getVendorImageTransform(i, imgIndex)"
+              [style.z-index]="getCurrentVendorImageIndex(i) === imgIndex ? 2 : 1" />
+          </div>
+
+          <!-- Dots Pagination (only show if multiple images) -->
+          <div class="store-dots-pagination" *ngIf="item?.featured_images?.length > 1">
+            <span *ngFor="let img of item.featured_images; let dotIndex = index" class="store-pagination-dot"
+              [class.active]="getCurrentVendorImageIndex(i) === dotIndex">
+            </span>
+          </div>
+
+        </div>
+
+        <!-- Store Information -->
+        <ion-card-header class="vendor_text_box">
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="font-weight-bold vendor-heading-primary">{{ item.store_name }}</div>
+            <div class="vendor_rating">
+              {{ item.rating || '3.9' }}
+              <ion-icon class="text-white" name="star"></ion-icon>
+            </div>
+          </div>
+          <div class="d-flex align-items-center">
+            <img src="assets/timer-icon.svg" alt="">
+            <p class="mb-0 font-weight-bold text-gray">
+              {{ item.vendor_start_time }}AM - {{ item.vendor_close_time }}PM
+            </p>
+          </div>
+        </ion-card-header>
+      </ion-card>
+    </div>
+  </div>
+
+     <div class="no-vendors" *ngIf="noVendorsFound">
+      <img src="assets/NoStoreFound.webp" alt="No vendors found" class="no-vendors-img" />
+      <p>No Vendors Found </p>
+    </div>
+
+</div>

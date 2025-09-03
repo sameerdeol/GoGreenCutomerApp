@@ -27,21 +27,8 @@ export class WelcomeOnePage implements OnInit {
   ngOnInit(): void {
     this.token ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ODQsInJvbGVfaWQiOjUsInVzZXJuYW1lIjpudWxsLCJpYXQiOjE3NDM5OTkxODh9.A2WM2h_NsEhrI3hqhJaRZNmb8iO7lVObN0w11kt2lJM';
     console.log('decode static token',this.token)
-    this.getAllFeaturesProducts();
   }
-  getAllFeaturesProducts(){
-    const userID = 3;
-    this.apiservice.get_all_features_product(userID).subscribe((response)=>{
-      this.allfeaturesproducts = response.data;
-      console.log('this.allfeaturesproducts ',this.allfeaturesproducts );
-    })
-  }
-  // get_test(){
-  //   this.apiservice.testing().subscribe((response)=>{
-  //     this.test = response;
-  //     console.log('this.test ',this.test );
-  //   })
-  // }
+
   navigateToWelcome(){
     this.router.navigate(['/welcome']);
   }

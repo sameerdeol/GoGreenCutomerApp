@@ -1,11 +1,11 @@
 <ion-content fullscreen>
-  <!-- Hero Image -->
-  <div class="header_bg_img">
-    <div class="page_outer_div ">
+
+  <div *ngIf="vendorDetails" class="header_bg_img"
+    [ngStyle]="{'background-image': 'url(' + vendorDetails.store_image + ')'}">
+    <div class="page_outer_div">
       <div class="display_flex align_items_center">
-        <div class="left_arrow_div"> <img src="assets/left-arrow-green.svg" (click)="goback()"></div>
-        
-        <div class="header_search_img ">
+        <div class="left_arrow_div">
+          <ion-icon name="chevron-back-outline" (click)="goback()"></ion-icon>
         </div>
       </div>
     </div>
@@ -14,76 +14,125 @@
   <!-- Foreground Content -->
   <div class="main_content">
     <!-- Store Info -->
-    <div class="outer-most-div">
-      <div class="img-outer-div">
-        <img src="assets/brand.png" alt="">
+    <div *ngIf="vendorDetails">
+      <div class="restrao_details">
+        <div class="store_basix_details">
+          <div class="store_heading">
+            <h2>{{vendorDetails.store_name}}</h2>
+          </div>
+          <div class="store_heading_distory">
+            <ion-icon name="location-outline"></ion-icon> {{vendorDetails.store_address}} <span>(5km)</span>
+          </div>
+          <div class="store_heading_timing">
+            <img src="assets/timer-icon.svg" alt="">
+            <!-- <ion-icon name="time-outline"></ion-icon> -->
+            <p [ngClass]="{
+              'text_gogreen': getVendorStatus(vendorDetails.vendor_close_time) === 'Open now',
+              'text-danger': getVendorStatus(vendorDetails.vendor_close_time) === 'Closed'
+            }"> {{ getVendorStatus(vendorDetails.vendor_close_time) }} (Closes at {{ vendorDetails.vendor_close_time
+              }})</p>
+          </div>
+        </div>
+        <div class="store_basix_details_rating">
+          3.5 <ion-icon name="star"></ion-icon>
+        </div>
       </div>
     </div>
 
-    <!-- Product List -->
-    <div class="restrao_details">
-      <h2 class="text_gogreen text-center margin_0 font-weight-bold">SPRING SUSHI</h2>
-      <p class="gray_text text-center margin_0 text_font">Japenese Food </p>
-      <p class="gray_text text-center margin_0 text_font">3.5 Rating</p>
-    </div>
-    <div class="d_flex justify-content-between align-items-center">
-      <ion-icon class="color_black font-24" name="share-social-outline"></ion-icon>
-      <p class="gray_text text-center margin_0 text_font">Vegitarian Freindy, Eat Phir Repeat</p>
-      <ion-icon class="color_black font-24" name="bookmark-outline"></ion-icon>
-    </div>
-    <ion-list [class.mb_14rem]="showCartPopup">
+    <div class="main_content_body">
 
-      <ion-item class="mb-3 mt-3" lines="none" *ngFor="let product of allProducts">
-        <div slot="start" class="product_img_div">
-          <img [src]="baseUrl+product.featured_image" />
+      <div class="share_bookmark_bar">
+        <ion-icon class="color_black font-24" (click)="shareContent()" name="share-social-outline"></ion-icon>
+        <div (click)="toggleFav(vendorDetails); $event.stopPropagation()" class="bookmark-btn m-0">
+          <ion-icon class="text_gogreen bookmark-filled"
+            [name]="vendorDetails.is_favourite == 1 ? 'bookmark' : 'bookmark-outline'"></ion-icon>
         </div>
-        <ion-label>
-          <h3 class="text_gogreen">{{product.title}}</h3>
-          <p class="text_font">J{{product.subtitle}}</p>
-          <div class="d_flex justify-content-between align-items-center">
-            <h2 class="color_black font-weight-bold">{{currency}}{{ product.price }}</h2>
-            <div class=" custm_padding" *ngIf="!isAddedMap[product.id]; else quantityControls">
-              <button class="add_to_cart_btn_bg" (click)="addToCart(product)">
-                Add To Cart
+      </div>
+
+      <swiper-container class="mySwiper" slides-per-view="2.5" space-between="5" autoplay="false" [breakpoints]="{
+        '640': { 'slidesPerView': 5, 'spaceBetween': 5 },
+        '768': { 'slidesPerView': 5, 'spaceBetween': 5 },
+        '1024': { 'slidesPerView': 5, 'spaceBetween': 5 }
+      }">
+        <!-- Static Filters Slide -->
+        <swiper-slide (click)="selectFilter('Filters')"
+          [ngClass]="{'active-slide': selectedFilters.includes('Filters')}">
+          <div class="slide-content filter_slide" [ngClass]="{'active_filter_slide': selectedFilterCount > 0}">
+            <p class="m-0"><ion-icon name="options-outline"></ion-icon>Filters <span
+                *ngIf="selectedFilterCount > 0">{{selectedFilterCount}}</span></p>
+          </div>
+        </swiper-slide>
+
+        <!-- Dynamic Filter Slides -->
+        <swiper-slide *ngFor="let cat1 of filters">
+          <div class="slide-content filter_slide" [ngClass]="{'active-slide': selectedFilters.includes(cat1)}"
+            (click)="toggleSlideFilter(cat1)">
+            <span>{{ cat1 }}</span>
+            <ion-icon *ngIf="selectedFilters.includes(cat1)" name="close" class="filter-close"
+              (click)="removeSlideFilter($event, cat1)">
+            </ion-icon>
+          </div>
+        </swiper-slide>
+      </swiper-container>
+
+
+      <ion-list>
+        <ion-item class="mb-3 mt-3 product-row" lines="none" *ngFor="let product of allProducts">
+          <div slot="start" class="product_img_div">
+            <div class="product_img_div_box">
+              <img [src]="product.featured_image" (click)="navigateToProduct(product)" />
+
+            </div>
+            <div class="pro_qyt_buttons">
+              <div class=" custm_padding" *ngIf="!isAddedMap[product.id]; else quantityControls">
+                <button class="add_to_cart_btn_bg" (click)="addToCart(product)">ADD</button>
+              </div>
+            </div>
+          </div>
+
+          <ng-template #quantityControls>
+            <div class="custm_padding">
+              <button class="add_to_cart_btn_bg2">
+                <span class="remove_item_btn" (click)="removeFromCart(product)">-</span>
+                <span>{{ getQuantity(product.id) }}</span>
+                <span class="add_item_btn" (click)="addToCart(product)">+</span>
               </button>
             </div>
-            
-            <ng-template #quantityControls>
-              <div class=" custm_padding">
-                <button class="add_to_cart_btn_bg2">
-                  <span class="remove_item_btn" (click)="removeFromCart(product)">-</span>
-                  {{ getQuantity(product.id) }}
-                  <span class="add_item_btn" (click)="addToCart(product)">+</span>
-                </button>
+          </ng-template>
+
+          <div class="product-info-col">
+            <h2>{{product.name}}</h2>
+            <p>{{product.description}}</p>
+
+            <div class="pro_qyt_box">
+              <div class="pro_qyt_price">
+                <h3 class="color_black font-weight-bold margin_0">{{currency}}{{ product.price }}</h3>
               </div>
-            </ng-template> 
+
+            </div>
+
           </div>
-          
-        </ion-label>
-  
-      </ion-item>
-    </ion-list>
+        </ion-item>
+      </ion-list>
+
+    </div>
+
+  </div>
+  <div class="view_cart_div" *ngIf="showViewCart" (click)="navigateToOrders()">
+    <p class="margin_0">
+    {{ cartQuantity }} {{ cartQuantity > 1 ? 'items' : 'item' }} added
+  </p>
+  <ion-icon name="arrow-forward"></ion-icon>
   </div>
 </ion-content>
-<div 
-class="cart-popup" 
-[ngClass]="{ 'slide-out': isSlidingOut }" 
-*ngIf="showCartPopup" [class.show-popup]="showCartPopup">
 
-<div class="display_flex left_right_padding align_items_center">
-  <p>
-    <ion-icon name="cart-outline"></ion-icon> 
-    {{ totalQuantity }} item(s) added to cart
-  </p>
 
-  <div class="view_cart_div_btn">
-    <button (click)="navigateToViewCart()">view cart</button>
-    <ion-icon 
-      (click)="removeCartStorage()" 
-      class="remove_item_icon" 
-      name="close-circle-outline">
-    </ion-icon>
-  </div>
+<div class="search_outer_div">
+  <ion-searchbar class="Vendor_product_search" (ionFocus)="openSearchModal()"></ion-searchbar>
+  <ion-button fill="clear" class="cart-button" (click)="navigateToOrders()">
+
+    <img src="/assets/cart.svg" alt="Cart" class="cart-img animate__animated"
+      [ngClass]="{ 'animate__tada': animateCart }" (animationend)="animateCart = false" />
+    <ion-badge class="cart_badge" *ngIf="cartQuantity > 0">{{cartQuantity}}</ion-badge>
+  </ion-button>
 </div>
-</div>
-<app-footer-tabs></app-footer-tabs>

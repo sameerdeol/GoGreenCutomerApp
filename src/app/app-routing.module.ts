@@ -22,6 +22,7 @@ const routes: Routes = [
   { path: 'location', component: LocationPage },
   { path: 'select-location', component: SelectLocationPage },
   { path: 'checkout', component: CheckoutPage },
+  
   {
     path: 'home',
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
@@ -85,6 +86,26 @@ const routes: Routes = [
   {
     path: 'store-products',
     loadChildren: () => import('./store-products/store-products.module').then( m => m.StoreProductsPageModule)
+  },
+  {
+    path: 'notifications',
+    loadChildren: () => import('./notifications/notifications.module').then( m => m.NotificationsPageModule)
+  },
+  {
+    path: 'orders',
+    loadChildren: () => import('./orders/orders.module').then( m => m.OrdersPageModule)
+  },
+  {
+    path: 'new-pick-drop',
+    loadChildren: () => import('./new-pick-drop/new-pick-drop.module').then( m => m.NewPickDropPageModule)
+  },
+  {
+    path: 'view-order-details',
+    loadChildren: () => import('./view-order-details/view-order-details.module').then( m => m.ViewOrderDetailsPageModule)
+  },
+  {
+    path: 'all-address',
+    loadChildren: () => import('./all-address/all-address.module').then( m => m.AllAddressPageModule)
   },
 
  

@@ -1,0 +1,45 @@
+<app-common-header></app-common-header>
+
+<ion-content class="details-page">
+  <section class="order-info">
+    <h2>Order ID: {{ order.order_uid }}</h2>
+    <small>{{ order.created_at | date:'mediumDate' }}</small>
+  </section>
+
+  <section class="products">
+    <ion-item *ngFor="let product of order.products">
+      <ion-thumbnail slot="start">
+        <img [src]="product.featured_image" />
+      </ion-thumbnail>
+      <ion-label>
+        <h3>{{ product.product_name }}</h3>
+        <p>{{ product.product_quantity }} × ${{ product.single_item_price }}</p>
+      </ion-label>
+      <div slot="end">
+        ${{ product.single_item_price * product.product_quantity }}
+      </div>
+      
+    </ion-item>
+  </section>
+
+  <section class="price-summary">
+    <strong>Total: ${{ order.total_price }}</strong>
+  </section>
+
+  <section class="shipping-payment">
+    <h3>Shipping Address</h3>
+    <p>{{ order.address.address }}</p>
+    <h3>Payment Method</h3>
+    <p>{{ order.payment_method }}</p>
+  </section>
+   <ion-footer >
+  <div class="footer_btn">
+    <ion-button  color="medium">Track Order</ion-button>
+    <ion-button  color="primary" (click)="buyAgain()">Buy Again</ion-button>
+  </div>
+
+  </ion-footer>
+</ion-content>
+
+ 
+ <app-footer-tabs></app-footer-tabs>

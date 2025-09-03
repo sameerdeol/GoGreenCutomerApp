@@ -1,116 +1,48 @@
-
-
 <ion-content [fullscreen]="true">
-  <div class="page_outer_div ">
-    <div class="display_flex align_items_center">
-      <div class="left_arrow_div"> <img src="assets/left-arrow-green.svg" (click)="goback()"></div>
-      <p class="white_bg_header">My Categories</p>
-      <div class="header_search_img ">
-      </div>
-    </div>
-  </div>
+  <app-common-header></app-common-header>
   <div class="page_outer_div mb-6rem">
-   <div class="location_search">
-     <input class="search_bar" type="search" placeholder="Search your product.." [(ngModel)]="searchKeyword" (ngModelChange)="onSearchChange($event)">
-     <ion-icon class="search-icon" name="search-outline"></ion-icon>
-   </div>
-   <div *ngIf="showSearchResults" class="search-result-dropdown">
-    <div class="search-result-item">
-      <div class="row no-gutters">
-        <div
-          class="col-3 px-0 mb-2"
-          *ngFor="let product of searchedProduct; let i = index" 
-          (click)="navigateToSubCAtProducts(product.id, product.category_name, 'subCatID')"
-        >
-          <div class="slide-content d-flex justify-content-center">
-            <div
-              class="icon-circle"
-              [ngClass]="{ 'active-category': selectedGridIndex === i }"
-            >
-              <img
-                [src]="baseUrl + product.subcategory_logo"
-                alt="{{ product.name }}"
-                class="svg-icon"
-              />
-              <p>{{ product.name }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-   
-    </div>
-    <div *ngIf="showSearchResults && searchedProduct.length === 0 && searchKeyword.trim()" class="no-result text-muted text-center my-3">
-      No Category found.
-    </div>
-  </div>
-  
-  <div  *ngIf="!searchKeyword.trim()">
-   <div class="outer_category_div">
-    <swiper-container  class="mySwiper" slides-per-view="4" space-between="10" [breakpoints]="{
-      '640': { 'slidesPerView': 5, 'spaceBetween': 10 },
-      '768': { 'slidesPerView': 5, 'spaceBetween': 10 },
-      '1024': { 'slidesPerView': 5, 'spaceBetween': 10 }
-    }">
+    <app-global-search (searchFocus)="onSearchFocusChange($event)"></app-global-search>
+  <div *ngIf="loading">
+    <div class="Recomended_vendor_div home_vendor_swiper_slides" *ngFor="let i of [1,2,3]">
+      <h4 class="category-heading">
+        <ion-skeleton-text animated style="width: 120px; height: 20px;"></ion-skeleton-text>
+      </h4>
 
-      <!-- Optional Static Slide -->
-      <swiper-slide (click)="selectCategory2(-1)" >
-        <div class="slide-content active-slide" >
-          <div class="icon-circle">
-            <img src="assets/all-cat.svg" alt="Static Slide" class="svg-icon">
-            <p>All</p>
-          </div>
-        </div>
-      </swiper-slide>
-    
-      <!-- Dynamic Slides -->
-      <swiper-slide *ngFor="let item of categories; let i = index" (click)="selectCategory(i, item.id, item.name)" >
-        <div class="slide-content">
-          <div class="icon-circle">
-            <img [src]="baseUrl + item.category_logo" alt="{{ item.name }}" class="svg-icon" />
-            <p>{{ item.name }}</p>
-          </div>
-        </div>
-      </swiper-slide>
-    </swiper-container>
-  </div>
-  <div *ngFor="let category of categorySliders" class="search_by_category_div ">
-    <div class="slider_heading_div">   
-      <h3>{{ category.title }}</h3>
-      <!-- <p>See all</p> -->
-    </div>
-  
-    <div class="search_by_category_slider_div"> 
-      <swiper-container class="mySwiper" slides-per-view="4" space-between="10" autoplay="false" [breakpoints]="{
-        '640': { 'slidesPerView': 5, 'spaceBetween': 10 },
-        '768': { 'slidesPerView': 5, 'spaceBetween': 10 },
-        '1024': { 'slidesPerView': 5, 'spaceBetween': 10 }
-      }">
-    
-        <swiper-slide *ngFor="let item of category.items">
-          <div class="slide-content"  (click)="navigateToSubCAtProducts(item.id, item[0]?.category_name, 'subCatID')"> 
-            <div class="img_outer_bg">
-              <img [src]="item.image" alt="">    
-            </div>        
-          <p>{{item.title}}</p>
+      <swiper-container class="subcategory-swiper" [slidesPerView]="3" [spaceBetween]="5" nested="true">
+        <swiper-slide *ngFor="let j of [1,2,3]" class="home_vendors_box">
+          <div class="slide-box">
+            <div class="d-flex justify-content-center recomended_slider_div home_recomended_slides_images_box">
+              <ion-skeleton-text animated style="width: 100px; height: 100px; border-radius: 8px;"></ion-skeleton-text>
+            </div>
+            <p class="recommended_store_name">
+              <ion-skeleton-text animated style="width: 80px; height: 14px;"></ion-skeleton-text>
+            </p>
           </div>
         </swiper-slide>
       </swiper-container>
     </div>
   </div>
-
-          <div class="home_slidr_outer_div">
-            <swiper-container class="mySwiper"  slides-per-view="1" space-between="15"  autoplay="true" pagination="false" >
-              <swiper-slide *ngFor="let item of bannerImg" >
-                <div class="slide-klm">
-                  <img [src]="baseUrl+item.image_url"  alt="">
-                </div>  
+  <div *ngIf="!loading && !searchKeyword.trim() && !hideCategoryDiv && !hideDiv" class="fade-in">
+    <div class="Recomended_vendor_div home_vendor_swiper_slides" *ngFor="let category of categories">
+      <h4 class="category-heading">{{ category.name }}</h4>
+      <swiper-container class="subcategory-swiper" [slidesPerView]="3" [spaceBetween]="5" nested="true">
+        <swiper-slide *ngFor="let sub of category.vendors" class="home_vendors_box">
+          <div class="slide-box">
+            <swiper-container class="nested-image-swiper" [slidesPerView]="1" [spaceBetween]="0" direction="horizontal" nested="true">
+              <swiper-slide *ngFor="let img of sub.featured_images">
+                <div class="d-flex justify-content-center recomended_slider_div home_recomended_slides_images_box"
+                  (click)="navigateToVendorStore(sub)">
+                  <img [src]="img" alt="{{ sub.store_name }}" class="recommended_vendor_store_img" />
+                </div>
               </swiper-slide>
             </swiper-container>
+            <p class="recommended_store_name">{{ sub.store_name }}</p>
           </div>
-        </div>
+        </swiper-slide>
+      </swiper-container>
+    </div>
   </div>
- 
- </ion-content>
- <app-footer-tabs></app-footer-tabs>
- 
+  </div>
+
+</ion-content>
+<app-footer-tabs></app-footer-tabs>

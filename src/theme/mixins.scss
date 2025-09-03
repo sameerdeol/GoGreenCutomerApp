@@ -1,0 +1,45 @@
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-align-center{
+  display: flex;
+  align-items: center;
+}
+
+@mixin relative{
+  position: relative;
+}
+
+@mixin absolute{
+  position: absolute;
+}
+
+@mixin flex-align-space-between{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+@mixin flex-align-center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin transition($property) {
+  transition: $property 0.3s ease;
+}
+
+@mixin font-bold-6{
+  font-weight: 600;
+}
+
+@mixin border-line($width, $side: all) {
+  @if $side == all {
+    border: #ededed solid #{$width}px;
+  } @else {
+    border-#{$side}: #ededed solid #{$width}px;
+  }
+}

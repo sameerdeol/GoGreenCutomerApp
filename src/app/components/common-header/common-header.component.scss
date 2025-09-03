@@ -1,0 +1,20 @@
+@use 'src/theme/variables' as vars;
+@use 'src/theme/mixins' as mix;
+
+.left_arrow_img_outer_div img{
+    width: 28%;
+}
+.header_border{
+  @include mix.border-line(1, bottom);
+  padding: 10px;
+}
+.header_heading_outer{
+  padding: 0;
+  text-align: center;
+  @include mix.flex-align-center;
+}
+.header_heading{
+  margin: 0;
+  @include mix.font-bold-6;
+  color: vars.$primary-color;
+}

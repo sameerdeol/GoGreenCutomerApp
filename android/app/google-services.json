@@ -1,64 +1,115 @@
 {
   "project_info": {
-    "project_number": "216191980655",
-    "project_id": "go-green-canada",
-    "storage_bucket": "go-green-canada.firebasestorage.app"
+    "project_number": "219923939926",
+    "project_id": "go-green-canada-73b42",
+    "storage_bucket": "go-green-canada-73b42.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:216191980655:android:e66b87db8fc938df5b299a",
+        "mobilesdk_app_id": "1:219923939926:android:2b6a6cd1135d7af740b1f7",
         "android_client_info": {
           "package_name": "go.green.customer"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "219923939926-5ld2ai7td8t7tji9b3h3js269hooehno.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyDnWTuaGv6VNtjxkGo_Nk3C80lUxkI53EM"
+          "current_key": "AIzaSyB_4a4-5_3k5BZAnjE5Y5rzM_X_OKEfzHg"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "219923939926-5ld2ai7td8t7tji9b3h3js269hooehno.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "219923939926-30mj2d55q623d06firelmij7ansjj06q.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.gogreetech.vendor"
+              }
+            }
+          ]
         }
       }
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:216191980655:android:20027f16971f5e315b299a",
+        "mobilesdk_app_id": "1:219923939926:android:3f84e08ae1f59ba640b1f7",
         "android_client_info": {
           "package_name": "go.green.rider"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "219923939926-5ld2ai7td8t7tji9b3h3js269hooehno.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyDnWTuaGv6VNtjxkGo_Nk3C80lUxkI53EM"
+          "current_key": "AIzaSyB_4a4-5_3k5BZAnjE5Y5rzM_X_OKEfzHg"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "219923939926-5ld2ai7td8t7tji9b3h3js269hooehno.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "219923939926-30mj2d55q623d06firelmij7ansjj06q.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.gogreetech.vendor"
+              }
+            }
+          ]
         }
       }
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:216191980655:android:c23936f53270abc95b299a",
+        "mobilesdk_app_id": "1:219923939926:android:fd51c6a20de2d62740b1f7",
         "android_client_info": {
           "package_name": "go.green.vendor"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "219923939926-5ld2ai7td8t7tji9b3h3js269hooehno.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyDnWTuaGv6VNtjxkGo_Nk3C80lUxkI53EM"
+          "current_key": "AIzaSyB_4a4-5_3k5BZAnjE5Y5rzM_X_OKEfzHg"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "219923939926-5ld2ai7td8t7tji9b3h3js269hooehno.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "219923939926-30mj2d55q623d06firelmij7ansjj06q.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.gogreetech.vendor"
+              }
+            }
+          ]
         }
       }
     }

@@ -68,6 +68,25 @@ body {
 .m_auto {
     margin: auto;
 }
+ion-select-popover {
+  --background: #13723b !important;  /* green background for popover */
+  --color: #fff !important;          /* white text */
+}
+ion-searchbar .searchbar-cancel-button {
+  color: #444444 !important;   /* green text */
+  font-weight: 600;            /* optional, make it bold */
+}
+ion-select-popover ion-item {
+  --background: #13723b !important;  /* green background for each option */
+  --color: #fff !important;
+}
+
+ion-select-popover ion-item:hover {
+  --background: #13723b !important;  /* darker green on hover */
+}
+ion-select-popover ion-list {
+  background: #13723b !important; /* remove that light strip */
+}
 .m_0  {
     margin: 0px !important;
 }
@@ -162,7 +181,7 @@ body * {
     border: 0px !important;
 }
 .page_outer_div {
-    padding: 12px;
+    padding: 10px;
 }
 app-footer-tabs {
     z-index: 999;
@@ -170,6 +189,12 @@ app-footer-tabs {
     bottom: -1px;
     left: 0;
     width: 100%;
+}
+.backIcon{
+      position: relative;
+    top: -33px;
+    font-size: 25px;
+    color: green;
 }
 .display_flex{
     display: flex;
@@ -179,7 +204,7 @@ app-footer-tabs {
     margin: 8px;
 }
 .font_weight{
-    font-weight: 600;
+    font-weight: 600 !important;
 }
 .text_font{
     font-size: 13px;
@@ -196,6 +221,9 @@ app-footer-tabs {
 .padding_0{
     padding: 0;
 }
+.custm_padding {
+  padding: 0 !important;
+}
 .color_black{
     color: #000;
 }
@@ -205,7 +233,7 @@ app-footer-tabs {
 }
 .footer-tabs{
     box-shadow: 0 10px 42px rgba(0, 0, 0, 0.2);
-
+    border-radius: 10px;
 }
 .font-24{
     font-size: 24px;
@@ -221,5 +249,124 @@ app-footer-tabs {
     --color: #fff !important;
   }
   .vendor-heading-primary{
-    font-size: 22px;
+    font-size: 20px;
+    color: #000;
+    text-transform: capitalize;
   }
+  .my-toast {
+  --background: #088B46; /* Custom blue */
+  --color: #ffffff;      /* White text */
+
+}
+ion-refresher,
+ion-refresher-content {
+  --color: #088B46; // your custom green or any color
+}
+.shimmer {
+  position: relative;
+  overflow: hidden;
+  background: #e0e0e0; // Light gray base
+  border-radius: 0px;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150px;
+    height: 100%;
+    width: 150px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+    animation: shimmer 1.2s infinite;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-150px);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.fake-placeholder {
+  position: absolute;
+  left: 50px;
+  top: 27%;
+  transform: translateY(-50%);
+  color: #999;
+  pointer-events: auto; // Changed to auto so it can be clicked
+  z-index: 2;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  cursor: text; // Show text cursor to indicate it's clickable
+  
+  // Animate.css integration
+  &.animate__fadeInUp {
+    animation-duration: 0.6s;
+    animation-fill-mode: both;
+  }
+  
+  &.animate__fadeOutUp {
+    animation-duration: 0.4s;
+    animation-fill-mode: both;
+  }
+  
+  // Custom animation for smooth text transitions
+  &.animate__fadeInUp {
+    animation-name: fadeInUp;
+  }
+  
+  &.animate__fadeOutUp {
+    animation-name: fadeOutUp;
+  }
+  
+  .typing-cursor {
+    animation: blink 1s infinite;
+    color: #088b46;
+    font-weight: bold;
+  }
+  
+  // Hover effect to indicate it's clickable
+  &:hover {
+    color: #088b46;
+    transform: translateY(-50%) scale(1.02);
+  }
+} 
+
+// Custom keyframe animations for smoother transitions
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateY(0);
+  }
+}
+
+@keyframes fadeOutUp {
+  from {
+    opacity: 1;
+    transform: translateY(-50%) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-50%) translateY(-10px);
+  }
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}

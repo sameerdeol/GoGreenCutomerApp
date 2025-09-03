@@ -1,0 +1,138 @@
+.details-page {
+  
+  /* ===== Order Info Section ===== */
+  .order-info {
+    padding: 16px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+
+    h2 {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #fff;
+      background-color: #28a745; /* green for delivered */
+      border-radius: 12px;
+      margin: 6px 0;
+    }
+
+    small {
+      color: #000000;
+    }
+  }
+
+  /* ===== Products Section ===== */
+  .products {
+    background: #fff;
+    padding: 16px;
+
+    ion-item {
+       --inner-padding-bottom: 8px;
+        --inner-padding-top: 8px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+      border-bottom: 1px solid #f1f1f1;
+      --inner-border-width: 0;
+
+      ion-thumbnail {
+        width: 50px;
+        height: 50px;
+
+        img {
+          object-fit: cover;
+          border-radius: 6px;
+        }
+      }
+
+      ion-label {
+        h3 {
+          font-size: 14px;
+          font-weight: 600;
+          margin: 0 0 2px 0;
+        }
+
+        p {
+          font-size: 12px;
+          color: #040404;
+          margin: 0;
+        }
+      }
+
+      div[slot="end"] {
+        font-weight: 600;
+        font-size: 14px;
+      }
+    }
+  }
+
+  /* ===== Price Summary Section ===== */
+  .price-summary {
+    background: #fff;
+    padding: 16px;
+    font-size: 14px;
+    border-top: 1px solid #eee;
+
+    div {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      color: #555;
+    }
+
+    hr {
+      border: none;
+      height: 1px;
+      background: #eee;
+      margin: 10px 0;
+    }
+
+    strong {
+      display: flex;
+      justify-content: space-between;
+      font-size: 16px;
+      color: #000;
+    }
+  }
+
+  /* ===== Shipping & Payment Section ===== */
+  .shipping-payment {
+    background: #fff;
+    padding: 0px 16px;
+
+    h3 {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    p {
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 12px;
+    }
+  }
+    ion-footer {
+    padding: 0px;
+    box-shadow: none;
+      .footer_btn{
+            display: flex;
+            justify-content: space-between;
+              ion-button {
+                  margin: 8px 16px;
+                  --border-radius: 6px;
+                  font-weight: 600;
+                }
+      }
+  
+  }
+
+}
+  /* ===== Footer Buttons ===== */
+

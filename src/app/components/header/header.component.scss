@@ -1,35 +1,42 @@
-.logo {
-  height: 40px;
-  width: auto;
-  position: relative;
-  // top: 5px;
-}
+
  
-  
+  ion-header{
+    border-bottom: 1px solid #cdcdcd;
+    box-shadow: none;
+    padding: 5px 10px;
+  }
   ion-toolbar {
     --background: #ffffff;  /* White background */
     --color: #000000;  /* Black text/icons */
   }
-  .header_profile{
-    border: 1px solid gray;
-    border-radius: 41px;
-    width: 43px;
-    height: 43px;
-    display: flex
-;
+
+.logo {
+  height: 100%;
+  width: auto;
+  object-fit: cover;
+}
+
+.header_profile {
+    border: 1px solid #008a4a;
+    border-radius: 25px;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    background: #e3f2ec;
+    align-items: center;
     justify-content: center;
     overflow: hidden;
-  }
+    color: #008a4a;
+    font-weight: 600;
+}
   ion-icon {
     font-size: 20px;
     color: green;
+    position: relative;
+    left: -3px;
   }
  
-  .pickup_logo{
-    height: 20px;
-    width: auto;
-    margin-right: 7px;
-  }
+
   ion-toolbar {
     --background: #ffffff; /* White background */
     --color: #000000;
@@ -48,33 +55,47 @@
     background: transparent;
     margin: 0px 8px 0px 8px;
   }
-  .pickup_drop {
-    background: #088b46;
-    display: flex;
-    color: white;
-    align-items: center;
-    border-radius: 31px;
-    font-size: 11px;
-    padding: 0px 10px 0px 10px;
-}
-.pickup_drop p{
-  margin: 7px 0px 9px 0px;
-}
+
   .icon-circle ion-icon {
     font-size: 20px;
     color: gray;
   }
   .inner_header_text_div {
     display: flex;
+  }
+.header_location_outer_div{
+  margin-left: 10px;
 }
 .header_location_outer_div p{
     margin: 0;
 }
 .header_location_outer_div>p{
-    font-size: 12px;
-    margin-left: 6px;
+    font-size: 14px;
 }
 .inner_header_text_div>p{
     font-weight: 600;
     font-size: 14px;
+}
+
+
+
+.pickup_drop {
+  background: #088b46;
+  display: flex;
+  align-items: center;      /* Vertically center items */
+  justify-content: center;  /* Horizontally center contents */
+  gap: 5px;
+  color: white;
+  border-radius: 5px;
+  font-size: 12px;
+  padding: 5px 10px;         /* Add some vertical padding */
+  height: 35px;              /* Fixed height for consistent alignment */
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.pickup_logo {
+  height: 20px;
+  width: auto;
+  display: block;
 }

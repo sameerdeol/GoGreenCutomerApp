@@ -1,9 +1,11 @@
 package go.green.customer;
 
-
 import android.os.Bundle;
 import com.getcapacitor.BridgeActivity;
 
+// public class MainActivity extends BridgeActivity {}
+
+// package go.green.vendor;
 
 public class MainActivity extends BridgeActivity {
     @Override

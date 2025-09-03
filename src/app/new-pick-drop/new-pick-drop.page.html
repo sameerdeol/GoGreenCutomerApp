@@ -1,0 +1,199 @@
+<ion-content [fullscreen]="true">
+  <app-header></app-header>
+
+  <div class="page_outer_div">
+    <div class="border_div">
+
+      <!-- Banner Swiper -->
+      <div class="outer_category_div">
+        <swiper-container class="mySwiper" slides-per-view="1" space-between="10" autoplay="false">
+          <swiper-slide *ngFor="let item of bannerImg">
+            <div class="slide-content">
+              <img [src]="item.image_url" alt="">
+            </div>
+          </swiper-slide>
+        </swiper-container>
+      </div>
+
+      <!-- Pickup & Drop Section -->
+      <div class="pickup_drop_outer_div">
+        <div class="heading_pickup">
+          <p class="head_p font_weight">Pickup & Drop: Fast, Easy & Convenient</p>
+          <p class="sub_head_p">Effortless delivery with real-time tracking.</p>
+        </div>
+
+        <!-- Pickup -->
+        <p class="label_heading">Pickup Address</p>
+        <div class="display_flex">
+          <input #pickupInput type="text" placeholder="Enter pickup location" [(ngModel)]="pickupAddress">
+          <ion-icon name="location-outline"></ion-icon>
+        </div>
+
+        <!-- Drop -->
+        <p class="label_heading">Drop Address</p>
+        <div class="display_flex">
+          <input #dropInput type="text" placeholder="Enter drop location" [(ngModel)]="dropAddress">
+          <ion-icon name="location-outline"></ion-icon>
+        </div>
+
+        <!-- Parcel Details -->
+        <div class="parcel_label_div">
+          <p class="label_heading">Parcel Items </p> <ion-icon name="information-circle"
+            (click)="presentPopover($event)"></ion-icon>
+        </div>
+
+        <div *ngFor="let item of items; let i = index" class="add_item_div mb-2">
+
+          <!-- Weight -->
+          <input type="number" placeholder="Weight" [(ngModel)]="item.weight" style="width: 70px; margin-right: 6px;" />
+
+          <!-- Unit -->
+          <select class="slect_option" [(ngModel)]="item.unit" style="width: 60px; margin-right: 6px;">
+
+            <option value="kg" selected>kg</option>
+            <option value="g">g</option>
+            <option value="lbs">lbs</option>
+          </select>
+
+          <!-- Dimensions -->
+
+          <input type="number" placeholder="W" [(ngModel)]="item.width" style="width: 50px; margin-right: 4px;" />
+          <input type="number" placeholder="H" [(ngModel)]="item.height" style="width: 50px; margin-right: 6px;" />
+
+          <!-- Add / Remove -->
+          <div class="add_btn_outer_div">
+            <div class="add_btn" *ngIf="i === items.length - 1" (click)="addRow()">+</div>
+            <div class="remove_btn" *ngIf="items.length > 1" (click)="removeRow(i)">-</div>
+          </div>
+
+        </div>
+
+        <!-- Distance -->
+        <div *ngIf="distanceText">
+          <p><strong>Distance:</strong> {{ distanceText }}</p>
+          <p><strong>Duration:</strong> {{ routeDurationText }}</p>
+        </div>
+
+        <!-- Comments -->
+        <p class="label_heading">Comments</p>
+        <textarea class="text_area" placeholder="Enter any special instructions"></textarea>
+
+        <!-- Submit -->
+        <div>
+          <ion-button class="welcome_submit mt_1" expand="block" (click)="placeOrder()">Submit</ion-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-popover [isOpen]="isPopoverOpen" (didDismiss)="isPopoverOpen = false">
+  <ng-template>
+    <div class="popover-content">
+      Ex Dimension : <strong>245px × 234px</strong>
+    </div>
+  </ng-template>
+</ion-popover>
+<app-footer-tabs></app-footer-tabs>
+
+<ion-modal [isOpen]="isModalOpen" (didDismiss)="isModalOpen = false">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>Order Summary</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="isModalOpen = false">
+            <ion-icon name="close-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding">
+      <div class="summary-section pickup">
+        <h3>Pickup Address</h3>
+        <p>{{ pickupAddress || 'No pickup address specified' }}</p>
+      </div>
+
+      <div class="summary-section drop">
+        <h3>Drop Address</h3>
+        <p>{{ dropAddress || 'No drop address specified' }}</p>
+      </div>
+
+      <div class="summary-section items">
+        <h3>Parcel Items</h3>
+        <div *ngFor="let item of items; let i = index" class="item-card">
+          <p><strong>Item {{ i+1 }}</strong></p>
+          <p><strong>Weight:</strong> {{ item.weight || '-' }} {{ item.unit }}</p>
+          <p><strong>Dimensions:</strong> {{ item.width || '-' }} × {{ item.height || '-' }} cm</p>
+        </div>
+      </div>
+
+      <div class="summary-section trip">
+        <h3>Trip Information</h3>
+        <p><strong>Distance:</strong> {{ distanceText || 'Calculating...' }}</p>
+        <p><strong>Duration:</strong> {{ routeDurationText || 'Calculating...' }}</p>
+      </div>
+
+      <div>
+        <div class="delivery-schedule-section">
+
+
+          <ion-radio-group [(ngModel)]="deliveryOption" (ionChange)="onDeliveryOptionChange($event)">
+            <!-- Today Delivery Option -->
+            <div class="delivery-option" [class.selected]="deliveryOption === 'today'"
+              (click)="selectDeliveryOption('today')">
+              <div class="delivery-item">
+                <ion-radio value="today" color="success"></ion-radio>
+                <div class="delivery-content">
+                  <h3 class="delivery-title">Today Delivery</h3>
+                  <p class="delivery-subtitle">Arriving in 20 min</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Schedule Delivery Option -->
+            <div class="delivery-option" [class.selected]="deliveryOption === 'scheduled'"
+              (click)="selectDeliveryOption('scheduled')">
+              <div class="delivery-item">
+                <ion-radio value="scheduled" color="success"></ion-radio>
+                <div class="delivery-content">
+                  <h3 class="delivery-title">Select Date and Time</h3>
+                  <p class="delivery-subtitle">Get your order delivered on your schedule—choose your date & time</p>
+                </div>
+              </div>
+
+              <!-- Date and Time Selection (shown when scheduled is selected) -->
+              <div *ngIf="deliveryOption === 'scheduled'" class="schedule-controls" (click)="$event.stopPropagation()">
+                <ion-datetime-button datetime="datetime"
+                  [disabled]="selectedDelvieryOption === 'today'"></ion-datetime-button>
+                <div class="selectTimeDiv">
+                  <input type="date" [value]="todayDate">
+                  <input type="time" [value]="currentTime">
+                </div>
+              </div>
+            </div>
+          </ion-radio-group>
+
+          <!-- Comments Section -->
+          <div class="comments-section">
+            <ion-textarea placeholder="write your comments" [(ngModel)]="deliveryComments" rows="3"
+              class="comments-textarea">
+            </ion-textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="charges">
+        <h2>Total Charges: ${{ calculateCharges() }}</h2>
+      </div>
+
+      <ion-button expand="block" class="submit_btn" (click)="submitOrder()">
+        <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+        Confirm Order
+      </ion-button>
+
+
+    </ion-content>
+  </ng-template>
+</ion-modal>

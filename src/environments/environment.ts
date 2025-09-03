@@ -4,18 +4,20 @@
 
 export const environment = {
   production: true,
-  currencySymbol: '$',
   baseurl: "https://cx.ekarigar.com/delievery-app/",
   firebaseConfig: {
-    apiKey: 'AIzaSyDnWTuaGv6VNtjxkGo_Nk3C80lUxkI53EM',
-    authDomain: 'go.green.customer.firebaseapp.com',
-    projectId: 'go.green.customer',
-    storageBucket: 'go.green.customer.appspot.com',
-    messagingSenderId: '216191980655',
-    appId: '1:216191980655:android:e66b87db8fc938df5b299a'
-  }
+    apiKey: 'AIzaSyB_4a4-5_3k5BZAnjE5Y5rzM_X_OKEfzHg',
+    authDomain: 'go-green-canada-73b42.firebaseapp.com',
+    projectId: 'go-green-canada-73b42',
+    storageBucket: 'go-green-canada-73b42.appspot.com',
+    messagingSenderId: '219923939926',
+    appId: '1:219923939926:android:e66b87db8fc938df5b299a'
+  },
+  currencySymbol: '$',
+  googleMapsApiKey: 'AIzaSyDFlmtcApTUQPffY2AyL8a5kOrYYd0L9nY'
 
 };
+
 
 /*
  * For easier debugging in development mode, you can import the following file

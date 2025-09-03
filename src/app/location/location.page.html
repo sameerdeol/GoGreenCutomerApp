@@ -1,17 +1,16 @@
 <ion-content [fullscreen]="true">
 
 
-  <div class="d_flex justify-content-between search_outer_div pr-2 pl-2"  [ngClass]="{ 'bg_white': autocompleteItems.length > 0 }">
-    <div class="left_arrow_img_outer_div d_flex ">
-      <img src="assets/green-left-arrow.svg">
+  <div class="d_flex justify-content-between search_outer_div pr-2 pl-2"
+    [ngClass]="{ 'bg_white': autocompleteItems.length > 0 }">
+    <div class="left_arrow_img_outer_div d_flex " (click)="goback()">
+      <img src="assets/green-left-arrow.svg" >
     </div>
-    <ion-searchbar 
-      placeholder="Search for area, street..."
-      (ionInput)="onSearchInput($event)">
+    <ion-searchbar placeholder="Search for area, street..." (ionInput)="onSearchInput($event)">
     </ion-searchbar>
-   </div>
- 
-   <div class="search_list" *ngIf="autocompleteItems.length > 0">
+  </div>
+
+  <div class="search_list" *ngIf="autocompleteItems.length > 0">
     <div class="ion_list">
       <div *ngFor="let item of autocompleteItems" (click)="selectPlace(item)">
         <div class="item-row">
@@ -21,63 +20,83 @@
       </div>
     </div>
   </div>
- 
-    <div #mapContainer id="map" style="width: 100%; height: 100%;"></div>
 
-    <div class="center-marker" id="centerMarker">           
-      <ion-icon class="location_marker map-pin" name="location-sharp"></ion-icon>
-      <div class="pulse-circle"></div>
-    </div>
-  <div class="location_white_bg2" #targetDiv>
-    <!-- <div class="cross_loc">
-      <ion-icon (click)="remove_select_loc()" name="close"></ion-icon>
-    </div> -->
-    <div>
-      <p class="text-dark text_font font_weight">Select Tag for location</p>
-    </div>
-    <swiper-container class="mySwiper" slides-per-view="4" space-between="10">
-      <!-- Iterate over the slides array and create a swiper-slide for each item -->
-      <swiper-slide 
-        *ngFor="let slide of slides; let i = index" 
-        [ngClass]="{'selected': selectedSlide === i}" 
-        (click)="onSlideClick(i)">
-        <div class="slide-content">
-          <div class="icon-circle">
-            <ion-icon [name]="slide.icon" class="mr-1"></ion-icon>
-            <p>{{ slide.text }}</p>
-          </div>
-        </div>
-      </swiper-slide>
-    </swiper-container>
-    
-    <div class="mt-3">
-      <input type="text" class="mb-3" placeholder="Complete Address" [(ngModel)]="address">
-      <input type="text" class="mb-3" placeholder="Floor" [(ngModel)]="floor">
-      <input type="text" class="mb-3" placeholder="Landmark" [(ngModel)]="landmark">
-    </div>
-    <div>
-      <button class="confirm_address" (click)="onConfirmAddress()">Confirm Address</button>
-    </div>
+  <div #mapContainer id="map" style="width: 100%; height: 100%;"></div>
 
+  <div class="center-marker" id="centerMarker">
+    <ion-icon class="location_marker map-pin" name="location-sharp"></ion-icon>
+    <div class="pulse-circle"></div>
   </div>
+
+
+
+
   <div class="location_white_bg">
-    <ion-button size="small" class="curr_loc_one text_gogreen opensans_semibold" expand="block" (click)="goToCurrentLocation()">
-      <img src="assets/icons/curr_location.svg" > 
+    <ion-button size="small" class="curr_loc_one text_gogreen opensans_semibold" expand="block"
+      (click)="goToCurrentLocation()">
+      <img src="assets/icons/curr_location.svg">
       Use current location
     </ion-button>
     <div *ngIf="addressDetails" class="mt-2 text-dark">
       <p class="mb-2 text_gogreen text_font">Dilevering Your Order To</p>
-      <div class="d_flex">
+      <div class="d_flex fetched_address">
         <ion-icon class="location_marker map-icon-bottom" name="location-sharp"></ion-icon>
         <p class="text_font">{{ addressDetails || 'No location selected yet.' }}</p>
       </div>
       <div>
-        <ion-button size="small" class="add_more_details" expand="block" (click)="goToCurrentLocation()">
+        <ion-button size="small" class="add_more_details" expand="block" (click)="add_select_loc()">
           Add more address details
         </ion-button>
       </div>
- 
+
     </div>
   </div>
 
+
+
+  <ion-content class="ion-padding">
+    <ion-modal [isOpen]="isModalOpen" [initialBreakpoint]="0.5" [breakpoints]="[0, 0.5, 0.8, 1]">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <!-- <ion-title>Modal</ion-title> -->
+            <ion-buttons slot="end"  (click)="setOpen(false)">
+              <!-- <ion-button >Close</ion-button> -->
+              <ion-icon class="close_btn"name="close"></ion-icon>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <div class="location_white_bg2">
+            <div class="tag_location_header">
+              <p class="text-dark text_font font_weight">Select Tag for location</p>
+              <!-- <p class="text-dark text_font font_weight" >Close</p> -->
+            </div>
+            <swiper-container class="mySwiper" slides-per-view="4" space-between="10">
+
+              <swiper-slide *ngFor="let slide of slides; let i = index" [ngClass]="{'selected': selectedSlide === i}"
+                (click)="onSlideClick(i)">
+                <div class="slide-content">
+                  <div class="icon-circle">
+                    <ion-icon [name]="slide.icon" class="mr-1"></ion-icon>
+                    <p>{{ slide.text }}</p>
+                  </div>
+                </div>
+              </swiper-slide>
+            </swiper-container>
+
+            <div class="mt-3">
+              <input type="text" disabled="" class="mb-3" placeholder="Complete Address" [(ngModel)]="address">
+              <input type="text" class="mb-3" placeholder="Floor" [(ngModel)]="floor">
+              <input type="text" class="mb-3" placeholder="Landmark" [(ngModel)]="landmark">
+            </div>
+            <div>
+              <button class="confirm_address" (click)="onConfirmAddress()">Confirm Address</button>
+            </div>
+
+          </div>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+  </ion-content>
 </ion-content>

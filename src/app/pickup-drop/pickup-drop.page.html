@@ -7,48 +7,7 @@
      <input class="search_bar" type="search" placeholder="Search your product..">
      <ion-icon class="search-icon" name="search-outline"></ion-icon>
    </div>
- 
-   <!-- <div class="outer_category_div"> 
-     <swiper-container class="mySwiper" slides-per-view="5" space-between="10"  autoplay="false">
-       <swiper-slide *ngFor="let item of sliderItems ">
-         <div class="slide-content ">
-           <div class="icon-circle">
-           <ion-icon [name]="item.icon"></ion-icon>
-           <p>{{ item.name }}</p>
-         </div>
-         </div>
-       </swiper-slide>
-     </swiper-container>
-   </div> -->
-   <div class="outer_category_div">
-    <swiper-container class="mySwiper" slides-per-view="4" space-between="10"   [breakpoints]="{
-      '640': { 'slidesPerView': 6, 'spaceBetween': 10 },
-      '768': { 'slidesPerView': 6, 'spaceBetween': 10 },
-      '1024': { 'slidesPerView': 8, 'spaceBetween': 10 }
-    }">
 
-      <!-- Optional Static Slide -->
-      <swiper-slide (click)="selectCategory2(-1)" >
-        <div class="slide-content" (click)="navigateToAllCat()">
-          <div class="icon-circle">
-            <img src="assets/all-cat.svg" alt="Static Slide" class="svg-icon">
-            <p>All</p>
-          </div>
-        </div>
-      </swiper-slide>
-    
-      <!-- Dynamic Slides -->
-      <swiper-slide *ngFor="let item of categories; let i = index" (click)="selectCategory(i, item.id, item.name)" >
-        <div class="slide-content">
-          <div class="icon-circle">
-            <img [src]="baseUrl + item.category_logo" alt="{{ item.name }}" class="svg-icon" />
-            <p>{{ item.name }}</p>
-          </div>
-        </div>
-      </swiper-slide>
-    </swiper-container>
-    
-  </div>
 
    <div class="pickup_drop_outer_div">
      <div class="heading_pickup">

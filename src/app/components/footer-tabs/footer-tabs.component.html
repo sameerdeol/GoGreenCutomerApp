@@ -16,8 +16,8 @@
     <!-- Wishlist -->
     <ion-tab-button  class="icon_outer_div" (click)="navigateToOrders()">
       <img [src]="activeTab === 'view-cart' ? '/assets/cart-active.svg' : '/assets/cart.svg'" alt="view-cart" class="cart_img">
-      <p [class.active-text]="activeTab === 'view-cart'">Orders</p>
-       <ion-badge class="cart_badge">47</ion-badge>
+      <p [class.active-text]="activeTab === 'view-cart'">Cart</p>
+       <ion-badge class="cart_badge" *ngIf="cartQuantity > 0">{{cartQuantity}}</ion-badge>
     </ion-tab-button>
     <!-- <ion-tab-button tab="3">
       <ion-icon name="calendar"></ion-icon>

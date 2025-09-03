@@ -2,8 +2,8 @@
   <ion-toolbar >
     <!-- Logo on the Left -->
   
-      <ion-buttons slot="start"*ngIf="customerDetails" class="header_profile ml-2" (click)="navigatToProfile()">
-        <img 
+      <ion-buttons slot="start"*ngIf="customerDetails" class="header_profile" (click)="navigatToProfile()">
+        <!-- <img 
         [src]="
           customerDetails.gender === 0 
             ? 'assets/men.png' 
@@ -13,33 +13,32 @@
         " 
         alt="Profile" 
         class="logo"
-      >
-       </ion-buttons>
-    
-  
-  <div class="header_location_outer_div">
-    <p>Delivered To</p>
-    <div class="inner_header_text_div">
-      <ion-icon name="location-outline"></ion-icon>
-      <p (click)="navigateToLocation()">To {{addressType}}</p>
-    </div>
-   
-  </div>
-   
-
-    <!-- Cart Icon on the Right -->
-    <ion-buttons slot="end" class="mr-2">
-      <!-- <ion-button class="icon-circle">
-        <ion-icon name="cart-outline"></ion-icon>
-      </ion-button> -->
-      <div class="pickup_drop" (click)="navigateTopickdrop()">
-        <img src="assets/pickup.svg" alt="Logo" class="pickup_logo">
-        <p>Pick & Drop</p>
+      > -->
+      <div class="profile-image-header">
+        {{ userInitial }}
       </div>
-      <ion-button class="icon-circle">
-        <ion-icon name="notifications-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+
+      </ion-buttons>
+  
+      <div class="header_location_outer_div">
+        <p>Delivered To</p>
+        <div class="inner_header_text_div">
+          <ion-icon name="location-outline"></ion-icon>
+          <p (click)="navigateToLocation()">To {{addressType}}</p>
+        </div>
+      </div>
+   
+      <!-- Cart Icon on the Right -->
+      <ion-buttons slot="end" class="">
+        <!-- <ion-button class="icon-circle">
+          <ion-icon name="cart-outline"></ion-icon>
+        </ion-button> -->
+        <div class="pickup_drop" (click)="navigateTopickdrop()">
+          <img src="assets/pickup.svg" alt="Logo" class="pickup_logo">Pick & Drop
+        </div>
+        <!-- <ion-button class="icon-circle" (click)="navigateToNotifications()">
+          <ion-icon name="notifications-outline"></ion-icon>
+        </ion-button> -->
+      </ion-buttons>
   </ion-toolbar>
 </ion-header>
-

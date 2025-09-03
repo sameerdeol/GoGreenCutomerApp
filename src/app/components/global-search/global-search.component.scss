@@ -1,0 +1,293 @@
+@use 'src/theme/variables' as vars;
+@use 'src/theme/mixins' as mix;
+
+.location_search {
+  height: 45px;
+
+  .searchBar{
+      --border-radius: 6px;
+      --icon-color: #008a4a;
+      --placeholder-color: #444444;
+  }
+
+  .search-result-dropdown {
+    background: #fff;
+    padding-bottom: 80px;
+    position: relative;
+    z-index: 9;
+
+    .fixed_width {
+      width: 60px;
+      height: 60px;
+      border: 1px solid #cdcdcd;
+      border-radius: 5px;
+      background: #f3f3f3;
+      @include mix.flex-center;
+      overflow: hidden;
+
+      img {
+        max-width: 100px;
+        max-height: 100px;
+        object-fit: contain;
+      }
+    }
+
+    p {
+      width: 100%;
+      font-size: 16px;
+      font-weight: 600;
+      color: #5a5959;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-transform: capitalize;
+    }
+
+    .empty_search_box {
+      @include mix.flex-center;
+      flex-direction: column;
+      text-align: center;
+      color: #6e6e6e;
+      min-height: 300px;
+
+      ion-icon {
+        font-size: 100px;
+        margin-bottom: 10px;
+        color: inherit;
+      }
+    }
+  }
+}
+
+.recomender_heading {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #6e6e6e;
+  text-transform: uppercase;
+}
+
+.vendorsOuterDiv {
+  background: #fff;
+  position: relative;
+  z-index: 9;
+
+  .Recomended_vendor_div {
+    margin-top: 10px;
+
+    .vendors-scroll-container {
+      padding: 8px 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      &::-webkit-scrollbar { display: none; }
+
+      .vendors-grid {
+        display: flex;
+        gap: 14px;
+        padding: 0 4px 8px;
+        width: max-content;
+        height: 230px;
+
+        .vendor-card {
+          flex: 0 0 200px;
+          background: #fff;
+          border: 1px solid rgba(0, 0, 0, 0.05);
+          border-radius: 6px;
+          overflow: hidden;
+          transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+          cursor: pointer;
+
+          &:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+          }
+
+          &.hovering {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+          }
+
+          .vendor-image-wrapper {
+            position: relative;
+            height: 150px;
+            overflow: hidden;
+
+            .vendor-image {
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              transition: all 0.6s cubic-bezier(0.4,0,0.2,1);
+            }
+
+            .dots-pagination {
+              @include mix.flex-center;
+              position: absolute;
+              bottom: 12px;
+              left: 50%;
+              transform: translateX(-50%);
+              gap: 6px;
+
+              .dot {
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+                background: rgba(255,255,255,0.6);
+                border: 1px solid rgba(255,255,255,0.8);
+                transition: all 0.3s ease;
+
+                &.active {
+                  background: #fff;
+                  transform: scale(1.2);
+                  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                }
+              }
+            }
+
+            .favorite-icon {
+              @include mix.flex-center;
+              position: absolute;
+              top: 12px;
+              right: 12px;
+              width: 36px;
+              height: 36px;
+              background: rgba(255,255,255,0.9);
+              border-radius: 50%;
+              backdrop-filter: blur(10px);
+              cursor: pointer;
+              transition: all 0.3s ease;
+
+              &:hover { transform: scale(1.1); background: #fff; }
+
+              ion-icon {
+                font-size: 20px;
+                color: #666;
+                transition: all 0.3s ease;
+
+                &.favorited { color: #ff4757; }
+              }
+            }
+          }
+
+          .vendor-info {
+            padding: 9px;
+
+            .vendor-name {
+              font-size: 18px;
+              font-weight: 600;
+              color: #1a1a1a;           
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              text-transform: capitalize;
+              margin: 6px 0px;
+            }
+
+            .delivery-time,
+            .vendor-details {
+              display: flex;
+              align-items: center;
+              gap: 6px;
+              font-size: 14px;
+              color: #666;
+              margin-bottom: 12px;
+            }
+
+            .vendor-details .rating {
+              display: flex;
+              align-items: center;
+              gap: 4px;
+              color: #ffa500;
+              font-weight: 600;
+            }
+
+            .vendor-tags {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 6px;
+
+              .tag {
+                font-size: 12px;
+                font-weight: 500;
+                color: #666;
+                background: #f8f9fa;
+                border: 1px solid #e9ecef;
+                padding: 4px 10px;
+                border-radius: 12px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .features_product_div {
+    .slider_heading_div {
+      @include mix.flex-align-space-between;
+      margin: 12px 0 15px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #d5d5d5;
+
+      h3 { font-size: 17px; font-weight: 600; color: #000; margin: 0; }
+      p  { font-size: 14px; color: #008000 !important; margin: 0 !important; }
+    }
+
+    .vendor-card-with-carousel {
+      position: relative;
+      margin: 4px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+
+      .bookmark_outer_div {
+        position: absolute;
+        top: 10px; right: 10px;
+        z-index: 9;
+
+        .bookmark-filled { background: #fff; padding: 5px; border-radius: 5px; font-size: 24px; }
+        .bookmark-outline { color: #00a86b; font-size: 20px; }
+      }
+
+      .vendor-image-carousel-container {
+        position: relative;
+        height: 200px;
+        overflow: hidden;
+
+        .store-carousel-image {
+          position: absolute;
+          width: 100%; height: 100%;
+          object-fit: cover;
+          border-radius: inherit;
+          transition: all 0.6s cubic-bezier(0.4,0,0.2,1);
+        }
+      }
+
+      .vendor_text_box {
+        background: #fff;
+        padding: 5px 10px;
+
+        .vendor_rating {
+          @include mix.flex-align-center;
+          gap: 4px;
+          width: 50px;
+          height: 27px;
+          font-size: 14px;
+          border-radius: 5px;
+          background: #088b46;
+          color: #fff;
+
+          ion-icon { font-size: 14px; margin-top: 1px; }
+        }
+      }
+    }
+  }
+}
+
+.no-vendors{
+          p{
+            text-align: center;
+            color: #a3a3a3;
+          }
+}

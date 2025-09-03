@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { ApiserviceService } from 'src/app/services/apiservice.service';
+import { ProfileInitialService } from 'src/app/services/profile-initial.service';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -17,7 +18,12 @@ export class HeaderComponent  implements OnInit {
   fulladdress: any;
   customerDetails: any;
   roleId: number = 5;
-  constructor(private router: Router,private storage: Storage,private apiservice:ApiserviceService) { 
+  userInitial: string = '';
+  firstName: any;
+  constructor(private router: Router,
+    private storage: Storage,
+    private apiservice:ApiserviceService,
+    private profileInitialService: ProfileInitialService) { 
     this.init();
   }
   
@@ -25,9 +31,12 @@ export class HeaderComponent  implements OnInit {
     await this.storage.create();
   }
   async ngOnInit() {
-    this.addressType = await this.storage.get('selectedTypeText');
+    // this.addressType = await this.storage.get('selectedTypeText');
     this.fulladdress = await this.storage.get('fullAddress');
-    console.log('this.addressType',this.addressType);
+    this.profileInitialService.userInitial$.subscribe(initial => {
+    this.userInitial = initial;
+  });
+    // console.log('this.addressType',this.addressType); 
     this.getExistingCustomerDetails();
   }
   navigatToProfile(){
@@ -37,7 +46,7 @@ export class HeaderComponent  implements OnInit {
     this.router.navigate(['/location']);
   }
   navigateTopickdrop(){
-    this.router.navigate(['/store-products']);
+    this.router.navigate(['/new-pick-drop']);
   }
   async getExistingCustomerDetails(){
     const role_id = this.roleId;
@@ -46,18 +55,27 @@ export class HeaderComponent  implements OnInit {
     .subscribe((response) => {
       if (response) {
         this.customerDetails = response.data;
-        console.log(this.customerDetails)
-        // You can show success message or navigate if needed
-        // this.firstName = data.firstname;
-        // this.lastName = data.lastname;
-        // this.phoneNumber = data.phonenumber;
-        // this.email = data.email;
-        // this.dob = data.dob;
-
-        // // Set gender
-        // this.selectedGender = data.gender === 0 ? 'male' : 'female';
+        this.firstName = response.data.firstname;
+        const newInitial = this.firstName?.charAt(0).toUpperCase() || '';
+        this.profileInitialService.setUserInitial(newInitial);  
+        // console.log('address type',this.customerDetails.type)   
+        if(this.customerDetails.type == 1){
+            this.addressType = 'Home'
+        } else if(this.customerDetails.type == 2){
+            this.addressType = 'Office'
+        } else if(this.customerDetails.type == 3){
+            this.addressType = 'Hotel'
+        }
+        else if(this.customerDetails.type == 4){
+            this.addressType = 'Other'
+        }
       }
     });
+  }
+  navigateToNotifications(){
+   
+      this.router.navigate(['/notifications']);
+   
   }
 
 }

@@ -12,7 +12,8 @@ export class ApiserviceService {
   base_path = 'https://cx.ekarigar.com/delievery-api/';
   
   // API Endpoints login1/appsignup
-  allcategories = this.base_path + 'category/fetch-categories';
+  // allcategories = this.base_path + 'category/fetch-categories';
+  allcategories = this.base_path + 'vendors/type?filter=active';
   allBannerImages = this.base_path + 'banners/app-banners';
   allbrands = this.base_path + 'productbrands/allProduct-brands';
   allSubcategories = this.base_path + 'subcategory/fetch-subcategories';
@@ -33,17 +34,24 @@ export class ApiserviceService {
   searchApi = this.base_path + 'search/searchproducts';
   getbrandbybrandIdAPi = this.base_path+ 'products/product-brandbyID';
   OrderSubmitCOD = this.base_path+ 'order/createorder';
-  updateCustomerProfile = this.base_path+ 'users/update-customerProfile';
+  updateCustomerProfile = this.base_path+ 'users/update-user';
   getExistingCustomerDetails= this.base_path+ 'users/customer-profile';
   saveUserAddress = this.base_path+ 'useraddress/user-addresses';
   getUserAddress = this.base_path+ 'useraddress/user-addressesbyid';
   getBestSellingProducts = this.base_path+ 'products/bestsellerproducts';
-  getallvendors = this.base_path+ 'users/all-vendors';
+  getallvendors = this.base_path+ 'vendors/all-vendors';
   addfavouriteVendors = this.base_path+'favourites/addfavourite';
   removefavoruiteVendors = this.base_path+'favourites/removefavoruite';
   getvendorbySearch = this.base_path+'search/itembysearch';
   getvendorProductsByVendorId = this.base_path+ 'products/getallproductsbyvendorID';
-
+  AllOrders = this.base_path+ 'order/orderhistorybyuserid';
+  getAllCatAndSubCat = this.base_path+ 'category/get-cateandsubcat';
+  allvendorOnSearchedResult = this.base_path + 'search/searchvendorbysearchterm';
+  getCatandVendors = this.base_path+'category/get-cateandrelatedvendor';
+  getVendorsByVendorId = this.base_path+'vendors/vendorbyid';
+  getproductByVendor = this.base_path+ '/search/searchallbyVendor';
+  productFilters = this.base_path+ 'products/filter';
+  deletAddress = this.base_path+'useraddress/deleteUser-addresses';
 
 
   private _storageReady = false;
@@ -100,6 +108,62 @@ export class ApiserviceService {
         return this.http.post<any>(this.allcategories, body, { headers });})
     );
   }
+   get_all_categories2(): Observable<any> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        return this.http.get<any>(this.allcategories, { headers });})
+    );
+  }
+    get_vendor_by_Cat(): Observable<any> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        return this.http.get<any>(this.getCatandVendors, { headers });})
+    );
+  }
+
+   get_all_cat_and_subCat(): Observable<any> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        return this.http.get<any>(this.getAllCatAndSubCat, { headers });})
+    );
+  }
+
+  get_all_vendor_on_searchResult(user_id: any, search_name: any): Observable<any> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        const body = { user_id: user_id ,search_name: search_name};
+        return this.http.post<any>(this.allvendorOnSearchedResult, body, { headers });})
+    );
+  }
+  get_all_product_by_vendor(searchstring: any,vendor_id: any){
+      return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        const body = { searchstring: searchstring ,vendor_id: vendor_id};
+        return this.http.post<any>(this.getproductByVendor, body, { headers });})
+    );
+  }
+   get_all_vendor_by_VendorId(user_id: any, vendor_id: any): Observable<any> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        const body = { user_id: user_id ,vendor_id: vendor_id};
+        return this.http.post<any>(this.getVendorsByVendorId, body, { headers });})
+    );
+  }
+  
+  filterProducts(payload: any){   
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        return this.http.post<any>(this.productFilters,payload, { headers });})
+    );
+ 
+  }
+   get_all_orders(user_id: any): Observable<any> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        const body = { user_id: user_id };
+        return this.http.post<any>(this.AllOrders, body, { headers });})
+    );
+  }
   get_allproductsByVendorID(vendor_id: any,searchTerm: any): Observable<any> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => {
@@ -107,10 +171,10 @@ export class ApiserviceService {
         return this.http.post<any>(this.getvendorProductsByVendorId, body, { headers });})
     );
   }
-  save_user_address(user_id: any,address: any,floor:any,landmark: any,type: any): Observable<any> {
+  save_user_address(user_id: any,address: any,floor:any,landmark: any,type: any,customer_lat: any,customer_lng: any): Observable<any> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => {
-        const body = { user_id: user_id,address:address,floor:floor,landmark:landmark,type:type};
+        const body = { user_id: user_id,address:address,floor:floor,landmark:landmark,type:type, customer_lat: customer_lat,customer_lng:customer_lng};
         return this.http.post<any>(this.saveUserAddress, body, { headers });})
     );
   }
@@ -142,6 +206,13 @@ export class ApiserviceService {
         return this.http.delete<any>(this.removefavoruiteVendors, {headers, body });})
     );
   }
+  deleteAddress(user_id: any,address_id:any): Observable<any> { //deletAddress
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        const body = { user_id: user_id,address_id:address_id};
+        return this.http.delete<any>(this.deletAddress, {headers, body });})
+    );
+  }
   get_best_seller_products(user_id: any): Observable<any> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => {
@@ -164,10 +235,10 @@ export class ApiserviceService {
       switchMap(headers => this.http.get<any>(this.allbrands, { headers }))
     );
   }
-  get_all_vendors(user_id:any): Observable<any> {
+  get_all_vendors(user_id:any, vendor_type_id: any): Observable<any> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => {
-        const body = { user_id: user_id };
+        const body = { user_id: user_id, vendor_type_id: vendor_type_id };
         return this.http.post<any>(this.getallvendors, body, { headers });})
     );
   }
@@ -194,10 +265,10 @@ export class ApiserviceService {
         return this.http.put<any>(this.updateCustomerProfile, body, { headers });})
     );
   }
-  insert_order_cod(userID: any, cart:any[], payment_method:any,user_address_id: any): Observable<any> {
+  insert_order_cod(userID: any, cart:any[], payment_method:any,user_address_id: any,vendor_id: any,is_fast_delivery: any): Observable<any> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => {
-        const body = { user_id: userID, cart: cart, payment_method: payment_method,user_address_id: user_address_id };
+        const body = { user_id: userID, cart: cart, payment_method: payment_method,user_address_id: user_address_id, vendor_id: vendor_id, is_fast_delivery: is_fast_delivery };
         return this.http.post<any>(this.OrderSubmitCOD, body, { headers });})
     );
   }

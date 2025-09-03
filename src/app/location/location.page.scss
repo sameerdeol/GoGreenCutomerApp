@@ -1,24 +1,49 @@
 .location_white_bg {
     height: 100%;
-    background-image: url(../../assets/welcome/white_ellipse_square.webp);
+    background-color: #fff;
     background-size: 150%;
     background-position: top center;
     background-repeat: no-repeat;
     position: fixed;
-    bottom: -69%;
-    padding-top: 50px !important;
-    padding: 0px 12px 0px 12px;
+    bottom: -74%;
+    padding: 20px 12px 20px 12px;
     transition: 0.3s;
     width: 100%;
-    // z-index: 99999;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+
+              .curr_loc_one{            
+              text-transform: unset !important;
+              --background: #fff;
+              width: fit-content;
+              margin: auto;
+              border: 1px solid #088B46;
+              border-radius: 25px;
+              overflow: hidden;
+              --padding-bottom: 10px;
+              --padding-top: 10px;
+              --padding-start: 15px;
+              --padding-end: 15px;
+              font-size: 14;
+
+                    img{
+                      margin-right: 5px;
+                      width: 18px;
+                    }
+              }
+              .fetched_address{
+                 height: 60px;
+              }
+              .add_more_details{
+                  --border-radius: 36px;
+                  color: white;
+                  min-width: 17px;
+                  height: 40px;
+                  font-size: 14px;
+              }
+  
 }
-.add_more_details{
-    --border-radius: 36px;
-    color: white;
-    min-width: 17px;
-    height: 40px;
-    font-size: 14px;
-}
+
 .center-marker {
     position: absolute;
     top: 50%;
@@ -141,7 +166,7 @@ ion-searchbar{
     border: 1px solid gray;
     padding: 8px !important;
     min-height: 45px;
-    border-radius: 36px;
+    border-radius: 5px;
     width: 90%;
     z-index: 9999;
     height: 25px;
@@ -178,17 +203,28 @@ ion-toolbar {
     height: -webkit-fill-available;
 }
 .location_white_bg2 {
-    height: 100%;
-    background-image: url(../../assets/welcome/manual_loc_ellipse.webp);
-    background-size: 150%;
-    background-position: top center;
-    background-repeat: no-repeat;
-    position: fixed;
-    bottom: -100%;
-    padding: 100px 20px 30px 20px;
-    transition: 0.3s;
-    width: 100%;
-    z-index: 99999;
+  margin-top: 10px;
+    // height: 80%;
+    // background-image: url(../../assets/welcome/manual_loc_ellipse.webp);
+    // position: fixed;
+    // bottom: -100%;
+    // padding: 20px 20px 20px 20px;
+    // transition: 0.3s;
+    // width: 100%;
+    // background-color: #fff;
+    .tag_location_header{
+        display: flex;
+        justify-content: space-between;
+    }
+    input[type="text"] {
+        width: 100%;
+        background: white;
+        border: 1px solid gray;
+        border-radius: 5px;
+        height: 45px;
+        padding: 0px 18px 0px 15px;
+        color: black;
+    }
 }
 .map-icon-bottom{
   color: #008a4a;
@@ -199,7 +235,7 @@ ion-toolbar {
     display: flex;
     align-items: center;
     border: 1px solid gray;
-    border-radius: 25px;
+    border-radius: 5px;
     padding: 7px;
 }
 .selected .icon-circle p {
@@ -227,33 +263,10 @@ ion-icon{
     font-size: 18px;
 }
 .select_loc {
-    bottom: -50% !important;
+    bottom: -40% !important;
     z-index: 99999999;
 }
-input[type="text"] {
-    width: 100%;
-    background: white;
-    border: 1px solid gray;
-    border-radius: 25px;
-    height: 40px;
-    padding: 0px 18px 0px 15px;
-    color: black;
-}
-// .select_loc:after {
-//     content: "x";
-//     background-color: #088B46;
-//     color: #fff;
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-//     border-radius: 50%;
-//     width: fit-content;
-//     padding: 5px 15px 10px 15px;
-//     font-size: 20px;
-//     position: absolute;
-//     top: -5%;
-//     left: 45%;
-// }
+
 .btn_enable_loc {
     border-radius: 28px;
     overflow: hidden;
@@ -269,20 +282,7 @@ input[type="text"] {
     --icon-color: #088B46;
 }
   
-.curr_loc_one {
-    text-transform: unset !important;
-    --background: #fff;
-    width: fit-content;
-    margin: auto;
-    border: 1px solid #088B46;
-    border-radius: 25px;
-    overflow: hidden;
-    --padding-bottom: 10px;
-    --padding-top: 10px;
-    --padding-start: 15px;
-    --padding-end: 15px;
-    font-size: 12px;
-}
+
 .map-container.black_overlay:after {
     content: '';
     background: #00000069;
@@ -382,3 +382,13 @@ input.searchbar-input.sc-ion-searchbar-ios {
     bottom: 30px;
     left: 5%;
 }
+.close_btn{
+   color: #088b46;
+   font-size: 25px;
+}
+.my-custom-loader .loading-wrapper {
+  background: #fff;
+  color: #000;
+  border-radius: 12px;
+}
+

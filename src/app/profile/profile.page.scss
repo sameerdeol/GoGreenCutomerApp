@@ -1,11 +1,10 @@
 .green_header{
-    background-image: url(/assets/header_bg.png);
-    background-size: 180%;
     background-position: top;
     background-repeat: no-repeat;
     position: relative;
     top: 0px;
-    height: 230px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
 
 }
 .green_header ion-icon{
@@ -105,7 +104,7 @@ input[type="text"] {
     width: 100%;
     background: white;
     border: 1px solid gray;
-    border-radius: 30px;
+    border-radius: 5px;
     padding: 8px 13px 8px 19px;
     color: black;
 }
@@ -113,7 +112,7 @@ input[type="email"] {
   width: 100%;
   background: white;
   border: 1px solid gray;
-  border-radius: 30px;
+  border-radius: 5px;
   padding: 8px 13px 8px 19px;
   color: black;
 }
@@ -121,7 +120,23 @@ input[type="number"] {
   width: 100%;
   background: white;
   border: 1px solid gray;
-  border-radius: 30px;
+  border-radius: 5px;
+  padding: 8px 13px 8px 19px;
+  color: black;
+}
+input[type="date"] {
+  width: 100%;
+  background: white;
+  border: 1px solid gray;
+  border-radius: 5px;
+  padding: 8px 13px 8px 19px;
+  color: black;
+}
+#gender {
+   width: 100%;
+  background: white;
+  border: 1px solid gray;
+  border-radius: 5px;
   padding: 8px 13px 8px 19px;
   color: black;
 }
@@ -130,6 +145,18 @@ input[type="number"] {
     font-size: 13px;
     font-weight: 600;
     margin: 7px 1px 8px 9px;
+}
+.profile-image{
+    background-color: rgb(195 221 210);
+    height: 75px;
+    width: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50px;
+    font-size: 27px;
+    font-weight: 600;
+    color: green;
 }
 .left_arrow_div img{
   width: 60%;
@@ -166,3 +193,4 @@ input[type="number"] {
   background-color: transparent;
   transform: scale(1.05);
 }
+
