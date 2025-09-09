@@ -15,7 +15,7 @@ import { Storage } from '@ionic/storage-angular';
 import { ViewChildren, QueryList, ElementRef, AfterViewInit } from '@angular/core';
 import { GlobalSearchComponent } from "../components/global-search/global-search.component";
 import type { SwiperOptions } from 'swiper/types';
-import { toggleFavoritefeatured } from '../utils/utils';
+import { toggleFavourite } from '../utils/utils';
 
 register();
 
@@ -300,7 +300,7 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   toggleFav(vendor: any) {
-    toggleFavoritefeatured(vendor, this.userID, this.apiservice);
+    toggleFavourite(vendor, this.userID, this.apiservice,'vendor');
   }
  
   async refreshPage(event: any) {
@@ -389,8 +389,9 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   navigateToVendorStore(item: any) {
+     console.log('this is homeID', this.userID)
     this.router.navigate(['/store-products'], {
-      state: { vendor: item }
+      state: { vendor: item , user_id: this.userID}
     });
     // console.log('this is ', item.title)
   }

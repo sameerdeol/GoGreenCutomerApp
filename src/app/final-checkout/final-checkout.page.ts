@@ -41,9 +41,15 @@ export class FinalCheckoutPage implements OnInit {
     await this.storage.create();
   }
   async ngOnInit() {
+    const nav = this.router.getCurrentNavigation();
+    if (nav?.extras.state) {
+      this.totalamountWithDilevryCharges = nav.extras.state['totalPrice'];
+      console.log('total amount in final checkout',this.totalamountWithDilevryCharges)
+    }
     const user_id = await this.storage.get('userID');
     this.userID =  user_id;
     this.cartitems =  await this.storage.get('cartItems');
+   
     const deilveryoption = await this.storage.get('selectedDeliveryOption');
     if(deilveryoption == "Fast"){
       this.selectedDeliveryOption = 1;
@@ -78,7 +84,7 @@ export class FinalCheckoutPage implements OnInit {
 
 
     this.deliveryOption = await this.storage.get('selectedDeliveryOption');
-    this.totalamountWithDilevryCharges = await this.storage.get('totalAmountWithDeleveryCharges');
+    // this.totalamountWithDilevryCharges = await this.storage.get('totalAmountWithDeleveryCharges');
   
   }
 

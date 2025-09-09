@@ -400,7 +400,6 @@ export class LocationPage implements OnInit {
     await toast.present();
   }
 
-
   setOpen(isOpen: boolean) {
     this.isModalOpen = isOpen;
     console.log('modal open', isOpen)

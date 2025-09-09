@@ -1,335 +1,64 @@
-
-
-<ion-content [fullscreen]="true">
-  <div class="green_header">
-    <div class="page_outer_div ">
-      <!-- <div class="display_flex align_items_center">
-        <div> <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon></div>
-        <p>Wishlist</p>
-        <div>
-          <ion-icon slot="icon-only" name="search-outline"></ion-icon>
-          <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
-        </div>
-      </div> -->
-      <div class="display_flex align_items_center">
-        <div class="left_arrow_div"> <img src="assets/left_arrow.svg" (click)="navigateToback()"></div>
-        <p class="header_heding_p">My Wishlist</p>
-        <div class="header_search_img ">
-          <!-- <ion-icon slot="icon-only" name="search-outline"></ion-icon> -->
-           <img src="assets/common_search_icon.svg" class="search_img">
-           <img src="assets/common_bell_icon.svg">
-          <!-- <ion-icon slot="icon-only" name="notifications-outline"></ion-icon> -->
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="whislist_top_bg">
-
-  </div>
-  <div class="select_all_container">
-    <div class="select_all_check">
-      <input type="checkbox" [(ngModel)]="selectAll" (change)="toggleSelectAll()" />
-      <label class="color_black margin_0">Select All</label>
-    </div>
- 
-    <ion-icon class="delete_icon" *ngIf="selectedItems.length > 0" (click)="deleteSelected()" name="trash-outline"></ion-icon>
-   <div class="filter_btn_outer" >
-    <img src="/assets/filter.svg" alt="">
-    <button class="filter_btn" (click)="toggleFilter()">Filter</button>
-   </div>
-  </div>
-  <div class="page_outer_div bordr_bottom_gray">
-    <ion-grid class="ion_grid_outer_div">
-      <ion-row >
-        <ion-col class="padding_0"size="6" *ngFor="let item of allfavoriteProducts">
-          <ion-card>
-            <div class="card-content"  [ngClass]="{'selected-card': isItemSelected(item)}">
-              <div class="display_flex">
-                <input
-                type="checkbox"
-                [checked]="isItemSelected(item)"
-                (change)="toggleSelection(item)"
-              >
-                <ion-icon (click)="unmarkfavourite(item.id)" name="close-outline"></ion-icon>
-              </div>
-             
-              
-             <div class="img_outer_div">
-              <img [src]="baseUrl+item.featured_image" alt="">
-             </div>
-             <p class="product_head text_left">{{item.title}}</p>
-             <p class="product_desc text_left">{{item.subtitle}}</p>
-             <div class="col-12 custm_padding" *ngIf="!isAddedMap[item.id]; else quantityControls">
-              <button class="add_to_cart_btn_bg" (click)="addToCart(item)">
-                Add To Cart
-              </button>
-            </div>
-            
-            <ng-template #quantityControls>
-              <div class="col-12 custm_padding">
-                <button class="add_to_cart_btn_bg2">
-                  <span class="remove_item_btn" (click)="removeFromCart(item)">-</span>
-                  {{ getQuantity(item.id) }}
-                  <span class="add_item_btn" (click)="addToCart(item)">+</span>
-                </button>
-              </div>
-            </ng-template>
-            </div>
-          </ion-card>
-        </ion-col>
-    
-      </ion-row>
- 
-    </ion-grid>
-    
-    
-    <div class="features_product_div" *ngIf="allweeklydeals?.length>0">
-      <div class="slider_heading_div">
-        <h3>Deals of the Week</h3>
-        <p (click)="navigateToinerAllDeals(allweeklydeals[0].category_id, 'dealsProduct')">See all</p>
-      </div>
-      <swiper-container class="mySwiper" slides-per-view="3" space-between="5" [breakpoints]="{
-        '640': { 'slidesPerView': 5, 'spaceBetween': 10 },
-        '768': { 'slidesPerView': 5, 'spaceBetween': 10 },
-        '1024': { 'slidesPerView': 5, 'spaceBetween': 10 }
-      }">
-        <swiper-slide *ngFor="let deals of allweeklydeals; let i = index">
-          <div class="slide-content slide_div slide_content">
-            <div class="whishlist_img_div">
-             
-            <button class="heart-button" (click)="toggleFavoritefeatured(deals, deals.id, deals.is_favourite)">
-              <img 
-                [src]="deals.is_favourite === 1 ? 'assets/heart-filled.svg' : 'assets/heart-empty.svg'" 
-                alt="Favorite" 
-                class="heart-img"
-              />
-            </button>
-            
-            </div>
-            <div class="image_wrapper" (click)="navigateToproduct(deals.id)" >
-              <img [src]="baseUrl + deals.featured_image" alt="">
-            </div>
-            <div class="product_desc display_flex">
-              <div class="width_50">
-                <p class="product_heading_desc">{{deals.title}}</p>
-                <p class="product_sub_heading_desc">{{deals.subtitle}}</p>
-              </div>
-          
-              <div class="price_outer_div">
-                <p class="price_p">${{deals.price}}</p>
-                
-                <!-- "Add to Cart" Button -->
-               
-              </div>
-            </div>
-            <div class="col-12 custm_padding" *ngIf="!isAddedMap[deals.id]; else quantityControls">
-              <button class="add_to_cart_btn_bg" (click)="addToCart(deals)">
-                Add To Cart
-              </button>
-            </div>
-            
-            <ng-template #quantityControls>
-              <div class="col-12 custm_padding">
-                <button class="add_to_cart_btn_bg2">
-                  <span class="remove_item_btn" (click)="removeFromCart(deals)">-</span>
-                  {{ getQuantity(deals.id) }}
-                  <span class="add_item_btn" (click)="addToCart(deals)">+</span>
-                </button>
-              </div>
-            </ng-template>
-        
+<ion-content>
+  <div class="page_outer_div">
+       <div class="features_product_div" *ngIf="Allvendors && Allvendors.length > 0">
+          <div class="slider_heading_div">
+            <h3>All Stores</h3>
           </div>
-        </swiper-slide>
-      </swiper-container>
 
-    </div>
+          <ion-card *ngFor="let item of Allvendors; let i = index"
+            class="mb-3 home_vendor_card_box vendor-card-with-carousel" (click)="handleVendorClick(i, item)"
+            (mouseenter)="onVendorHover(i, true)" (mouseleave)="onVendorHover(i, false)"
+            (touchstart)="onVendorTouch(i)">
 
-      <div class="popular_brand_div  margin_bottom_5" [ngClass]="{ 'margin_bottom_13': showCartPopup }">
-        <div class="slider_heading_div">   
-            <h3>Popular Brands</h3>
-            <p>See all</p>
-        </div>
-        <div class="home_slidr_outer_div brand_outer_div">
-          <swiper-container class="mySwiper" slides-per-view="4" space-between="15"  autoplay="false" pagination="false">
-            <swiper-slide *ngFor="let brand of allbrands">
-              <div class="slide-content slide_content">
-                <div class="image_wrapper_brand"  (click)="navigateToBrands(brand.id)">
-                  <img [src]="baseUrl+brand.brand_logo" alt="">
+            <!-- Bookmark/Favorite Button -->
+            <div class="bookmark_outer_div">
+              <button fill="clear" (click)="toggleFav(item); $event.stopPropagation()"
+                class="bookmark-btn m-0 book_mark_button">
+                <ion-icon class="text_gogreen bookmark-filled"
+                  [name]="item?.is_favourite == 1 ? 'bookmark' : 'bookmark-outline'">
+                </ion-icon>
+              </button>
+            </div>
+
+            <!-- Image Carousel Container -->
+            <div class="vendor-image-carousel-container w-100 vendor_slider home_all_vendor_big_box">
+              <!-- Image Stack for Carousel Effect -->
+              <div class="store-image-stack">
+                <img *ngFor="let img of getVendorImages(item); let imgIndex = index" [src]="img"
+                  alt="vendor store image" class="vendor_store_img box_vendor_images store-carousel-image"
+                  [style.opacity]="getVendorImageOpacity(i, imgIndex)"
+                  [style.transform]="getVendorImageTransform(i, imgIndex)"
+                  [style.z-index]="getCurrentVendorImageIndex(i) === imgIndex ? 2 : 1" />
+              </div>
+
+              <!-- Dots Pagination (only show if multiple images) -->
+              <div class="store-dots-pagination" *ngIf="item?.featured_images?.length > 1">
+                <span *ngFor="let img of item.featured_images; let dotIndex = index" class="store-pagination-dot"
+                  [class.active]="getCurrentVendorImageIndex(i) === dotIndex">
+                </span>
+              </div>
+
+            </div>
+
+            <!-- Store Information -->
+            <ion-card-header class="vendor_text_box">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="font-weight-bold vendor-heading-primary">{{ item.store_name }}</div>
+                <div class="vendor_rating">
+                  {{ item.rating || '3.9' }}
+                  <ion-icon class="text-white" name="star"></ion-icon>
                 </div>
-  
-              </div>  
-            </swiper-slide>
-          </swiper-container>
-        </div>
+              </div>
+              <div class="d-flex align-items-center">
+                <img src="assets/timer-icon.svg" alt="">
+                <p class="mb-0 font-weight-bold text-gray">
+                  {{ item.vendor_start_time }}AM - {{ item.vendor_close_time }}PM
+                </p>
+              </div>
+            </ion-card-header>
+          </ion-card>
         </div>
   </div>
-  <div class="sidebarmenu" [class.show]="isFilterVisible">
-    <div class="firstclear">
-      <p class="filter">All Filters</p>
-      <p class="clear" (click)="clearAllFilter()">CLEAR ALL</p>
-    </div>
   
-    <div class="filteroptions">
-      <div class="category">
-        <p (click)="showCategory('Discount')" [class.active]="activeCategory === 'Discount'">Discount</p>
-        <div class="bottom-borderr"></div>
-        <div class="bottom-borderr"></div>
-        <p (click)="showCategory('Brand')" [class.active]="activeCategory === 'Brand'">Brand</p>
-        <div class="bottom-borderr"></div>
-        <p (click)="showCategory('Price_range')" [class.active]="activeCategory === 'Price_range'">Price Range</p>
-        <div class="bottom-borderr"></div>
-        <p (click)="showCategory('Delivery_type')" [class.active]="activeCategory === 'Delivery_type'">Delivery Type</p>
-        <div class="bottom-borderr"></div>
-        <p (click)="showCategory('Star_rating')" [class.active]="activeCategory === 'Star_rating'">Rating</p>
-        <div class="bottom-borderr"></div>
-        <p (click)="showCategory('Category')" [class.active]="activeCategory === 'Category'">Category</p>
-        <div class="bottom-borderr"></div>
-        <p (click)="showCategory('Short_By')" [class.active]="activeCategory === 'Short_By'">Sort By</p>
-       
-      </div>
-  
-      <!-- Subcategories -->
-      <div *ngIf="activeCategory === 'Discount'" class="subcategory">
-        <p>
-          <input type="checkbox" [checked]="tempSelectedDiscountThresholds.includes(10)" 
-          (change)="onTempDiscountFilterChange($event, 10)"> 10% and above
-        </p>
-        <div class="bottom-borderrblack"></div>
-        <p>
-          <input type="checkbox" [checked]="tempSelectedDiscountThresholds.includes(20)" 
-          (change)="onTempDiscountFilterChange($event, 20)"> 20% and above
-        </p>
-        <div class="bottom-borderrblack"></div>
-        <p>
-          <input type="checkbox" [checked]="tempSelectedDiscountThresholds.includes(30)" 
-          (change)="onTempDiscountFilterChange($event, 30)"> 30% and above
-        </p>
-        <div class="bottom-borderrblack"></div>
-        <p>
-          <input type="checkbox" [checked]="tempSelectedDiscountThresholds.includes(40)" 
-          (change)="onTempDiscountFilterChange($event, 40)"> 40% and above
-        </p>
-        <div class="bottom-borderrblack"></div>
-      </div>
-  
-      <div *ngIf="activeCategory === 'Short_By'" class="subcategory">
-        <p><input type="checkbox"> Price - Low to High</p>
-        <div class="bottom-borderrblack"></div>
-        <p><input type="checkbox"> Price - High to Low</p>
-        <div class="bottom-borderrblack"></div>
-        <p><input type="checkbox"> Popularity Newest First</p>
-        <div class="bottom-borderrblack"></div>
-      </div>
-  
-      <div *ngIf="activeCategory === 'Brand'" class="subcategory">
-        <div *ngFor="let brand of allbrands">
-          <p>
-            <input type="checkbox" [value]="brand.id"  [checked]="tempSelectedBrandIds.includes(brand.id)" 
-            (change)="onTempBrandChange($event, brand.id)">
-            {{ brand.name }}
-          </p>
-          <div class="bottom-borderrblack"></div>
-        </div>
-      </div>
-  
-      <div *ngIf="activeCategory === 'Price_range'" class="subcategory">
-        <p>
-          <input 
-        type="checkbox" 
-        [checked]="isPriceRangeSelected(0, 50)"
-        (change)="onTempPriceRangeChange($event, {min: 0, max: 50})"> $0 - $50
-        </p>
-        <div class="bottom-borderrblack"></div>
-        <p>
-          <input 
-        type="checkbox" 
-        [checked]="isPriceRangeSelected(50, 100)"
-        (change)="onTempPriceRangeChange($event, {min: 50, max: 100})"> $50 - $100
-        </p>
-        <div class="bottom-borderrblack"></div>
-        <p>
-          <input 
-          type="checkbox" 
-          [checked]="isPriceRangeSelected(100, 200)"
-          (change)="onTempPriceRangeChange($event, {min: 100, max: 200})"> $100 - $200
-        </p>
-        <div class="bottom-borderrblack"></div>
-      </div>
-  
-      <div *ngIf="activeCategory === 'Delivery_type'" class="subcategory">
-        <p>
-          <input 
-            type="checkbox" 
-            [checked]="tempSelectedDeliveryTypes.includes(0)" 
-            (change)="onTempDeliveryTypeChange($event, 0)"> Normal Delivery
-        </p>
-        <div class="bottom-borderrblack"></div>
-      
-        <p>
-          <input 
-            type="checkbox" 
-            [checked]="tempSelectedDeliveryTypes.includes(1)" 
-            (change)="onTempDeliveryTypeChange($event, 1)"> Fast Delivery
-        </p>
-        <div class="bottom-borderrblack"></div>
-      </div>
-  
-      <div *ngIf="activeCategory === 'Star_rating'" class="subcategory">
-        <p><input type="checkbox"> 1 Star</p>
-        <div class="bottom-borderrblack"></div>
-        <p><input type="checkbox"> 2 Stars</p>
-        <div class="bottom-borderrblack"></div>
-        <p><input type="checkbox"> 3 Stars</p>
-        <div class="bottom-borderrblack"></div>
-        <p><input type="checkbox"> 4 Stars</p>
-        <div class="bottom-borderrblack"></div>
-        <p><input type="checkbox"> 5 Stars</p>
-        <div class="bottom-borderrblack"></div>
-      </div>
-  
-      <div *ngIf="activeCategory === 'Category'" class="subcategory">
-        <div *ngFor="let cat of Allcategories">
-          <p>
-            <input 
-              type="checkbox" 
-              [checked]="tempSelectedCategoryIds.includes(cat.id)" 
-              (change)="onTempCategoryChange($event, cat.id)">
-            {{ cat.name }}
-          </p>
-          <div class="bottom-borderrblack"></div>
-        </div>
-      </div>
-    </div>
-  
-    <div class="closeapply">
-      <div class="close" (click)="closeFilter($event)">
-        <a id="closeFilter">CLOSE</a>
-      </div>
-      <div (click)="applyFilter()"class="apply">
-        <a >APPLY</a>
-      </div>
-    </div>
-  </div>
-  <div 
-  class="cart-popup" 
-  [ngClass]="{ 'slide-out': isSlidingOut }" 
-  *ngIf="showCartPopup" [class.show-popup]="showCartPopup">
-  
-  <div class="display_flex left_right_padding align_items_center">
-    <p>
-      <ion-icon name="cart-outline"></ion-icon> 
-      {{ totalQuantity }} item(s) added to cart
-    </p>
 
-    <div class="view_cart_div_btn">
-      <button (click)="navigateToViewCart()">view cart</button>
-      <ion-icon 
-        (click)="removeCartStorage()" 
-        class="remove_item_icon" 
-        name="close-circle-outline">
-      </ion-icon>
-    </div>
-  </div>
-</div>
 </ion-content>
-<app-footer-tabs></app-footer-tabs>

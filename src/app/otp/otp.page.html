@@ -1,25 +1,7 @@
 <ion-content [fullscreen]="false">
   <ion-toolbar>
     <div class="welcome_main h_100vh bg_white">
-      <div class="d_flex pt_1 bg_white">
-        <ion-toolbar>
-          <ion-buttons slot="start">
-            <ion-button (click)="gobackpreviouswelcome()">
-              <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-          
-          <!-- Page Title -->
-          <ion-title class="text_center text_gogreen">OTP</ion-title>
-          
-          <ion-buttons slot="end">
-            <ion-button>
-              <ion-icon name="help-circle"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </div>
-      
+      <app-common-header [customClass]="'my-header-class'"></app-common-header>
       <div class="text_center msg_main">
         <img src="../../assets/welcome/message_icon.svg" class="welcome_ingredients" alt="welcome_ingredients" title="welcome_ingredients">
       </div>
@@ -31,33 +13,25 @@
             <p class="verify_number">Please type the verification code
               send to <b>{{prefix}}{{phoneNumber}}</b></p>
           </div>
-          <div class="otp_main position_relative">
-            <input id="otp1" class="otp_feild" type="tel" maxlength="1" 
-                   (input)="moveFocus($event, 'otp2', null)" />
-          
-            <input id="otp2" class="otp_feild" type="tel" maxlength="1" 
-                   (input)="moveFocus($event, 'otp3', 'otp1')" />
-          
-            <input id="otp3" class="otp_feild" type="tel" maxlength="1" 
-                   (input)="moveFocus($event, 'otp4', 'otp2')" />
-          
-            <input id="otp4" class="otp_feild" type="tel" maxlength="1" 
-                   (input)="moveFocus($event, null, 'otp3')" />
-
+       
+            <ion-input-otp> </ion-input-otp>
             <div class="d_flex justify_content_between otp_time_resend_main">
               <span *ngIf="!otpExpired">Time: {{ formattedTime  }}s</span>
               <span *ngIf="otpExpired">OTP Expired</span>
-              <span (click)="resendOtp()">Resend OTP</span>
+              <span class="font-weight-bold" (click)="resendOtp()">Resend OTP</span>
             </div>
-          </div>
-          <button 
-          class="welcome_submit text_gogreen mt_4" 
-          expand="block" 
+          
+          <button
+          class="welcome_submit text_gogreen mt_4"
+          expand="block"
           (click)="afterotpcontinue()" >
           Continue
         </button>
         </div>
+       
+ 
       </div>
     </div>
   </ion-toolbar>
 </ion-content>
+ 

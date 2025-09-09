@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
 import { CommonHeaderComponent } from '../components/common-header/common-header.component';
-import { getLowestPriceVariant } from 'src/app/utils/utils';
+import { getLowestPriceVariant, toggleFavourite } from 'src/app/utils/utils';
 import { CartService } from '../services/cart.service';
 import { Subscription } from 'rxjs';
 register();
@@ -28,7 +28,8 @@ export class ProductDetailPage implements OnInit {
   constructor(private location: Location,
     private storage: Storage,
     private router: Router,
-    private cartService: CartService,) {
+    private cartService: CartService,
+    private apiservice: ApiserviceService) {
     this.init();
 
     const navigation = this.router.getCurrentNavigation();
@@ -66,6 +67,7 @@ export class ProductDetailPage implements OnInit {
   showViewCart: boolean = false;
   rating = 5;
   stars = [1, 2, 3, 4, 5];
+  isFavorite: boolean = false;
 
 
   async init() {
@@ -100,6 +102,9 @@ export class ProductDetailPage implements OnInit {
     }
   }
 
+  toggleFav(product: any) {
+      toggleFavourite(product, this.userID, this.apiservice,'product');
+  }
   goBack() {
     this.location.back();
   }
@@ -119,7 +124,7 @@ export class ProductDetailPage implements OnInit {
     if (cartItemIndex !== -1) {
       const cartItem = this.cartItems[cartItemIndex];
       cartItem.variant_id = variant.id;
-      cartItem.variant_price = variant.price; // ← add this
+      cartItem.variant_price = Number(variant.price); // ← add this
       console.log('🧩 Variant added to cart item:', cartItem);
       this.storage.set('cartItems', this.cartItems);
     }

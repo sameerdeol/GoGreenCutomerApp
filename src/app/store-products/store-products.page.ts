@@ -1,7 +1,7 @@
 
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ModalController } from '@ionic/angular';
+import { AlertController, IonicModule, ModalController } from '@ionic/angular';
 import { CommonModule, Location } from '@angular/common';
 import { SearchModalComponent } from '../components/search-modal/search-modal.component';
 import { ApiserviceService } from '../services/apiservice.service';
@@ -11,7 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
 import { Subscription } from 'rxjs';
 import { FilterModalComponent } from '../components/filter-modal/filter-modal.component';
-import { toggleFavoritefeatured } from '../utils/utils';
+import { toggleFavourite } from '../utils/utils';
 import { Share } from '@capacitor/share';
 @Component({
   selector: 'app-store-products',
@@ -40,6 +40,7 @@ export class StoreProductsPage implements OnInit {
   vendor_id: any;
   selectedFilterCount: any;
   showViewCart: boolean = false;
+  isVendorOpen: boolean = false;
   filterData = {
     price: null as string | null,
     discount: null as string | null,
@@ -53,14 +54,17 @@ export class StoreProductsPage implements OnInit {
     private storage: Storage,
     private location: Location,
     private modalController: ModalController,
-    private modalCtrl: ModalController,) {
+    private modalCtrl: ModalController,
+    private alertController: AlertController) {
 
     this.init();
+    // this.user_id = await this.storage.get('userID')
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras?.state) {
       const vendor = navigation.extras.state['vendor'];
+      const userID = navigation.extras.state['user_id'];
       this.vendor_id = vendor.vendor_id;
-      this.getAllProductsByVendor(this.vendor_id);
+      this.getAllProductsByVendor(this.vendor_id,userID);
       this.vendorDetails = vendor;
       console.log("vendorDetails", this.vendorDetails)
     }
@@ -70,7 +74,9 @@ export class StoreProductsPage implements OnInit {
       // console.log('🛒 Footer received cart quantity update:', quantity);
     });
   }
-
+  async init() {
+    await this.storage.create();
+  }
   toggleSlideFilter(filter: string) {
     if (this.selectedFilters.includes(filter)) {
       this.selectedFilters = this.selectedFilters.filter(f => f !== filter);
@@ -229,7 +235,8 @@ export class StoreProductsPage implements OnInit {
     const closeDate = new Date();
     closeDate.setHours(hours, minutes, 0, 0);
 
-    return now < closeDate ? 'Open now' : 'Closed';
+    this.isVendorOpen = now < closeDate;
+    return this.isVendorOpen ? 'Open now' : 'Closed';
   }
 
   toggleExpand(productId: string) {
@@ -239,15 +246,13 @@ export class StoreProductsPage implements OnInit {
   isExpanded(productId: string): boolean {
     return this.expandedProducts[productId] || false;
   }
-  async init() {
-    await this.storage.create();
-  }
+
   goback() {
     this.location.back();
   }
 
   async ngOnInit() {
-    this.user_id = await this.storage.get('userID');
+ 
     this.cartQuantity = this.cartService.getCurrentQuantity();
  
   }
@@ -315,9 +320,9 @@ export class StoreProductsPage implements OnInit {
     // Update cart service
     this.cartService.setCartItems(this.cartItems);
   }
-  getAllProductsByVendor(vendor_id: any) {
+  getAllProductsByVendor(vendor_id: any,user_id:any) {
     const searchTerm = "";
-    this.apiservice.get_allproductsByVendorID(vendor_id, searchTerm).subscribe((response) => {
+    this.apiservice.get_allproductsByVendorID(vendor_id, searchTerm, user_id).subscribe((response) => {
       if (response.success == true) {
         this.allProducts = response.product;
         console.log("all vendor products", this.allProducts)
@@ -326,6 +331,18 @@ export class StoreProductsPage implements OnInit {
   }
 
   async addToCart(product: any) {
+if (!this.isVendorOpen) {
+  const alert = await this.alertController.create({
+    header: 'Vendor Closed',
+    message: 
+      `This vendor is currently closed. Please come back during opening hours.\n\n` +
+      `Opens at: ${this.vendorDetails?.open_time || 'N/A'}\n` +
+      `Closes at: ${this.vendorDetails?.close_time || 'N/A'}`,
+    buttons: ['OK']
+  });
+  await alert.present();
+  return;
+}
     // Check if cart has items from a different vendor
     if (this.cartItems.length > 0) {
       const firstCartItem = this.cartItems[0];
@@ -410,7 +427,7 @@ export class StoreProductsPage implements OnInit {
   }
 
   toggleFav(vendor: any) {
-      toggleFavoritefeatured(vendor, this.user_id, this.apiservice);
+      toggleFavourite(vendor, this.user_id, this.apiservice,'vendor');
   }
 
 }

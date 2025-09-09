@@ -36,10 +36,6 @@ const routes: Routes = [
     loadChildren: () => import('./product-detail/product-detail.module').then( m => m.ProductDetailPageModule)
   },
   {
-    path: 'pickup-drop',
-    loadChildren: () => import('./pickup-drop/pickup-drop.module').then( m => m.PickupDropPageModule)
-  },
-  {
     path: 'compelte-profile',
     loadChildren: () => import('./compelte-profile/compelte-profile.module').then( m => m.CompelteProfilePageModule)
   },
@@ -59,10 +55,7 @@ const routes: Routes = [
     path: 'whishlist',
     loadChildren: () => import('./whishlist/whishlist.module').then( m => m.WhishlistPageModule)
   },
-  {
-    path: 'inner-product-page',
-    loadChildren: () => import('./inner-product-page/inner-product-page.module').then( m => m.InnerProductPagePageModule)
-  },
+ 
   {
     path: 'sub-categories',
     loadChildren: () => import('./sub-categories/sub-categories.module').then( m => m.SubCategoriesPageModule)
@@ -79,10 +72,7 @@ const routes: Routes = [
     path: 'thank-you',
     loadChildren: () => import('./thank-you/thank-you.module').then( m => m.ThankYouPageModule)
   },
-  {
-    path: 'searched-result',
-    loadChildren: () => import('./searched-result/searched-result.module').then( m => m.SearchedResultPageModule)
-  },
+ 
   {
     path: 'store-products',
     loadChildren: () => import('./store-products/store-products.module').then( m => m.StoreProductsPageModule)

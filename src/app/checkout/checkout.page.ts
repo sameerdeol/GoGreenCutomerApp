@@ -43,7 +43,9 @@ export class CheckoutPage implements OnInit {
     if (nav?.extras.state) {
       this.totalamountWithDilevryCharges = nav.extras.state['totalPrice'];
       this.deliveryOption = nav.extras.state['deliveryOption'];
+ 
     }
+    // await this.storage.set('totalamountWithDilevryCharges',this.totalamountWithDilevryCharges);
     this.getCustomerAddress();
     this.addressType = await this.storage.get('selectedTypeText');
     this.fulladdress = await this.storage.get('fullAddress');
@@ -112,6 +114,11 @@ export class CheckoutPage implements OnInit {
 
 
   navigateTofinalCheckout(){
-    this.router.navigate(['/final-checkout']);
+    // this.router.navigate(['/final-checkout']);
+      this.router.navigate(['/final-checkout'], {
+        state: {
+          totalPrice: this.totalamountWithDilevryCharges,
+        }
+      });
   }
 }

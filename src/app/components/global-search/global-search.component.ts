@@ -8,7 +8,7 @@ import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { register } from 'swiper/element/bundle';
-import { toggleFavoritefeatured } from 'src/app/utils/utils';
+import { toggleFavourite } from 'src/app/utils/utils';
 
 // Register Swiper custom elements
 register();
@@ -373,7 +373,7 @@ export class GlobalSearchComponent implements OnInit, AfterViewInit {
     this.navigateToVendorStore(vendor);
   }
   toggleFav(vendor: any) {
-      toggleFavoritefeatured(vendor, this.userID, this.apiservice);
+      toggleFavourite(vendor, this.userID, this.apiservice, 'vendor');
   }
    
 }

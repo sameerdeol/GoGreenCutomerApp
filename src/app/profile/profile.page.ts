@@ -95,12 +95,10 @@ export class ProfilePage implements OnInit {
     this.location.back();
   }
 
-  validateForm(): void {
-    // Reset error messages
+  async validateForm(): Promise<void> {
     this.emailError = '';
     this.genderError = '';
     const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-    console.log('gender', this.gender)
     let isValid = true;
 
     if (!emailRegex.test(this.email)) {
@@ -129,35 +127,47 @@ export class ProfilePage implements OnInit {
     const phonenumber = this.phoneNumber.trim();
     const dob = this.dob.trim();
 
-    this.apiservice.updateCustomerDetails(role_id, firstname, lastname, email, phonenumber, user_id, gender, dob)
-      .subscribe(async (response) => {
-        this.loading = false;
-        if (response.status === true) {
-          console.log('Update user API Response', response.message);
+    this.apiservice.updateCustomerDetails(
+      role_id,
+      firstname,
+      lastname,
+      email,
+      phonenumber,
+      user_id,
+      gender,
+      dob
+    ).subscribe(async (response) => {
+      this.loading = false;
+      if (response.status === true) {
+        const newInitial = this.firstName?.charAt(0).toUpperCase() || '';
+        this.profileInitialService.setUserInitial(newInitial);
 
-          const newInitial = this.firstName?.charAt(0).toUpperCase() || '';
-          this.profileInitialService.setUserInitial(newInitial); // ✅ broadcast to other component
-
-          // ✅ Show success alert
-          const alert = await this.alertCtrl.create({
-            header: 'Success',
-            message: 'User details updated successfully.',
-            buttons: ['OK']
-          });
-          await alert.present();
-        }
-      }, async error => {
-        this.loading = false;
-
-        // ❌ Show error alert
-        const alert = await this.alertCtrl.create({
-          header: 'Error',
-          message: 'Something went wrong. Please try again.',
-          buttons: ['OK']
+        const successAlert = await this.alertCtrl.create({
+          header: 'Success',
+          message: 'User details updated successfully.',
+          buttons: [] // 👈 remove buttons
         });
-        await alert.present();
+
+        await successAlert.present();
+
+        // ⏱️ Auto-close after 3 seconds
+        setTimeout(() => {
+          successAlert.dismiss();
+        }, 2000);
+      }
+    }, async () => {
+      this.loading = false;
+      const errorAlert = await this.alertCtrl.create({
+        header: 'Error',
+        message: 'Something went wrong. Please try again.',
+        buttons: ['OK']
       });
+      await errorAlert.present();
+    });
   }
+
+
+
 
   getExistingCustomerDetails(){
     const role_id = this.roleId;

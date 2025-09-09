@@ -25,7 +25,13 @@
       <div class="product_heading_outer_div">
         <div class="product_head display_flex">
           <p class="font-weight-bold">{{productDetails?.name}}</p>
-          <img>
+        <ion-icon
+          [name]="productDetails.is_favourite == 1 ? 'heart' : 'heart-outline'"
+          [style.color]="productDetails.is_favourite == 1 ? '#088B46' : 'gray'"
+          size="large"
+          (click)="toggleFav(productDetails)">
+        </ion-icon>
+
         </div>
         <div class="product_desc display_flex">
           <p class="text_font ">{{productDetails.description}}</p>

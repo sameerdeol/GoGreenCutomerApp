@@ -1,17 +1,18 @@
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { AlertController, IonicModule } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { CommonModule,Location } from '@angular/common';
 import { ApiserviceService } from '../services/apiservice.service';
-
+import { CommonHeaderComponent } from '../components/common-header/common-header.component';
+ 
 @Component({
   selector: 'app-otp',
   templateUrl: './otp.page.html',
   styleUrls: ['./otp.page.scss'],
   standalone: true,
-  imports: [IonicModule,CommonModule ], // ✅ Import Ionic components
+  imports: [IonicModule,CommonModule,CommonHeaderComponent], // ✅ Import Ionic components
   schemas: [CUSTOM_ELEMENTS_SCHEMA] // ✅ Allow Web Components like <ion-icon>
 })
 export class OtpPage implements OnInit {
@@ -25,15 +26,15 @@ export class OtpPage implements OnInit {
   savedUserAddress: any;
   addressOfUser: any[] = [];
   is_address_saved_already: any;
-  is_new_user: any;
-
-  constructor(private router: Router, 
+ 
+  constructor(private router: Router,
     private fb: FormBuilder,
     private storage: Storage,
     private apiservice:ApiserviceService,
+    private alertController: AlertController
    ) {
     this.init();
-
+ 
     this.otpForm = this.fb.group({
       otp1: [''],
       otp2: [''],
@@ -41,13 +42,12 @@ export class OtpPage implements OnInit {
       otp4: [''],
     });
   }
-
+ 
   async ngOnInit(): Promise<void> {
     this.phoneNumber =   await this.storage.get('phoneNumber');
     this.UserID = await this.storage.get('userID');
     this.prefix =  await this.storage.get('selectedCountryCode');
     this.is_address_saved_already = await this.storage.get('is_address_saved_already')
-    this.is_new_user = await this.storage.get('is_new_user');
     // this.getCustomerAddress();
     if (this.phoneNumber && this.prefix) {
       this.startCountdown();
@@ -86,8 +86,8 @@ export class OtpPage implements OnInit {
   resendOtp() {
     this.startCountdown();
   }
-
-
+ 
+ 
   moveFocus(event: any, nextElementId: string | null, prevElementId: string | null) {
     if (event.inputType === "deleteContentBackward" && prevElementId) {
       // Move focus to the previous input on backspace
@@ -103,25 +103,35 @@ export class OtpPage implements OnInit {
       }
     }
   }
-
+  async showOtpExpiredAlert() {
+    const alert = await this.alertController.create({
+      header: 'OTP Expired',
+      message: 'Your OTP has expired. Please resend again.',
+      buttons: [
+        {
+          text: 'Resend',
+          handler: () => {
+            this.resendOtp(); // 👈 call your function here
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
   gobackpreviouswelcome() {
     this.router.navigate(['/welcome']);
   }
   afterotpcontinue() {
     if (this.otpExpired) {
+      this.showOtpExpiredAlert();
       return;
     }
     console.log('addresvariable',this.savedUserAddress)
-    if(this.is_new_user == true){
-      this.router.navigate(['/location']);
-    }else{
+    if(this.is_address_saved_already == true){
       this.router.navigate(['/home']);
+    }else{
+      this.router.navigate(['/location']);
     }
-    // if(this.is_address_saved_already == true){
-    //   this.router.navigate(['/home']);
-    // }else{
-    //   this.router.navigate(['/location']);
-    // }
     // Add OTP validation here if needed
    
   }

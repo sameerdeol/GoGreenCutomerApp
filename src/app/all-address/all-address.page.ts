@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { AlertController, IonicModule } from '@ionic/angular';
 import { CommonHeaderComponent } from "../components/common-header/common-header.component";
 import { ApiserviceService } from '../services/apiservice.service';
 import { Storage } from '@ionic/storage-angular';
@@ -33,7 +33,8 @@ export class AllAddressPage implements OnInit {
 
   constructor(
     private apiservice: ApiserviceService,
-    private storage: Storage
+    private storage: Storage,
+    private alertController: AlertController
   ) {
     this.init();
   }
@@ -67,21 +68,42 @@ export class AllAddressPage implements OnInit {
     });
   }
 
-  deleteUserAddress(address_id: any) {
-    console.log('address_id',address_id)
-    this.apiservice.deleteAddress(this.user_id, address_id).subscribe({
-      next: (response) => {
-        if (response) {
-          console.log(response);
-          // Remove the deleted address from the list
-          this.savedUserAddress = this.savedUserAddress.filter(addr => addr.id !== address_id);
+  async deleteUserAddress(address_id: any) {
+    const alert = await this.alertController.create({
+      header: 'Confirm Delete',
+      message: 'Are you sure you want to delete this address?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Delete cancelled');
+          }
+        },
+        {
+          text: 'Delete',
+          handler: () => {
+            this.apiservice.deleteAddress(this.user_id, address_id).subscribe({
+              next: (response) => {
+                if (response) {
+                  console.log(response);
+                  // Remove the deleted address from the list
+                  this.savedUserAddress = this.savedUserAddress.filter(addr => addr.id !== address_id);
+                }
+              },
+              error: (error) => {
+                console.error('Error deleting address:', error);
+              }
+            });
+          }
         }
-      },
-      error: (error) => {
-        console.error('Error deleting address:', error);
-      }
+      ]
     });
+
+    await alert.present();
   }
+
 
   trackByFn(index: number, item: Address): any {
     return item.id;
@@ -91,7 +113,8 @@ export class AllAddressPage implements OnInit {
     const types: { [key: number]: string } = {
       1: 'Home',
       2: 'Work',  
-      3: 'Other'
+      3: 'Hotel',
+      4: 'Other',
     };
     return types[type] || 'Unknown';
   }

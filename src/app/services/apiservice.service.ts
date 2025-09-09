@@ -17,7 +17,7 @@ export class ApiserviceService {
   allBannerImages = this.base_path + 'banners/app-banners';
   allbrands = this.base_path + 'productbrands/allProduct-brands';
   allSubcategories = this.base_path + 'subcategory/fetch-subcategories';
-  allFeaturesProduct = this.base_path + 'products/featuredproducts';
+  // allFeaturesProduct = this.base_path + 'products/featuredproducts';
   allWeeklyDeals = this.base_path + 'products/weeklydealproducts';
   productDetail = this.base_path + 'products/productbyid';
   categoryRelatedBrands = this.base_path + 'products/product-brandsbyCategory';
@@ -27,8 +27,7 @@ export class ApiserviceService {
   loginApi = this.base_path + 'users/appsignup';
   catByCatID = this.base_path + 'subcategory/subcategoriesbycatID';
   productbyCatID = this.base_path + 'products/productbycategoryid';
-  addTofavourite = this.base_path + 'favourites/addfavourite';
-  removeToFavourite = this.base_path+ 'favourites/removefavoruite';
+
   productByBrands = this.base_path+ 'products/productbybrandID';
   getAllfavouriteProducts = this.base_path+ 'favourites/getfavouritebyuserid';
   searchApi = this.base_path + 'search/searchproducts';
@@ -40,8 +39,10 @@ export class ApiserviceService {
   getUserAddress = this.base_path+ 'useraddress/user-addressesbyid';
   getBestSellingProducts = this.base_path+ 'products/bestsellerproducts';
   getallvendors = this.base_path+ 'vendors/all-vendors';
-  addfavouriteVendors = this.base_path+'favourites/addfavourite';
-  removefavoruiteVendors = this.base_path+'favourites/removefavoruite';
+
+  addfavourite = this.base_path+'favourites/addfavourite';
+  removefavoruite = this.base_path+'favourites/removefavoruite';
+
   getvendorbySearch = this.base_path+'search/itembysearch';
   getvendorProductsByVendorId = this.base_path+ 'products/getallproductsbyvendorID';
   AllOrders = this.base_path+ 'order/orderhistorybyuserid';
@@ -164,10 +165,10 @@ export class ApiserviceService {
         return this.http.post<any>(this.AllOrders, body, { headers });})
     );
   }
-  get_allproductsByVendorID(vendor_id: any,searchTerm: any): Observable<any> {
+  get_allproductsByVendorID(vendor_id: any,searchTerm: any,user_id: any): Observable<any> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => {
-        const body = { vendor_id: vendor_id, searchTerm:searchTerm};
+        const body = { vendor_id: vendor_id, searchTerm:searchTerm,user_id: user_id};
         return this.http.post<any>(this.getvendorProductsByVendorId, body, { headers });})
     );
   }
@@ -192,20 +193,38 @@ export class ApiserviceService {
         return this.http.post<any>(this.getvendorbySearch, body, { headers });})
     );
   }
-  addToFavouriteVendors(user_id: any,vendor_id:any,favnum: any): Observable<any> {
-    return this.getAuthHeaders().pipe(
-      switchMap(headers => {
-        const body = { user_id: user_id,vendor_id:vendor_id,favnum: favnum};
-        return this.http.post<any>(this.addfavouriteVendors, body, { headers });})
-    );
-  }
-  removeToFavouriteVEndors(user_id: any,vendor_id:any,favnum: any): Observable<any> {
-    return this.getAuthHeaders().pipe(
-      switchMap(headers => {
-        const body = { user_id: user_id,vendor_id:vendor_id,favnum: favnum};
-        return this.http.delete<any>(this.removefavoruiteVendors, {headers, body });})
-    );
-  }
+
+
+  // this two apis are used
+addToFavourite(user_id: any, id: any, favnum: any, type: 'vendor' | 'product'): Observable<any> {
+  return this.getAuthHeaders().pipe(
+    switchMap(headers => {
+      const body =
+        type === 'vendor'
+          ? { user_id, vendor_id: id, favnum }
+          : { user_id, product_id: id, favnum };
+
+      return this.http.post<any>(this.addfavourite, body, { headers });
+    })
+  );
+}
+
+removeToFavourite(user_id: any, id: any, favnum: any, type: 'vendor' | 'product'): Observable<any> {
+  return this.getAuthHeaders().pipe(
+    switchMap(headers => {
+      const body =
+        type === 'vendor'
+          ? { user_id, vendor_id: id, favnum }
+          : { user_id, product_id: id, favnum };
+
+      return this.http.delete<any>(this.removefavoruite, { headers, body });
+    })
+  );
+}
+
+ //-------------
+
+
   deleteAddress(user_id: any,address_id:any): Observable<any> { //deletAddress
     return this.getAuthHeaders().pipe(
       switchMap(headers => {
@@ -251,13 +270,13 @@ export class ApiserviceService {
     );
   }
 
-  get_all_features_product(userID: any): Observable<any> {
-    return this.getAuthHeaders().pipe(
-      switchMap(headers => {
-        const body = { userID: userID };
-        return this.http.post<any>(this.allFeaturesProduct, body, { headers });})
-    );
-  }
+  // get_all_features_product(userID: any): Observable<any> {
+  //   return this.getAuthHeaders().pipe(
+  //     switchMap(headers => {
+  //       const body = { userID: userID };
+  //       return this.http.post<any>(this.allFeaturesProduct, body, { headers });})
+  //   );
+  // }
   updateCustomerDetails(role_id: any,firstname: any,lastname: any,email: any,phonenumber: any,user_id: any,gender:any,dob: any): Observable<any> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => {
@@ -309,20 +328,20 @@ export class ApiserviceService {
     );
   }
 
-  add_to_favourties(user_id: any, product_id: any): Observable<any> {
-    return this.getAuthHeaders().pipe(
-      switchMap(headers => {
-        const body = { user_id: user_id, product_id: product_id};
-        return this.http.post<any>(this.addTofavourite, body, { headers });})
-    );
-  }
-  remove_to_favourties(user_id: any, product_id: any): Observable<any> {
-    return this.getAuthHeaders().pipe(
-      switchMap(headers => {
-        const body = { user_id: user_id, product_id: product_id };
-        return this.http.delete<any>(this.removeToFavourite, {headers, body });})
-    );
-  }
+  // add_to_favourties(user_id: any, product_id: any): Observable<any> {
+  //   return this.getAuthHeaders().pipe(
+  //     switchMap(headers => {
+  //       const body = { user_id: user_id, product_id: product_id};
+  //       return this.http.post<any>(this.addTofavourite, body, { headers });})
+  //   );
+  // }
+  // remove_to_favourties(user_id: any, product_id: any): Observable<any> {
+  //   return this.getAuthHeaders().pipe(
+  //     switchMap(headers => {
+  //       const body = { user_id: user_id, product_id: product_id };
+  //       return this.http.delete<any>(this.removeToFavourite, {headers, body });})
+  //   );
+  // }
   get_product_by_brands(userID : any, brandID: any): Observable<any> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => {

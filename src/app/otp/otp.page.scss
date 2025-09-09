@@ -16,6 +16,7 @@
 .delivery_man {
     width: 90%;
 }
+ 
 .delivery_man_main {
     text-align: center;
     position: absolute;
@@ -84,7 +85,7 @@ ion-list.drop_list{
     background: #fff !important;
     color: #088B46;
     width: 80%;
-    margin: auto;
+    margin-top: 22px !important;
 }
 .otp_feild {
     width: 50px;
@@ -119,13 +120,40 @@ ion-list.drop_list{
     margin: auto;
 }
 .otp_time_resend_main {
-    position: absolute;
-    width: 100%;
-    bottom: -27px;
+    width: 65%;
     color: #fff;
-    z-index: 99;
     font-size: 13px;
+    margin: auto;
 }
 ion-toolbar{
     --background: white;
 }
+ion-input-otp input {
+    border-radius: 12px;    /* rounded corners */
+    background: #fff;       /* white background */
+    border: 1px solid #ccc; /* optional border */
+    color: #000;            /* black text */
+    font-weight: 600;
+  }
+  .input-otp-shape-round.sc-ion-input-otp-md-h {
+    --border-radius: 25px !important;
+    border: 1px solid white;
+    width: 70%;
+    margin: 12px auto;
+    border-radius: 35px;
+    --border-color: white;
+    --background: white;
+    --padding-bottom: 10px;
+    --padding-top: 10px;
+    --padding-left: 10px;
+    --padding-right: 10px;
+    font-weight: 600;
+    font-size: 20px;
+    color: black;
+}
+.input-otp-size-medium.sc-ion-input-otp-md-h .input-otp-group.sc-ion-input-otp-md, .input-otp-size-large.sc-ion-input-otp-md-h .input-otp-group.sc-ion-input-otp-md {
+    gap: 18px !important;
+}
+ion-input-otp::part(container) {
+    gap: 8px !important; /* spacing between digits */
+  }

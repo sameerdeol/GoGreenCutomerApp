@@ -157,21 +157,21 @@ export class SubCategoriesPage implements OnInit {
   }
   markfavourite(product_id: any){
     const user_id = this.userID;
-    this.apiservice.add_to_favourties(user_id,product_id).subscribe((response: any) => {  
-      if(response){
-        // console.log('Favorite API Response-',response)
-      }
-      },
-    );
+    // this.apiservice.add_to_favourties(user_id,product_id).subscribe((response: any) => {  
+    //   if(response){
+    //     // console.log('Favorite API Response-',response)
+    //   }
+    //   },
+    // );
   }
   unmarkfavourite(product_id: any){
     const user_id = this.userID;
-    this.apiservice.remove_to_favourties(user_id,product_id).subscribe((response: any) => {  
-      if(response){
-        // console.log('Unremove Favorite API Response-',response)
-      }
-      },
-    );
+    // this.apiservice.remove_to_favourties(user_id,product_id).subscribe((response: any) => {  
+    //   if(response){
+    //     // console.log('Unremove Favorite API Response-',response)
+    //   }
+    //   },
+    // );
   }
   async navigateToproduct(id: any){
     await this.storage.set('product_id', id);

@@ -27,7 +27,7 @@ export class MyAccountPage implements OnInit {
   quickLinkData = [
     [
       { icon: 'cube-outline', label: 'Orders', route: '/orders' },
-      { icon: 'heart-outline', label: 'Wishlist', route: '/wishlist' },
+      { icon: 'heart-outline', label: 'Wishlist', route: '/whishlist' },
     ],
     [
       { icon: 'person-outline', label: 'Profile', route: '/profile' },

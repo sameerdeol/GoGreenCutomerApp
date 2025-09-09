@@ -27,7 +27,11 @@
 
     <!-- My Account -->
     <ion-tab-button  class="icon_outer_div" (click)="navigateToAccount()">
-      <img [src]="activeTab === 'account' ? '/assets/account-active.svg' : '/assets/account.svg'" alt="My Account">
+      <!-- <img [src]="activeTab === 'account' ? '/assets/account-active.svg' : '/assets/account.svg'" alt="My Account"> -->
+    <ion-icon 
+      [name]="activeTab === 'account' ? 'settings' : 'settings-outline'" 
+      [style.color]="activeTab === 'account' ? '#088B46' : '#8c8c8c'">
+    </ion-icon>
       <p [class.active-text]="activeTab === 'account'">Settings</p>
     </ion-tab-button>
 

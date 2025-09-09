@@ -6,30 +6,36 @@ export function getLowestPriceVariant(variants: any[]): any | null {
   );
 }
 
-export function toggleFavoritefeatured(vendor: any, userId: any, apiService: any): void {
-  vendor.is_favourite = vendor.is_favourite === 1 ? 0 : 1;
 
-  if (vendor.is_favourite === 1) {
-    markfavourite(userId, vendor.vendor_id, apiService);
-  } else {
-    unmarkfavourite(userId, vendor.vendor_id, apiService);
-  }
-}
+export function toggleFavourite(
+  item: any,
+  userId: any,
+  apiService: any,
+  type: 'vendor' | 'product'
+): void {
+  // flip state immediately for UI
+  item.is_favourite = item.is_favourite === 1 ? 0 : 1;
 
-export function markfavourite(userId: any, vendorId: any, apiService: any) {
-  const favnum = 1;
-  apiService.addToFavouriteVendors(userId, vendorId, favnum).subscribe((response: any) => {
-    if (response) {
-      console.log('Mark Favorite API Response-', response);
+  const favnum = type === 'vendor' ? 1 : 0;
+  const id = type === 'vendor' ? item.vendor_id : item.product_id ?? item.id;
+
+  const apiCall =
+    item.is_favourite === 1
+      ? apiService.addToFavourite(userId, id, favnum, type)
+      : apiService.removeToFavourite(userId, id, favnum, type);
+
+  apiCall.subscribe(
+    (res: any) => {
+      console.log(
+        `${item.is_favourite === 1 ? '✅ Mark' : '❌ Unmark'} ${type} Favourite Response:`,
+        res
+      );
+    },
+    (err: any) => {
+      console.error(`❌ Error updating ${type} favourite:`, err);
+      // rollback if failed
+      item.is_favourite = item.is_favourite === 1 ? 0 : 1;
     }
-  });
+  );
 }
 
-export function unmarkfavourite(userId: any, vendorId: any, apiService: any) {
-  const favnum = 1;
-  apiService.removeToFavouriteVEndors(userId, vendorId, favnum).subscribe((response: any) => {
-    if (response) {
-      console.log('Unremove Favorite API Response-', response);
-    }
-  });
-}
