@@ -28,10 +28,10 @@
         Select All
       </label>
 
-      <div class="view_cart_item_div" *ngFor="let item of cartItems">
+      <div class="view_cart_item_div" *ngFor="let item of cartItems" >
         <input type="checkbox" [(ngModel)]="selectedItemMap[item.id]" (change)="onItemCheckboxChange(item)" />
 
-        <div class="view_cart_outer_div">
+        <div class="view_cart_outer_div" (click)="navigateToParticularProduct(item.id)">
           <div class="display_flex_only">
             <div class="checkout_item_outer_div">
               <img [src]="item.image" alt="" class="mb-2">

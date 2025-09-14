@@ -97,7 +97,8 @@
               id="datetime"
               [value]="selectedDateTime"
               (ionChange)="onDateTimeChange($event)"
-              [disabled]="selectedDelvieryOption === 'today'">
+              [disabled]="selectedDelvieryOption === 'today'"
+              [min]="minDateTime">
             </ion-datetime>
           </ng-template>
         </ion-modal>
@@ -105,7 +106,7 @@
       <input type="textarea" placeholder="write your comments">
       
     </div>
-  </div>
+</div>
 
 
   

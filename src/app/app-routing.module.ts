@@ -45,7 +45,7 @@ const routes: Routes = [
   },
   {
     path: 'profile',
-    loadChildren: () => import('./profile/profile.module').then( m => m.ProfilePageModule)
+    loadChildren: () => import('./settings/profile/profile.module').then( m => m.ProfilePageModule)
   },
   {
     path: 'edit-address',
@@ -53,7 +53,7 @@ const routes: Routes = [
   },
   {
     path: 'whishlist',
-    loadChildren: () => import('./whishlist/whishlist.module').then( m => m.WhishlistPageModule)
+    loadChildren: () => import('./settings/whishlist/whishlist.module').then( m => m.WhishlistPageModule)
   },
  
   {
@@ -79,11 +79,11 @@ const routes: Routes = [
   },
   {
     path: 'notifications',
-    loadChildren: () => import('./notifications/notifications.module').then( m => m.NotificationsPageModule)
+    loadChildren: () => import('./settings/notifications/notifications.module').then( m => m.NotificationsPageModule)
   },
   {
     path: 'orders',
-    loadChildren: () => import('./orders/orders.module').then( m => m.OrdersPageModule)
+    loadChildren: () => import('./settings/orders/orders.module').then( m => m.OrdersPageModule)
   },
   {
     path: 'new-pick-drop',
@@ -95,7 +95,27 @@ const routes: Routes = [
   },
   {
     path: 'all-address',
-    loadChildren: () => import('./all-address/all-address.module').then( m => m.AllAddressPageModule)
+    loadChildren: () => import('./settings/all-address/all-address.module').then( m => m.AllAddressPageModule)
+  },
+  {
+    path: 'bookmarks',
+    loadChildren: () => import('./settings/bookmarks/bookmarks.module').then( m => m.BookmarksPageModule)
+  },
+  {
+    path: 'faqs',
+    loadChildren: () => import('./settings/faqs/faqs.module').then( m => m.FAQsPageModule)
+  },
+  {
+    path: 'terms-and-condition',
+    loadChildren: () => import('./settings/terms-and-condition/terms-and-condition.module').then( m => m.TermsAndConditionPageModule)
+  },
+  {
+    path: 'privacy',
+    loadChildren: () => import('./settings/privacy/privacy.module').then( m => m.PrivacyPageModule)
+  },
+  {
+    path: 'about-us',
+    loadChildren: () => import('./settings/about-us/about-us.module').then( m => m.AboutUsPageModule)
   },
 
  

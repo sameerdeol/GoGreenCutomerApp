@@ -266,7 +266,7 @@ ion-content {
       font-weight: 700;
       color: #008a4a;
       height: 35px;
-
+      text-transform: capitalize;
       display: -webkit-box;
       -webkit-line-clamp: 2;        /* Show only 2 lines */
       -webkit-box-orient: vertical;
@@ -279,6 +279,7 @@ ion-content {
       font-size: 14px;
       // font-weight: 700;
       // color: #008a4a;
+      text-transform: capitalize;
       height: 45px;
       color: black;
       display: -webkit-box;

@@ -34,17 +34,37 @@ export class MyAccountPage implements OnInit {
       { icon: 'notifications-outline', label: 'Notifications', route: '/notifications' },
     ]
   ];
-  constructor(private router: Router,private alertCtrl: AlertController,private storage: Storage, private location: Location) { 
+  constructor(private router: Router,private alertCtrl: AlertController,private apiservice: ApiserviceService ,private storage: Storage, private location: Location) { 
     this.init();
   }
   async init() {
     await this.storage.create();
   }
-  ngOnInit() {
+  async ngOnInit() {
+    const user_id = await this.storage.get('userID');
+    const fcmToken = await this.storage.get('pushNotificationToken');
+    console.log('onlogout user_id', user_id)
+    console.log('onlogout fcmToken', fcmToken)
   }
  
   AllAddress(){
     this.router.navigate(['/all-address']);
+  }
+  bookmarks(){
+    console.log('bookmark click')
+    this.router.navigate(['/bookmarks']);
+  }
+  FaQs(){
+    this.router.navigate(['/faqs']);
+  }
+  privacy(){
+    this.router.navigate(['/privacy']);
+  }
+  TermsAndUse(){
+    this.router.navigate(['/terms-and-condition']);
+  }
+  AboutUS(){
+    this.router.navigate(['/about-us']);
   }
   navigateTo(route: string) {
     this.router.navigate([`/${route}`]);
@@ -78,9 +98,32 @@ export class MyAccountPage implements OnInit {
 
     await alert.present();
   }
+  async removeNotificationToken(){
+    const user_id = await this.storage.get('userID');
+    const fcmToken = await this.storage.get('pushNotificationToken');
+    console.log('onlogout user_id', user_id)
+    console.log('onlogout fcmToken', fcmToken)
+    this.apiservice.remove_notification_token(user_id, fcmToken).subscribe(async (response)=>{
+      if(response.success == true){
+        console.log('token remove response',response)
+        await this.clearStorageExceptPushToken();
+      }
+    })
+  }
+  async clearStorageExceptPushToken() {
+    // get pushNotificationToken before clearing
+    const pushToken = await this.storage.get('pushNotificationToken');
 
-  async logout() {
+    // clear all storage
     await this.storage.clear();
+
+    // restore pushNotificationToken
+    if (pushToken) {
+      await this.storage.set('pushNotificationToken', pushToken);
+    }
+  }
+  async logout() {
+    this.removeNotificationToken();   
     this.router.navigate(['/welcome-one']);
   }
   goback(){

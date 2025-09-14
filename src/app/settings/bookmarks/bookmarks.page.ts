@@ -1,83 +1,58 @@
+import { CommonModule, Location } from '@angular/common';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-// import { HeaderComponent } from '../components/header/header.component';
-import { CommonModule ,Location } from '@angular/common';
+import { CommonHeaderComponent } from '../../components/common-header/common-header.component';
 import { register } from 'swiper/element/bundle';
-// import { FooterTabsComponent } from '../components/footer-tabs/footer-tabs.component';
-import { HttpClient } from '@angular/common/http';
-import { ApiserviceService } from '../services/apiservice.service';
+import { ApiserviceService } from '../../services/apiservice.service';
 import { environment } from 'src/environments/environment';
-import { Router } from '@angular/router';
-import { FooterTabsComponent } from '../components/footer-tabs/footer-tabs.component';
+import { Router, RouterModule } from '@angular/router';
+import { FooterTabsComponent } from '../../components/footer-tabs/footer-tabs.component';
 import { Storage } from '@ionic/storage-angular';
 import { ChangeDetectorRef } from '@angular/core';
 import { SwiperOptions } from 'swiper/types';
-import { toggleFavourite } from '../utils/utils';
+import { toggleFavourite } from '../../utils/utils';
+
 register();
 
 
 @Component({
-  selector: 'app-whishlist',
-  templateUrl: './whishlist.page.html',
-  styleUrls: ['./whishlist.page.scss'],
+  selector: 'app-bookmarks',
+  templateUrl: './bookmarks.page.html',
+  styleUrls: ['./bookmarks.page.scss'],
   standalone: true,
-  imports: [IonicModule, FormsModule, CommonModule, FooterTabsComponent], 
+  imports: [IonicModule, FormsModule, CommonModule, CommonHeaderComponent,RouterModule ], 
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class WhishlistPage implements OnInit {
+export class BookmarksPage implements OnInit {
 
-  constructor(private apiservice:ApiserviceService, private router: Router,private storage: Storage,private cdr: ChangeDetectorRef,private location: Location) {
+    baseUrl = environment.baseurl;
+    userID: any;
+    hoveredVendorIndex: number | null = null;
+    currentVendorImageIndexes: { [key: number]: number } = {};
+    vendorImageIntervals: { [key: number]: any } = {};
+    touchTimeouts: { [key: number]: any } = {};
+  
+    Allvendors: any[] = [];
+    isLoading: boolean = true;
+    private readonly VENDOR_IMAGE_DURATION = 2500; // 2.5 seconds per image  
+    outerSliderOpts: SwiperOptions = {
+          slidesPerView: 1,
+          pagination: { clickable: true }
+    };
+      
+    innerSliderOpts: SwiperOptions = {
+          slidesPerView: 1.2,
+          spaceBetween: 10,
+          freeMode: true
+    };
+  
+  constructor(private apiservice:ApiserviceService,
+     private router: Router,
+     private storage: Storage,
+    private location: Location) {
     this.init();
    }
-
-  allweeklydeals: any;
-  allbrands: any;
-  baseUrl = environment.baseurl;
-  userID: any;
-
-  isAddedMap: { [key: string]: boolean } = {};
-  activeCart: any[] = [];
-  cartItems: any[] = [];
-  selectedItemMap: { [key: number]: boolean } = {};
-  totalQuantity: number = 0;
-  totalAmount: number = 0;
-  allfavoriteProducts: any;
-
-  selectAll: boolean = false;
-  selectedItems: any[] = [];
-
-  activeCategory: string | null = 'Discount';
-  isFilterVisible: boolean = false;
-  activeDropdown: string | null = null; 
-  selectedBrandIds: number[] = [];
-  selectedDiscountThresholds: number[] = [];
-  selectedPriceRanges: { min: number, max: number }[] = [];
-  Allcategories: any;
-  selectedCategoryIds: number[] = [];
-  selectedDeliveryTypes: number[] = []; 
-
-  hoveredVendorIndex: number | null = null;
-  currentVendorImageIndexes: { [key: number]: number } = {};
-  vendorImageIntervals: { [key: number]: any } = {};
-  touchTimeouts: { [key: number]: any } = {};
-
-  Allvendors: any[] = [];
-  private readonly VENDOR_IMAGE_DURATION = 2500; // 2.5 seconds per image
-    
-  outerSliderOpts: SwiperOptions = {
-        slidesPerView: 1,
-        pagination: { clickable: true }
-  };
-    
-  innerSliderOpts: SwiperOptions = {
-        slidesPerView: 1.2,
-        spaceBetween: 10,
-        freeMode: true
-  };
-
-
-
 
   async ngOnInit() {
     // const token = await Storage.get({ key: 'userID' });
@@ -90,27 +65,27 @@ export class WhishlistPage implements OnInit {
     await this.storage.create();
   }
 
-  navigateToback(){
-    this.location.back();
-  }
+
   getAllVendors(vendor_type_id: (number | null)[]) {
     const user_id = this.userID;
     this.Allvendors = [];
+    this.isLoading = true;
     this.apiservice.get_all_vendors(user_id, vendor_type_id).subscribe({
       next: (response) => {
         if (response.success === true) {
-          this.Allvendors = response.data;
-          // this.isLoading = false;
-          // console.log('show all vendors', this.Allvendors);
+          // Filter only bookmarked vendors (is_favourite = 1)
+          this.Allvendors = response.data.filter((vendor: any) => vendor.is_favourite === 1);
+          this.isLoading = false;
+          // console.log('show bookmarked vendors', this.Allvendors);
         } else {
           this.Allvendors = [];
-
+          this.isLoading = false;
         }
       },
       error: (error) => {
         console.error('API error:', error);
         this.Allvendors = [];
-
+        this.isLoading = false;
       }
     });
   }
@@ -229,10 +204,22 @@ export class WhishlistPage implements OnInit {
     // console.log('this is ', item.title)
   }
     toggleFav(vendor: any) {
-      toggleFavourite(vendor, this.userID, this.apiservice,'vendor');
+      console.log('Before toggle - Allvendors count:', this.Allvendors.length);
+      console.log('Vendor to remove:', vendor.vendor_id, vendor.store_name);
+      
+      // Create a copy of the vendor to avoid modifying the original object
+      const vendorCopy = { ...vendor };
+      
+      // Call the API to toggle favorite status
+      toggleFavourite(vendorCopy, this.userID, this.apiservice, 'vendor');
+      
+      // Remove the vendor from the list immediately (since this is bookmarks page)
+      // and we only show bookmarked vendors, so any toggle means remove
+      // Use vendor_id as the unique identifier
+      this.Allvendors = this.Allvendors.filter(v => v.vendor_id !== vendor.vendor_id);
+      
+      console.log('After toggle - Allvendors count:', this.Allvendors.length);
+      console.log('Remaining vendors:', this.Allvendors.map(v => v.store_name));
     }
-
-
-
 
 }

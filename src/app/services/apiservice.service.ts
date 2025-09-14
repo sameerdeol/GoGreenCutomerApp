@@ -53,7 +53,9 @@ export class ApiserviceService {
   getproductByVendor = this.base_path+ '/search/searchallbyVendor';
   productFilters = this.base_path+ 'products/filter';
   deletAddress = this.base_path+'useraddress/deleteUser-addresses';
-
+  saveNotificationToken  = this.base_path+'notifications/userfcm-token';
+  removeNotificationToken = this.base_path+'notifications/remove-fcmtoken';
+  getAllProducts = this.base_path+ 'products/getproducts';
 
   private _storageReady = false;
 
@@ -115,17 +117,39 @@ export class ApiserviceService {
         return this.http.get<any>(this.allcategories, { headers });})
     );
   }
-    get_vendor_by_Cat(): Observable<any> {
+  get_vendor_by_Cat(): Observable<any> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => {
         return this.http.get<any>(this.getCatandVendors, { headers });})
     );
   }
 
+  get_all_products(userID: any): Observable<any> {
+      return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        const body = { userID: userID };
+        return this.http.post<any>(this.getAllProducts, body, { headers });})
+    );
+  }
+ 
    get_all_cat_and_subCat(): Observable<any> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => {
         return this.http.get<any>(this.getAllCatAndSubCat, { headers });})
+    );
+  }
+  save_notification_token(user_id: any, fcmToken: any): Observable<any> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        const body = { user_id: user_id ,fcmToken: fcmToken};
+        return this.http.post<any>(this.saveNotificationToken, body, { headers });})
+    );
+  }
+  remove_notification_token(user_id: any, fcmToken: any): Observable<any> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        const body = { user_id: user_id ,fcmToken: fcmToken};
+        return this.http.delete<any>(this.removeNotificationToken, { headers, body });})
     );
   }
 

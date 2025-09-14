@@ -46,13 +46,13 @@
     </div>
 
     <div class="page_outer_div Addons_div_bg">
-      <div class="p_heading" *ngIf="productDetails.attributes?.length > 0">
+      <div class="p_heading" *ngIf="productDetails?.attributes?.length > 0">
         <p>Product Details</p>
       </div>
       <!-- product attributes -->
-      <div class="product_details_div" *ngIf="productDetails.attributes?.length > 0">
+      <div class="product_details_div" *ngIf="productDetails?.attributes?.length > 0">
         <ion-grid [fixed]="true" class="attribute-table">
-          <ion-row *ngFor="let attr of productDetails.attributes">
+          <ion-row *ngFor="let attr of productDetails?.attributes">
             <ion-col size="6" class="attribute-key">
               {{ attr.attribute_key }}
             </ion-col>
@@ -64,12 +64,12 @@
       </div>
 
       <!-- Variants -->
-      <div *ngIf="productDetails.variants.length > 0 && showVariantAndAddons">
+      <div *ngIf="productDetails?.variants?.length > 0 && showVariantAndAddons">
         <div class="addons_outer_div">
           <div class="addons">
             <p class="addon_heading">Variants</p>
           </div>
-          <div *ngFor="let variant of productDetails.variants" class="addon-item">
+          <div *ngFor="let variant of productDetails?.variants" class="addon-item">
             <label class="addon-label">
               <div class="left">
                 <input type="radio" name="variant" [value]="variant.id"   [(ngModel)]="selectedVariant"
@@ -86,17 +86,21 @@
       <!-- variants end -->
 
       <!-- Add ons  -->
-      <div *ngIf="productDetails.addons.length > 0 && showVariantAndAddons">
+      <div *ngIf="productDetails?.addons?.length > 0 && showVariantAndAddons">
         <div class="addons_outer_div">
           <div class="addons">
             <p class="addon_heading">Add on</p>
             <p class="clear" (click)="clear('Addon')">clear</p>
           </div>
 
-          <div *ngFor="let addon of productDetails.addons" class="addon-item">
+          <div *ngFor="let addon of productDetails?.addons" class="addon-item">
             <label class="addon-label">
               <div class="left">
-                <input type="radio" name="addon" [value]="addon.id" [(ngModel)]="selectedAddon" class="custom-radio" (click)="toggleAddon(addon)" />
+                <input type="checkbox" 
+                       [value]="addon.id" 
+                       [checked]="isAddonSelected(addon.id)" 
+                       class="custom-checkbox" 
+                       (change)="toggleAddon(addon)" />
                 <p>{{ addon.name }}</p>
               </div>
               <div class="right">
@@ -116,7 +120,9 @@
 <div class="add-to-cart-footer" *ngIf="productDetails">
   <div class="add_to_cart_outer_div">
     <div class="col-6">
-      <p class="price_var"> {{currency}}{{ getTotalPrice(productDetails)}}</p>
+      <p class="price_var" *ngIf="getTotalPrice(productDetails) > 0">
+      {{currency}}{{ getTotalPrice(productDetails)}}
+    </p>
        <!-- <div class="final-price">
         <p>{{ selectedTotalPrice | currency }}</p>
       </div> -->  

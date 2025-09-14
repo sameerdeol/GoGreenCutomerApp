@@ -1,8 +1,23 @@
+<app-common-header></app-common-header>
 <ion-content>
   <div class="page_outer_div">
-       <div class="features_product_div" *ngIf="Allvendors && Allvendors.length > 0">
+    <!-- Loading Spinner -->
+    <div class="loading-container" *ngIf="isLoading">
+      <ion-spinner name="crescent" class="loading-spinner"></ion-spinner>
+      <p class="loading-text">Loading stores...</p>
+    </div>
+
+    <!-- No Data Message -->
+    <div class="no-data-container" *ngIf="!isLoading && (!Allvendors || Allvendors.length === 0)">
+      <ion-icon name="storefront-outline" class="no-data-icon"></ion-icon>
+      <h3>No Bookmarked Stores</h3>
+      <p>You haven't bookmarked any stores yet.</p>
+    </div>
+
+    <!-- Vendors List -->
+    <div class="features_product_div" *ngIf="!isLoading && Allvendors && Allvendors.length > 0">
           <div class="slider_heading_div">
-            <h3>All Stores</h3>
+            <h3>Bookmarked Stores</h3>
           </div>
 
           <ion-card *ngFor="let item of Allvendors; let i = index"
@@ -12,12 +27,12 @@
 
             <!-- Bookmark/Favorite Button -->
             <div class="bookmark_outer_div">
-              <button fill="clear" (click)="toggleFav(item); $event.stopPropagation()"
-                class="bookmark-btn m-0 book_mark_button">
-                <ion-icon class="text_gogreen bookmark-filled"
+              <ion-button fill="clear" (click)="toggleFav(item); $event.stopPropagation()"
+                class="bookmark-btn book_mark_button">
+                <ion-icon class="bookmark-icon"
                   [name]="item?.is_favourite == 1 ? 'bookmark' : 'bookmark-outline'">
                 </ion-icon>
-              </button>
+              </ion-button>
             </div>
 
             <!-- Image Carousel Container -->
@@ -62,3 +77,4 @@
   
 
 </ion-content>
+<app-footer-tabs></app-footer-tabs>

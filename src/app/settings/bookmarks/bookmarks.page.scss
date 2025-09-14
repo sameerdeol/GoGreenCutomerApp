@@ -1,3 +1,56 @@
+  // Loading Spinner Styles
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      color: #00a86b;
+      margin-bottom: 20px;
+    }
+    
+    .loading-text {
+      color: #666;
+      font-size: 16px;
+      margin: 0;
+      font-weight: 500;
+    }
+  }
+
+  // No Data Styles
+  .no-data-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    text-align: center;
+    
+    .no-data-icon {
+      font-size: 80px;
+      color: #ccc;
+      margin-bottom: 20px;
+    }
+    
+    h3 {
+      color: #333;
+      font-size: 20px;
+      margin: 0 0 10px 0;
+      font-weight: 600;
+    }
+    
+    p {
+      color: #666;
+      font-size: 14px;
+      margin: 0;
+    }
+  }
+
   .features_product_div {
           .slider_heading_div {
               display: flex;
@@ -27,22 +80,45 @@
                      .bookmark_outer_div{
                       position: absolute;
                       top: 10px;
-                      float: inline-end;
                       right: 10px;
                       z-index: 9;
-                      border-radius: 5px;
-                              .bookmark-filled {
-                                  background-color: #ffffff;
-                                  border-radius: 5px;
-                                  padding: 5px;
-                                  font-size: 24px;
-                                  width: 25px;
-                                  height: 25px;
-                                }                              
-                              .bookmark-outline {
-                                color: #00a86b;               // Green icon only
-                                font-size: 20px;
-                              }
+                      
+                      .bookmark-btn {
+                        --background: transparent;
+                        --background-hover: transparent;
+                        --background-focused: transparent;
+                        --background-activated: transparent;
+                        --box-shadow: none;
+                        --color: #00a86b;
+                        --color-hover: #00a86b;
+                        --color-focused: #00a86b;
+                        --color-activated: #00a86b;
+                        --padding-start: 4px;
+                        --padding-end: 4px;
+                        --padding-top: 4px;
+                        --padding-bottom: 4px;
+                        margin: 0;
+                        padding: 4px;
+                        width: auto;
+                        height: auto;
+                        background: none;
+                        border: none;
+                        box-shadow: none;
+                        
+                        &:hover {
+                          transform: scale(1.1);
+                        }
+                        
+                        &:active {
+                          transform: scale(0.95);
+                        }
+                        
+                        .bookmark-icon {
+                          font-size: 24px;
+                          color: #00a86b;
+                          margin: 0;
+                        }
+                      }
                     }
                     .vendor-image-carousel-container {
                       position: relative;

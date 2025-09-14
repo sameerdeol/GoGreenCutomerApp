@@ -17,14 +17,15 @@ register();
   selector: 'app-global-search',
   templateUrl: './global-search.component.html',
   styleUrls: ['./global-search.component.scss'],
-  imports: [IonicModule, FormsModule, CommonModule], 
+  imports: [IonicModule, FormsModule, CommonModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GlobalSearchComponent implements OnInit, AfterViewInit {
   @ViewChildren('vendorSwiper') storeSwiperRefs!: QueryList<ElementRef>;
   @ViewChildren('vendorSwiper2') recommendedSwiperRefs!: QueryList<ElementRef>;
   @Output() searchFocus = new EventEmitter<boolean>();
-  @Input() vendor_id!: string | number; 
+  @Input() vendor_id!: string | number;
+  @Output() dismissModal = new EventEmitter<void>();
 
   currency = environment.currencySymbol;
   intervalId: any;
@@ -36,7 +37,7 @@ export class GlobalSearchComponent implements OnInit, AfterViewInit {
   showDesiredData: boolean = false;
   Allvendors: any;
   noVendorsFound: boolean = false;
-  searchedProduct: any[]=[];
+  searchedProduct: any[] = [];
   baseUrl = environment.baseurl;
 
   hoveredVendorIndex: number | null = null;
@@ -45,7 +46,7 @@ export class GlobalSearchComponent implements OnInit, AfterViewInit {
   touchTimeouts: { [key: number]: any } = {};
   userID: any;
   backIcon: boolean = false;
-  
+
   private readonly VENDOR_IMAGE_DURATION = 2500; // 2.5 seconds per image
 
   constructor(private apiservice: ApiserviceService,
@@ -54,34 +55,37 @@ export class GlobalSearchComponent implements OnInit, AfterViewInit {
     private ngZone: NgZone,
     private cdr: ChangeDetectorRef
   ) {
-     this.init();
-   }
+    this.init();
+  }
 
   async ngOnInit() {
     this.userID = await this.storage.get('userID');
   }
 
   onSearchChange(event: any) {
-    const value = event.detail.value; 
+    const value = event.detail.value;
     this.searchKeyword = value;
     this.showSearchResults = !!value.trim(); // show results only when there's some input
-    
- 
+
+
     if (this.searchKeyword.trim()) {
       this.noVendorsFound = false;
-      if(this.vendor_id){
-         this.getSearchedProductOfVendor(value, this.vendor_id);
-      }else{
-          this.getSearchedProduct(value);
-      }      
-      this.searchFocus.emit(true); 
+      if (this.vendor_id) {
+        this.getSearchedProductOfVendor(value, this.vendor_id);
+      } else {
+        this.getSearchedProduct(value);
+      }
+      this.searchFocus.emit(true);
     } else {
-      this.searchedProduct = [];  
+      this.searchedProduct = [];
       this.showDesiredData = false;
       this.showSearchResults = false;
-      this.searchFocus.emit(false); 
-      
+      this.searchFocus.emit(false);
+
     }
+  }
+  hideFooter(){
+    this.searchFocus.emit(true);
   }
 
   async init() {
@@ -89,11 +93,11 @@ export class GlobalSearchComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    
+
   }
 
   navigateToVendorStore(item: any) {
-      this.router.navigate(['/store-products'], {
+    this.router.navigate(['/store-products'], {
       state: { vendor: item }
     });
   }
@@ -105,12 +109,15 @@ export class GlobalSearchComponent implements OnInit, AfterViewInit {
     this.placeholderHidden = false; // Show fake placeholder again 
     this.noVendorsFound = false;
   }
-
+  onClearClick() {
+    this.noVendorsFound = false;
+    console.log('this.noVendorsFound',this.noVendorsFound)
+  }
   async getVednorByVendorId(vendor_id: any) {
     const user_id = await this.storage.get('userID');
     return this.apiservice.get_all_vendor_by_VendorId(user_id, vendor_id);
   }
-  
+
   async getAllVendorsBySearchedResult(search_name: any) {
     this.showSearchResults = false;   // Hide search dropdown
     const user_id = await this.storage.get('userID');
@@ -120,12 +127,12 @@ export class GlobalSearchComponent implements OnInit, AfterViewInit {
         if (response.success === true) {
           console.log("get Vendor by Searched Result", response);
           this.Allvendors = response.data;
-               
+
           this.showDesiredData = true;
           this.showSearchResults = false;
           this.noVendorsFound = false; // Vendors found
-          this.searchFocus.emit(true);    
-    
+          this.searchFocus.emit(true);
+
         } else {
           this.Allvendors = [];
           this.noVendorsFound = true; // No vendors found
@@ -153,7 +160,19 @@ export class GlobalSearchComponent implements OnInit, AfterViewInit {
         }
       });
 
-    } else {
+    } else if (item.type === 'product') {
+      const product_id = item.id;
+      if (product_id) {
+        this.dismissModal.emit();
+      }
+      this.router.navigate(['/product-detail'], {
+        state: {
+          product_id: product_id,
+        }
+      });
+
+    }
+    else if (item.type === 'category' || 'subcategory') {
       this.getAllVendorsBySearchedResult(item.title);
     }
   }
@@ -241,11 +260,11 @@ export class GlobalSearchComponent implements OnInit, AfterViewInit {
       }
     });
   }
-  async getSearchedProductOfVendor(searchstring: any, vendor_id: any){
-   
-     this.apiservice.get_all_product_by_vendor(searchstring, vendor_id).subscribe((response)=>{
-      if(response.success == true){  
-          const products = response.data.product?.map((item: any) => ({
+  async getSearchedProductOfVendor(searchstring: any, vendor_id: any) {
+
+    this.apiservice.get_all_product_by_vendor(searchstring, vendor_id).subscribe((response) => {
+      if (response.success == true) {
+        const products = response.data.product?.map((item: any) => ({
           id: item.id,
           title: item.name,
           subtitle: item.description,
@@ -254,21 +273,21 @@ export class GlobalSearchComponent implements OnInit, AfterViewInit {
           type: 'product',
           extras: item.extra
         })) || [];
-        this.searchedProduct = products ;
-        console.log('searched product of particular Vendor:',response.data.product)
+        this.searchedProduct = products;
+        console.log('searched product of particular Vendor:', response.data.product)
       }
-     })
+    })
   }
-  onBackClick(){
-    this.searchFocus.emit(false); 
+  onBackClick() {
+    this.searchFocus.emit(false);
     this.backIcon = false;
     this.cdr.detectChanges();
     this.noVendorsFound = false;
   }
 
   getVendorImages(vendor: any): string[] {
-    return vendor?.featured_images?.length > 0 
-      ? vendor.featured_images 
+    return vendor?.featured_images?.length > 0
+      ? vendor.featured_images
       : [vendor.default_image || '/assets/placeholder-vendor.jpg'];
   }
 
@@ -279,7 +298,7 @@ export class GlobalSearchComponent implements OnInit, AfterViewInit {
   getVendorImageOpacity(vendorIndex: number, imageIndex: number): number {
     const currentIndex = this.getCurrentVendorImageIndex(vendorIndex);
     const isHovered = this.hoveredVendorIndex === vendorIndex;
-    
+
     if (!isHovered) return imageIndex === 0 ? 1 : 0;
     return imageIndex === currentIndex ? 1 : 0;
   }
@@ -287,9 +306,9 @@ export class GlobalSearchComponent implements OnInit, AfterViewInit {
   getVendorImageTransform(vendorIndex: number, imageIndex: number): string {
     const currentIndex = this.getCurrentVendorImageIndex(vendorIndex);
     const isHovered = this.hoveredVendorIndex === vendorIndex;
-    
+
     if (!isHovered) return 'scale(1)';
-    
+
     if (imageIndex === currentIndex) {
       return 'scale(1.02)'; // Slight zoom on active image
     }
@@ -298,7 +317,7 @@ export class GlobalSearchComponent implements OnInit, AfterViewInit {
 
   // onVendorHover(vendorIndex: number, isHovering: boolean) {
   //   const vendor = this.Allvendors[vendorIndex];
-    
+
   //   if (isHovering) {
   //     this.hoveredVendorIndex = vendorIndex;
   //     this.startVendorImageRotation(vendorIndex, vendor);
@@ -312,12 +331,12 @@ export class GlobalSearchComponent implements OnInit, AfterViewInit {
     const vendor = this.Allvendors[vendorIndex];
     this.hoveredVendorIndex = vendorIndex;
     this.startVendorImageRotation(vendorIndex, vendor);
-    
+
     // Clear any existing timeout for this vendor
     if (this.touchTimeouts[vendorIndex]) {
       clearTimeout(this.touchTimeouts[vendorIndex]);
     }
-    
+
     // Auto-stop after 4 seconds on mobile
     this.touchTimeouts[vendorIndex] = setTimeout(() => {
       if (this.hoveredVendorIndex === vendorIndex) {
@@ -329,7 +348,7 @@ export class GlobalSearchComponent implements OnInit, AfterViewInit {
 
   startVendorImageRotation(vendorIndex: number, vendor: any) {
     if (!vendor?.featured_images || vendor.featured_images.length <= 1) return;
-    
+
     // Initialize current index
     if (!(vendorIndex in this.currentVendorImageIndexes)) {
       this.currentVendorImageIndexes[vendorIndex] = 0;
@@ -373,7 +392,7 @@ export class GlobalSearchComponent implements OnInit, AfterViewInit {
     this.navigateToVendorStore(vendor);
   }
   toggleFav(vendor: any) {
-      toggleFavourite(vendor, this.userID, this.apiservice, 'vendor');
+    toggleFavourite(vendor, this.userID, this.apiservice, 'vendor');
   }
-   
+
 }

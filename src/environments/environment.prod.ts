@@ -10,6 +10,6 @@ export const environment = {
     appId: '1:219923939926:android:e66b87db8fc938df5b299a'
   },
   currencySymbol: '$',
-  googleMapsApiKey: 'AIzaSyDFlmtcApTUQPffY2AyL8a5kOrYYd0L9nY'
+  googleMapsApiKey: 'AIzaSyCl-dO9JXz6xt30BpIBlI2P0xoQGL9DXe0'
 
 };

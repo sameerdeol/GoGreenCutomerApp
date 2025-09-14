@@ -2,7 +2,7 @@
 @use 'src/theme/mixins' as mix;
  
 .left_arrow_img_outer_div img{
-    width: 28%;
+    width: 27%;
 }
 .my-header-class{
   border: none !important;
@@ -11,7 +11,12 @@
   @include mix.border-line(1, bottom);
   padding: 12px;
 }
- 
+ ion-toolbar{
+  --background: white;
+ }
+ ion-header{
+  box-shadow: none !important;
+ }
 .header_heading_outer{
   padding: 0;
   text-align: center;

@@ -1,6 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { AlertController, IonicModule } from '@ionic/angular';
 import { CommonModule, Location } from '@angular/common';
 import { register } from 'swiper/element/bundle';
 import { FooterTabsComponent } from '../components/footer-tabs/footer-tabs.component';
@@ -24,34 +24,17 @@ register();
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ProductDetailPage implements OnInit {
-
-  constructor(private location: Location,
-    private storage: Storage,
-    private router: Router,
-    private cartService: CartService,
-    private apiservice: ApiserviceService) {
-    this.init();
-
-    const navigation = this.router.getCurrentNavigation();
-    if (navigation?.extras?.state) {
-      this.productDetails = navigation.extras.state['product'];
-      this.product_id = this.productDetails.id;
-      console.log("vendorDetails", this.productDetails)
-    }
-    this.cartSubscription = this.cartService.cartQuantity$.subscribe(quantity => {
-      this.cartQuantity = quantity;
-
-    });
-  }
-
   cartQuantity: number = 0;
   private cartSubscription: Subscription = new Subscription();
-  selectedAddon: any;
+  selectedAddons: any[] = []; // Changed to array for multiple addons
   selectedVariant: any;
+  selectedVariant1: any;
   property_detail: any;
+  vendorStatus: any = null;
   productId: any;
   baseUrl = environment.baseurl;
   currency = environment.currencySymbol;
+  vendorDetails: any;
   userID: any;
   cartState: CartState = {};
   isAdded: any;
@@ -60,7 +43,7 @@ export class ProductDetailPage implements OnInit {
   totalQuantity: number = 0;
   product_id: number = 0;
   cartItems: any[] = [];
-  productDetails: any;
+  productDetails: any = null;
   isAddedMap: { [key: string]: boolean } = {};
   selectedVariatnPrice: number = 0;
   showVariantAndAddons: boolean = false;
@@ -69,12 +52,52 @@ export class ProductDetailPage implements OnInit {
   stars = [1, 2, 3, 4, 5];
   isFavorite: boolean = false;
 
+  constructor(private location: Location,
+    private storage: Storage,
+    private router: Router,
+    private route: ActivatedRoute,
+    private cartService: CartService,
+    private apiservice: ApiserviceService,
+    private alertController: AlertController,
+    ) {
+    this.init();
+    this.checkExistingItems();
+    const navigation = this.router.getCurrentNavigation();
+    this.route.queryParamMap.subscribe(params => {
+    const id = params.get('id');
+
+    if (id) {
+      this.product_id = +id;
+      // console.log("Product ID from route:", this.product_id);
+      this.getProductToDetailsById(this.product_id);
+
+    } else if (navigation?.extras?.state) {
+      this.productDetails = navigation.extras.state['product'] ?? null;
+      this.product_id = this.productDetails?.id ?? null;
+      this.vendorStatus = navigation.extras.state['vendorStatus'] ?? '';
+      this.vendorDetails = navigation.extras.state['vendorDetails'] ?? null;
+      // console.log("Product ID from state:", this.product_id);
+    } else {
+
+      console.warn("No product_id found in route or state");
+      this.router.navigate(['/products']); // optional redirect
+    }
+  });
+    this.cartSubscription = this.cartService.cartQuantity$.subscribe(quantity => {
+    this.cartQuantity = quantity;
+    });
+  }
 
   async init() {
     await this.storage.create();
   }
+
   async ionViewWillEnter() {
     await this.loadCartFromStorage(); // Re-load on every visit to this page
+    // Restore selected state when returning to page
+    if (this.productDetails) {
+      await this.checkExistingItems();
+    }
   }
 
   ngOnDestroy(): void {
@@ -82,43 +105,59 @@ export class ProductDetailPage implements OnInit {
     if (this.cartSubscription) {
       this.cartSubscription.unsubscribe();
     }
+   
+  }
+  getProductToDetailsById(id: any){
+    this.apiservice.get_product_details(id).subscribe((response)=>{
+      if(response.success === true){
+         this.productDetails = response.product;
+          console.log('Your Clicked Product Details is :',this.productDetails)
+      }
+    })
+  }
+  async checkExistingItems(){
+    const storedCart = await this.storage.get('cartItems');
+    const existingItem = storedCart.find((item: any) => item.id === this.productDetails?.id);
+    console.log('existing item in cart on page load',existingItem)
+    if (existingItem) {
+        this.showVariantAndAddons = true;
+             
+        // Restore variant
+        if (existingItem.variant_id) {
+          this.selectedVariant = existingItem.variant_id;
+          this.selectedVariatnPrice = existingItem.variant_price;
+          console.log('existingItem.variant_id',existingItem.variant_id)
+        }
+
+        // Restore addons (multiple addons support)
+        if (existingItem.addons?.length > 0 ) {
+          this.selectedAddons = existingItem.addons.map((addon: any) => addon.addon_id);
+          console.log('existingItem.selectedAddons',this.selectedAddons)
+        } else {
+          this.selectedAddons = [];
+        }
+    }else{
+      this.showVariantAndAddons = false;
+      this.selectedAddons = [];
+    }
   }
   async ngOnInit() {
     const user_id = await this.storage.get('userID');
     this.userID = user_id;
     this.cartQuantity = this.cartService.getCurrentQuantity();
-    
-    if (this.productDetails?.variants?.length > 0) {
+
+  }
+  onintialSetVariantId(){
+     if (this.productDetails?.variants?.length > 0) {
       const lower = getLowestPriceVariant(this.productDetails.variants);
-      this.selectedVariant = lower.id;
+      this.selectedVariant = Number(lower.id);
+      console.log('this.selectedVariant',this.selectedVariant)
       this.selectedVariatnPrice = Number(lower.price);
     }
-
-    const storedCart = await this.storage.get('cartItems');
-    const alreadyInCart = storedCart.some((item: { id: any; }) => item.id === this.productDetails.id);
-
-    if (alreadyInCart) {
-      this.showVariantAndAddons = true;
-    }
   }
-
-  toggleFav(product: any) {
-      toggleFavourite(product, this.userID, this.apiservice,'product');
-  }
-  goBack() {
-    this.location.back();
-  }
-  viewCart(){
-    this.router.navigate(['/view-cart']);
-  }
-
-  setRating(value: number) {
-    this.rating = value;
-    console.log('⭐ Selected rating:', this.rating);
-  }
-
   toggleVariant(variant: any, productId: number) {
     this.selectedVariant = variant.id;
+    // this.productState.selectedVariant = variant.id;
 
     const cartItemIndex = this.cartItems.findIndex(item => item.id === productId);
     if (cartItemIndex !== -1) {
@@ -129,10 +168,32 @@ export class ProductDetailPage implements OnInit {
       this.storage.set('cartItems', this.cartItems);
     }
   }
+  onVariantChange(event: any) {
+  const selectedVariantId = event.detail.value;
+  const variant = this.productDetails.variants.find((v: any) => v.id === selectedVariantId);
+  if (variant) {
+    this.toggleVariant(variant, this.productDetails.id);
+  }
+  }
+  toggleFav(product: any) {
+      toggleFavourite(product, this.userID, this.apiservice,'product');
+  }
+  goBack() {
+    this.location.back();
+  }
+  viewCart(){
+    this.router.navigate(['/view-cart']);
+  }
+  
+  setRating(value: number) {
+    this.rating = value;
+    console.log('⭐ Selected rating:', this.rating);
+  }
+
 
   clear(item: string) {
     if (item === 'Addon') {
-      this.selectedAddon = null;
+      this.selectedAddons = []; // Clear selected addons array
 
       const productId = this.productDetails.id;
       const cartItemIndex = this.cartItems.findIndex(item => item.id === productId);
@@ -148,8 +209,18 @@ export class ProductDetailPage implements OnInit {
     console.log('🛒 Cart after clearing:', this.cartItems);
   }
   async toggleAddon(addon: any) {
-    this.selectedAddon = addon.id;
-    console.log('selectedAddon', this.selectedAddon);
+    const addonId = addon.id;
+    const addonIndex = this.selectedAddons.indexOf(addonId);
+    
+    if (addonIndex > -1) {
+      // Remove addon if already selected
+      this.selectedAddons.splice(addonIndex, 1);
+    } else {
+      // Add addon if not selected
+      this.selectedAddons.push(addonId);
+    }
+    
+    console.log('selectedAddons', this.selectedAddons);
 
     const productId = this.productDetails.id;
     const cartItemIndex = this.cartItems.findIndex(item => item.id === productId);
@@ -160,33 +231,70 @@ export class ProductDetailPage implements OnInit {
       // ✅ Make sure variant_id is set properly
       cartItem.variant_id = this.selectedVariant || null;
 
-      // ✅ Only keep the newly selected addon
-      cartItem.addons = [{
-        addon_id: addon.id,
-        price: addon.price
-      }];
+      // ✅ Update addons based on selected addons
+      cartItem.addons = this.selectedAddons.map(addonId => {
+        const addon = this.productDetails.addons.find((a: any) => a.id === addonId);
+        return {
+          addon_id: addonId,
+          price: addon ? addon.price : 0
+        };
+      });
 
       console.log('🧩 Updated Addons for product:', cartItem);
       await this.storage.set('cartItems', this.cartItems);
     }
   }
+  handleChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    console.log('Current value:', JSON.stringify(target.value));
+  }
+
+  isAddonSelected(addonId: any): boolean {
+    return this.selectedAddons.includes(addonId);
+  }
 
   async addToCart(product: any) {
-    const existingItem = this.cartItems.find(item => item.id === product.id);
-
+  console.log('this.vendorStatus',this.vendorStatus)
+  if (!this.vendorStatus) {
+    const alert = await this.alertController.create({
+      header: 'Vendor Closed',
+      message: 
+        `This vendor is currently closed. Please come back during opening hours.\n\n` +
+        `Opens at: ${this.vendorDetails?.open_time || 'N/A'}\n` +
+        `Closes at: ${this.vendorDetails?.close_time || 'N/A'}`,
+      buttons: ['OK']
+    });
+    await alert.present();
+    return;
+  }
+  const existingItem = this.cartItems.find(item => item.id === product.id);
+    if(this.selectedVariant == null || ""){
+      this.selectedVariant = product?.variants?.id;
+      this.onintialSetVariantId();
+    }
+     console.log('selected variant when add to cart', this.selectedVariant)
     if (existingItem) {
       existingItem.quantity += 1;
     } else {
+      // Include selected addons when adding to cart
+      const selectedAddonsData = this.selectedAddons.map(addonId => {
+        const addon = product.addons.find((a: any) => a.id === addonId);
+        return {
+          addon_id: addonId,
+          price: addon ? addon.price : 0
+        };
+      });
+
       this.cartItems.push({
         category_id: product.category_id,
         id: product.id,
         quantity: 1,
         price: product.price,
         image: product.featured_image,
-        variant_id: this.selectedVariant?.id || null,
+        variant_id: this.selectedVariant || null,
         variant_price: Number(this.selectedVariant?.price || '0'),
         vendor_id: product.vendor_id,
-        addons: [],
+        addons: selectedAddonsData,
         title: product.name, // 👈 add name
         subtitle: product.description,
       });
@@ -211,6 +319,9 @@ export class ProductDetailPage implements OnInit {
         this.isAddedMap[product.id] = false;
         this.showViewCart = false;
         this.clear('Addon');
+        this.selectedAddons = []; // Clear selected addons
+        this.selectedVariant = null; // Clear selected variant
+        this.onintialSetVariantId();
         this.showVariantAndAddons = false;
       }
 
@@ -259,8 +370,13 @@ export class ProductDetailPage implements OnInit {
     this.cartItems.forEach(item => {
       this.isAddedMap[item.id] = true;
       this.showViewCart = true;
-      this.showViewCart = true;
+      this.showVariantAndAddons = true;
     });
+
+    // Restore selected state for current product
+    if (this.productDetails) {
+      await this.checkExistingItems();
+    }
 
     console.log('🛒 Cart loaded from storage:', this.cartItems);
   }

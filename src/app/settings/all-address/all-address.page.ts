@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AlertController, IonicModule } from '@ionic/angular';
-import { CommonHeaderComponent } from "../components/common-header/common-header.component";
-import { ApiserviceService } from '../services/apiservice.service';
+import { CommonHeaderComponent } from "../../components/common-header/common-header.component";
+import { ApiserviceService } from '../../services/apiservice.service';
 import { Storage } from '@ionic/storage-angular';
 
 interface Address {
@@ -132,5 +132,25 @@ export class AllAddressPage implements OnInit {
     console.log('Edit address:', address);
     // Implement edit functionality - navigate to edit page
     // this.router.navigate(['/edit-address', address.id]);
+  }
+
+  getTypeClass(type: number): string {
+    const classes: { [key: number]: string } = {
+      1: 'home',
+      2: 'work',
+      3: 'other',
+      4: 'other',
+    };
+    return classes[type] || 'other';
+  }
+
+  getTypeIcon(type: number): string {
+    const icons: { [key: number]: string } = {
+      1: 'home-outline',
+      2: 'business-outline',
+      3: 'bed-outline',
+      4: 'location-outline',
+    };
+    return icons[type] || 'location-outline';
   }
 }

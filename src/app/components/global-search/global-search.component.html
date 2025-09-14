@@ -2,7 +2,9 @@
 <div class="location_search loction_outer">
 
   <ion-searchbar class="searchBar" mode="md" showCancelButton="focus" placeholder="Search" animated="true"
-    (ionInput)="onSearchChange($event)" (ionCancel)="onBackClick()">
+    (ionInput)="onSearchChange($event)" (ionCancel)="onBackClick()" (click)="hideFooter()" (ionClear)="onClearClick()" 
+
+    >
   </ion-searchbar>
 
 

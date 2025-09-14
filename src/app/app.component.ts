@@ -6,7 +6,10 @@ import { Storage } from '@ionic/storage-angular';
 import { FcmService } from './services/fcm.service';
 import { PushNotifications, PushNotificationSchema, ActionPerformed, Token } from '@capacitor/push-notifications';
 import { register } from 'swiper/element/bundle';
+import { App } from '@capacitor/app';
+import { ApiserviceService } from './services/apiservice.service';
 register();
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -14,7 +17,9 @@ register();
   standalone: false,
   providers: [Storage]
 })
+
 export class AppComponent {
+  
   public appPages = [
     { title: 'Inbox', url: '/folder/inbox', icon: 'mail' },
     { title: 'Outbox', url: '/folder/outbox', icon: 'paper-plane' },
@@ -24,7 +29,7 @@ export class AppComponent {
     { title: 'Spam', url: '/folder/spam', icon: 'warning' },
   ];
   public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
-  constructor(private router: Router, private platform: Platform,private storage: Storage,private fcm: FcmService) {
+  constructor(private router: Router, private platform: Platform,private storage: Storage,private fcm: FcmService,private apiservice: ApiserviceService) {
     this.init();
     this.initializeApp2();
     this.platform.ready().then(() => {
@@ -32,11 +37,21 @@ export class AppComponent {
     }).catch(e => {
       console.log(e);
     });
+
+ this.platform.backButton.subscribeWithPriority(10, () => {
+  if (this.router.url === '/home') {
+    App.exitApp(); // ✅ official Capacitor way
+  } else {
+    window.history.back();
+  }
+});
+  
   }
   async init() {
     await this.storage.create();
   }
   async ngOnInit() {
+
     const token =  await this.storage.get('auth_token');
     console.log('token in AppComponent:', token);
     if (token) {
@@ -45,6 +60,7 @@ export class AppComponent {
       this.router.navigate(['/splashscreen']);
     } 
   }
+
   initializeApp2() {
     PushNotifications.requestPermissions().then(result => {
      
@@ -58,8 +74,9 @@ export class AppComponent {
     });
  
  
-    PushNotifications.addListener('registration', (token: Token) => {
+    PushNotifications.addListener('registration', async (token: Token) => {
       console.log('Push registration success, token: ', token.value);
+      await this.storage.set('pushNotificationToken', token.value);
     });
  
  

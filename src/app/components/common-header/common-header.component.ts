@@ -43,12 +43,24 @@ export class CommonHeaderComponent implements OnInit {
       this.headerText = 'Order Details';
     } else if (url.includes('/orders')) {
       this.headerText = 'Orders';
-    } else if (url.includes('/my-account')) {
+    } else if (url.includes('/whishlist')) {
+      this.headerText = 'Wishlist';
+    }else if (url.includes('/my-account')) {
       this.headerText = 'My Account';
     } else if (url.includes('/all-address')) {
       this.headerText = 'Saved Address';
     }else if (url.includes('/otp')) {
       this.headerText = 'OTP';
+    }else if (url.includes('/bookmarks')) {
+      this.headerText = 'Bookmarks';
+    }else if (url.includes('/about-us')) {
+      this.headerText = 'About Us';
+    }else if (url.includes('/faqs')) {
+      this.headerText = 'FAQs';
+    }else if (url.includes('/privacy')) {
+      this.headerText = 'Privacy';
+    }else if (url.includes('/terms-and-condition')) {
+      this.headerText = 'Terms Of Use';
     }else {
       this.headerText = ''; // default
     }

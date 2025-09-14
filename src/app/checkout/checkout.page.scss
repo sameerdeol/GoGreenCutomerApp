@@ -20,13 +20,8 @@ input[type="checkbox"] {
     justify-content: center;
 
   }
-  .delivery_type {
-    width: 85%;
-  }
-  .display_flex_checkbox input[type="checkbox"] {
+
  
-    margin-right: 32px;
-  }
   input[type="checkbox"]:checked::before {
     content: "";
     // position: absolute;
@@ -91,22 +86,9 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   display: none;
   // cursor: pointer;
 }
-input[type="textarea"] {
-  background: white;
-  border: 1px solid black;
-  border-radius: 3px;
-  width: 100%;
-  margin-top: 12px;
-  padding: 6px 10px 72px 10px;
-  color: #000;
 
-}
-.display_flex_checkbox{
-  display: flex;
-}
-.text_align_center{
-  text-align: center;
-}
+
+
 .arriving_div{
   border: 2px solid #E4E4E4;
   padding: 12px;
@@ -198,20 +180,56 @@ input[type="textarea"] {
 .arriving_outer_div{
   padding: 12px;
   margin-bottom: 12rem;
+      .arriving_div{
+                p{
+                  margin-bottom: 3px;
+                }
+                  .display_flex_checkbox{
+                    display: flex;
+                           input[type="checkbox"] {
+                                             margin-right: 32px;
+                                }
+                                  .delivery_type {
+                                    width: 85%;
+                                  }
+                  }
+                  .text_align_center{
+                    text-align: center;
+                              ion-datetime::part(native) {
+                                  border-radius: 0px;
+                                  background-color: #f9f9f9;
+                                  border: 1px solid #dcdcdc;
+                                }
+                                ion-datetime-button{
+                                  margin-right: 3rem;
+                                }
+                                ion-datetime-button::part(native) {
+                                  background-color: #ffffff;
+                                  border: 2px solid #00894d;
+                                  border-radius: 26px;
+                                  color: #000;
+                                }
+                               
+                  }
+                   input[type="textarea"] {
+                                  background: white;
+                                  border: 1px solid black;
+                                  border-radius: 3px;
+                                  width: 100%;
+                                  margin-top: 12px;
+                                  padding: 6px 10px 72px 10px;
+                                  color: #000;
+
+                    }
+      } 
+  
 }
 .primary_font_size{
   font-size: 13px;
 }
-.arriving_div p{
-  margin-bottom: 3px;
-}
 
-ion-datetime-button::part(native) {
-  background-color: #ffffff;
-  border: 2px solid #00894d;
-  border-radius: 26px;
-  color: #000;
-}
+
+
 
 ion-modal::part(content) {
   border-radius: 0px;
@@ -219,11 +237,4 @@ ion-modal::part(content) {
   background: #ffffff;
 }
 
-ion-datetime::part(native) {
-  border-radius: 0px;
-  background-color: #f9f9f9;
-  border: 1px solid #dcdcdc;
-}
-ion-datetime-button{
-  margin-right: 3rem;
-}
+

@@ -1,0 +1,300 @@
+// Modern Address Page Design
+.page-container {
+  padding: 16px;
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+// Loading State
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+  
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
+    color: #00a86b;
+    margin-bottom: 20px;
+  }
+  
+  .loading-text {
+    color: #666;
+    font-size: 16px;
+    margin: 0;
+    font-weight: 500;
+  }
+}
+
+// Addresses Container
+.addresses-container {
+  .addresses-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 4px;
+    
+    h2 {
+      color: #333;
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0;
+    }
+    
+    .address-count {
+      color: #666;
+      font-size: 14px;
+      background: #e9ecef;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+  }
+  
+  .addresses-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+// Address Card
+.address-card {
+  margin: 0;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  background: white;
+  transition: all 0.3s ease;
+  border: 1px solid #f0f0f0;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  }
+  
+  ion-card-content {
+    padding: 20px;
+  }
+}
+
+// Address Main Header
+.address-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  
+  .address-type-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    
+    ion-icon {
+      font-size: 14px;
+    }
+    
+    // Type-specific colors
+    &.home {
+      background: #e3f2fd;
+      color: #1976d2;
+    }
+    
+    &.work {
+      background: #f3e5f5;
+      color: #7b1fa2;
+    }
+    
+    &.other {
+      background: #e8f5e8;
+      color: #388e3c;
+    }
+  }
+  
+  .address-actions {
+    display: flex;
+    gap: 4px;
+    
+    .action-btn {
+      --padding-start: 8px;
+      --padding-end: 8px;
+      --padding-top: 8px;
+      --padding-bottom: 8px;
+      margin: 0;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      
+      &.edit-btn {
+        --color: #00a86b;
+        --background: rgba(0, 168, 107, 0.1);
+        
+        &:hover {
+          --background: rgba(0, 168, 107, 0.2);
+        }
+      }
+      
+      &.delete-btn {
+        --color: #e74c3c;
+        --background: rgba(231, 76, 60, 0.1);
+        
+        &:hover {
+          --background: rgba(231, 76, 60, 0.2);
+        }
+      }
+      
+      ion-icon {
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+// Address Content
+.address-content {
+  .address-title {
+    color: #333;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+    line-height: 1.4;
+  }
+  
+  .address-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #666;
+      font-size: 14px;
+      
+      ion-icon {
+        font-size: 16px;
+        color: #00a86b;
+        flex-shrink: 0;
+      }
+      
+      span {
+        flex: 1;
+      }
+    }
+  }
+}
+
+// Empty State
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+  
+  .empty-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    
+    ion-icon {
+      font-size: 40px;
+      color: #ccc;
+    }
+  }
+  
+  h3 {
+    color: #333;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+  }
+  
+  p {
+    color: #666;
+    font-size: 14px;
+    margin: 0 0 24px 0;
+    line-height: 1.5;
+  }
+  
+  .add-address-btn {
+    --background: #00a86b;
+    --color: white;
+    --border-radius: 25px;
+    --padding-start: 24px;
+    --padding-end: 24px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    font-weight: 600;
+    text-transform: none;
+    
+    ion-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .page-container {
+    padding: 12px;
+  }
+  
+  .addresses-container {
+    .addresses-header {
+      h2 {
+        font-size: 20px;
+      }
+    }
+  }
+  
+  .address-card {
+    ion-card-content {
+      padding: 16px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .page-container {
+    padding: 8px;
+  }
+  
+  .addresses-list {
+    gap: 12px;
+  }
+  
+  .address-card {
+    ion-card-content {
+      padding: 14px;
+    }
+  }
+  
+  .address-main {
+    .address-actions {
+      .action-btn {
+        width: 32px;
+        height: 32px;
+        
+        ion-icon {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}

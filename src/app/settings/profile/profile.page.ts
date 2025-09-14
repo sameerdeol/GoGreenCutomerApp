@@ -4,12 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { AlertController, IonicModule  } from '@ionic/angular';
 import { CommonModule,Location } from '@angular/common';
 import { register } from 'swiper/element/bundle';
-import { FooterTabsComponent } from '../components/footer-tabs/footer-tabs.component';
-import { ApiserviceService } from '../services/apiservice.service';
+import { FooterTabsComponent } from '../../components/footer-tabs/footer-tabs.component';
+import { ApiserviceService } from '../../services/apiservice.service';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
-import { ProfileInitialService } from '../services/profile-initial.service';
-import { CommonHeaderComponent } from "../components/common-header/common-header.component";
+import { ProfileInitialService } from '../../services/profile-initial.service';
+import { CommonHeaderComponent } from "../../components/common-header/common-header.component";
 import { Platform } from '@ionic/angular';
 
 register();
@@ -30,6 +30,7 @@ export class ProfilePage implements OnInit {
   selectedGender: any;
   phoneNumber: any;
   genderError: any;
+  today: string = '';
 
 
   firstName: any;
@@ -56,6 +57,7 @@ export class ProfilePage implements OnInit {
     this.userId = await this.storage.get('userID');
     this.phoneNumber =   await this.storage.get('phoneNumber');
     this.getExistingCustomerDetails();
+    this.setMaxDate();
     this.platform.backButton.subscribeWithPriority(10, async () => {
     if (!this.firstName || this.firstName.trim() === '') {
       const alert = await this.alertCtrl.create({
@@ -76,6 +78,30 @@ export class ProfilePage implements OnInit {
 
   async init() {
     await this.storage.create();
+  }
+
+  setMaxDate() {
+    const currentDate = new Date();
+    this.today = currentDate.toISOString().split('T')[0]; // format: YYYY-MM-DD
+  }
+
+  onDateChange() {
+    // Clear any previous error when user changes the date
+    this.dobError = '';
+    
+    if (this.dob) {
+      const selectedDate = new Date(this.dob);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      if (selectedDate > today) {
+        this.dobError = 'Date of birth cannot be in the future.';
+        this.dob = ''; // Clear the invalid date
+      } else if (selectedDate.getFullYear() < 1900) {
+        this.dobError = 'Please enter a valid date of birth.';
+        this.dob = ''; // Clear the invalid date
+      }
+    }
   }
   navigateToAccount(){
     this.router.navigate(['/my-account']);
@@ -98,6 +124,7 @@ export class ProfilePage implements OnInit {
   async validateForm(): Promise<void> {
     this.emailError = '';
     this.genderError = '';
+    this.dobError = '';
     const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
     let isValid = true;
 
@@ -109,6 +136,21 @@ export class ProfilePage implements OnInit {
     if (this.gender === '') {
       this.genderError = 'Please select a gender.';
       isValid = false;
+    }
+
+    // Validate Date of Birth
+    if (this.dob) {
+      const selectedDate = new Date(this.dob);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Reset time to start of day
+      
+      if (selectedDate > today) {
+        this.dobError = 'Date of birth cannot be in the future.';
+        isValid = false;
+      } else if (selectedDate.getFullYear() < 1900) {
+        this.dobError = 'Please enter a valid date of birth.';
+        isValid = false;
+      }
     }
 
     if (isValid) {

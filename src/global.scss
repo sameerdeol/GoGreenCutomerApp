@@ -80,7 +80,17 @@ ion-select-popover ion-item {
   --background: #13723b !important;  /* green background for each option */
   --color: #fff !important;
 }
-
+app-footer-tabs {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+}
+.vendor-closed {
+  filter: grayscale(100%);
+  opacity: 0.7; /* Optional: adds a faded effect */
+}
 ion-select-popover ion-item:hover {
   --background: #13723b !important;  /* darker green on hover */
 }
@@ -208,6 +218,7 @@ app-footer-tabs {
 }
 .text_font{
     font-size: 13px;
+    text-transform: capitalize;
 }
 .align_items_center{
     align-items: center;

@@ -105,17 +105,27 @@ export class HomePage implements OnInit, OnDestroy {
   outerCategoryVisible = true;
   selectedIndex: number = -1;
   hoveredIndex: number | null = null;
-
+  hideFooter = false;
   constructor(
     private apiservice: ApiserviceService, 
     private router: Router,
     private modalCtrl: ModalController,
     private storage: Storage, 
-    private cartService: CartService
+    private cartService: CartService,
+    
   ) {
     this.init();
   }
-
+  async ngOnInit() {
+    const user_id = await this.storage.get('userID');
+    // const token = await this.storage.get('auth_token');
+    this.userID = user_id;
+    this.getAllVendors([null]);
+    this.storage.get('statictoken')
+    this.getAllVendorTypes();
+    this.getAllBannerImg();
+    this.onCategorySelect(0, 0);
+  }
   // Image carousel methods for vendors
   getVendorImages(vendor: any): string[] {
     return vendor?.featured_images?.length > 0 
@@ -229,16 +239,7 @@ export class HomePage implements OnInit, OnDestroy {
     await this.storage.create();
   }
 
-  async ngOnInit() {
-    const user_id = await this.storage.get('userID');
-    // const token = await this.storage.get('auth_token');
-    this.userID = user_id;
-    this.getAllVendors([null]);
-    this.storage.get('statictoken')
-    this.getAllVendorTypes();
-    this.getAllBannerImg();
-    this.onCategorySelect(0, 0);
-  }
+
   async ionViewWillEnter() {
     const storedCart = await this.storage.get('cartItems');
     this.cartItems = storedCart || [];
@@ -282,7 +283,8 @@ export class HomePage implements OnInit, OnDestroy {
   // All your existing methods remain the same...
   onSearchFocusChange(isFocused: boolean) {
     this.hideDiv = isFocused;
-    // console.log('onfocus change',this.hideDiv)
+    this.hideFooter = isFocused;
+    console.log('onfocus change',this.hideFooter)
   }
 
   selectCategory2(index: number): void {

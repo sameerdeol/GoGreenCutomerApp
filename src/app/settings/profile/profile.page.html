@@ -31,7 +31,13 @@
       <div *ngIf="emailError" class="text-danger text-center">{{ emailError }}</div>
 
       <div class="form_label">Date Of Birth</div>
-      <input type="date" id="dob" placeholder="DD/MM/YYYY" [(ngModel)]="dob">
+      <input type="date" 
+             id="dob" 
+             placeholder="DD/MM/YYYY" 
+             [max]="today" 
+             [(ngModel)]="dob"
+             (change)="onDateChange()"
+             (input)="onDateChange()">
       <div *ngIf="dobError" class="text-danger text-center">{{ dobError }}</div>
 
       <div class="form_label">Gender</div>

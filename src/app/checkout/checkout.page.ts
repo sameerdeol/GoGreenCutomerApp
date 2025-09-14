@@ -30,6 +30,8 @@ export class CheckoutPage implements OnInit {
   addressType: any;
   fulladdress: any;
   savedUserAddress: any[] = [];
+  minDateTime: string ='';
+  maxDateTime: string = '';
   constructor(private router: Router,private storage: Storage,private apiservice: ApiserviceService) { 
     this.init();
   }
@@ -39,6 +41,7 @@ export class CheckoutPage implements OnInit {
   }
 
   async ngOnInit() {
+    this.setDateLimits();
     const nav = this.router.getCurrentNavigation();
     if (nav?.extras.state) {
       this.totalamountWithDilevryCharges = nav.extras.state['totalPrice'];
@@ -64,6 +67,31 @@ export class CheckoutPage implements OnInit {
     
    
   }
+setDateLimits() {
+  const now = new Date();
+
+  // Get local date in YYYY-MM-DDTHH:mm format
+  const offset = now.getTimezoneOffset(); // in minutes
+  const localISOTime = new Date(now.getTime() - (offset * 60000))
+    .toISOString()
+    .slice(0, 16); // cut seconds + Z
+
+  this.minDateTime = localISOTime;
+
+  // Max = 7 days from now
+  const future = new Date();
+  future.setDate(future.getDate() + 7);
+
+  const localFutureISO = new Date(future.getTime() - (offset * 60000))
+    .toISOString()
+    .slice(0, 16);
+
+  this.maxDateTime = localFutureISO;
+
+  console.log('Min datetime (IST):', this.minDateTime);
+  console.log('Max datetime (IST):', this.maxDateTime);
+}
+
 
   async onDateTimeChange(event: CustomEvent) {
     const newValue = event.detail.value;  

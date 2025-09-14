@@ -36,8 +36,10 @@ export class WelcomePage implements OnInit {
   async init() {
     await this.storage.create();
   }
-  ngOnInit() {
+  async ngOnInit() {
     // this.checkLoginStatus();
+      const fcmToken =  await this.storage.get('pushNotificationToken');
+      console.log('fcmToken on welcome',fcmToken)
   }
 
   allowOnlyNumbers(event: KeyboardEvent): boolean {
@@ -56,7 +58,16 @@ export class WelcomePage implements OnInit {
   redirectToOtp() {
     this.router.navigate(['/otp']);
   }
+  async saveFcMToken(fcmToken: any) {
+    const user_id = await this.storage.get('userID');
+    console.log('userId in App component', user_id);
 
+    this.apiservice.save_notification_token(user_id, fcmToken).subscribe((response) => {
+      if (response) {
+        console.log('token Response:', response);
+      }
+    });
+  }
   async Login() {
     const otp = 1234;
     const phonenumber = this.phoneNumber;
@@ -75,6 +86,9 @@ export class WelcomePage implements OnInit {
         await this.storage.set('userID', this.decodedToken.id);
         await this.storage.set('phoneNumber', this.phoneNumber);
         this.router.navigate(['/otp']);
+        const fcmToken =  await this.storage.get('pushNotificationToken');
+      
+        this.saveFcMToken(fcmToken);
       }
     });
   }

@@ -4,7 +4,7 @@
     <ion-buttons slot="start">
       <ion-icon class="down_arrow" name="chevron-down-outline" size="large" (click)="dismiss()"></ion-icon>
     </ion-buttons> 
-    <app-global-search class="search_component" [vendor_id]="vendor_id"   (searchFocus)="onSearchFocusChange($event)"></app-global-search>
+    <app-global-search (dismissModal)="dismiss()" class="search_component" [vendor_id]="vendor_id"   (searchFocus)="onSearchFocusChange($event)"></app-global-search>
   </div>
 
 </ion-content>

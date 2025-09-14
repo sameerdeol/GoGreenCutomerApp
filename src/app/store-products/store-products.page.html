@@ -26,11 +26,14 @@
           <div class="store_heading_timing">
             <img src="assets/timer-icon.svg" alt="">
             <!-- <ion-icon name="time-outline"></ion-icon> -->
-            <p [ngClass]="{
-              'text_gogreen': getVendorStatus(vendorDetails.vendor_close_time) === 'Open now',
-              'text-danger': getVendorStatus(vendorDetails.vendor_close_time) === 'Closed'
-            }"> {{ getVendorStatus(vendorDetails.vendor_close_time) }} (Closes at {{ vendorDetails.vendor_close_time
-              }})</p>
+       
+                <p [ngClass]="{
+              'text_gogreen': vendorDetails.is_vendor_opened,
+              'text-danger': !vendorDetails.is_vendor_opened
+                }">
+              {{ vendorDetails.is_vendor_opened ? 'Open now' : 'Closed' }}
+              (Closes at {{ vendorDetails.vendor_close_time }})
+            </p>
           </div>
         </div>
         <div class="store_basix_details_rating">
@@ -77,7 +80,7 @@
 
 
       <ion-list>
-        <ion-item class="mb-3 mt-3 product-row" lines="none" *ngFor="let product of allProducts">
+        <ion-item class="mb-3 mt-3 product-row" lines="none" *ngFor="let product of allProducts" >
           <div slot="start" class="product_img_div">
             <div class="product_img_div_box">
               <img [src]="product.featured_image" (click)="navigateToProduct(product)" />
@@ -100,7 +103,7 @@
             </div>
           </ng-template>
 
-          <div class="product-info-col">
+          <div class="product-info-col" (click)="navigateToProduct(product)">
             <h2>{{product.name}}</h2>
             <p>{{product.description}}</p>
 

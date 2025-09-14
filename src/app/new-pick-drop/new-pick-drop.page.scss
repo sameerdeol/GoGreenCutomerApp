@@ -1,6 +1,45 @@
 ion-content{
     --background: white;
   }
+
+  // Google Maps Autocomplete styling
+  .pac-container {
+    z-index: 9999 !important;
+    position: fixed !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+    border: 1px solid #d0d0d0 !important;
+    margin-top: 2px !important;
+  }
+
+  .pac-item {
+    padding: 8px 12px !important;
+    border-bottom: 1px solid #f0f0f0 !important;
+    font-size: 14px !important;
+  }
+
+  .pac-item:last-child {
+    border-bottom: none !important;
+  }
+
+  .pac-item:hover,
+  .pac-item-selected {
+    background-color: #f5f5f5 !important;
+  }
+
+  .pac-icon {
+    margin-right: 8px !important;
+  }
+
+  .pac-item-query {
+    font-weight: 500 !important;
+    color: #333 !important;
+  }
+
+  .pac-matched {
+    font-weight: 600 !important;
+    color: #1976d2 !important;
+  }
   .page_outer_div{
     .border_div{
        border: 1px solid #d0d0d0;
@@ -38,6 +77,7 @@ ion-content{
                               margin: 10px 0px 10px 0px;
                               font-size: 13px;
                               font-weight: 600;
+                              color:#000;
                             }
                             input[type="text"] {
                                 background: white;
@@ -101,7 +141,12 @@ ion-content{
                                               border-radius: 5px;
                                           }
                             }                                    
-                  }
+                           }
+                           .distance_info{
+                             p{
+                              color: #000;
+                             }
+                           }
                    .text_area {
                                 background: white;
                                 border: 1px solid gray;
@@ -330,4 +375,87 @@ ion-radio {
   .date-time-buttons ion-button {
     width: 100%;
   }
+}
+
+.arriving_outer_div{
+  padding: 12px;
+  margin-bottom: 12rem;
+  border: 1px solid black;
+  border-radius: 6px;
+      .arriving_div{
+        color: #000;
+                p{
+                  margin-bottom: 3px;
+                }
+                  .display_flex_checkbox{
+                    display: flex;
+                           input[type="checkbox"] {
+                                             margin-right: 32px;
+                                }
+                                input[type="checkbox"] {
+                                        appearance: none;
+                                        -webkit-appearance: none;
+                                        border: 2px solid #088B46;
+                                        border-radius: 50%; /* makes it round */
+                                        width: 20px;
+                                        height: 20px;
+                                        outline: none;
+                                        cursor: pointer;
+                                        position: relative;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+
+                                      }
+
+                                    
+                                      input[type="checkbox"]:checked::before {
+                                        content: "";
+                                        top: 2px;
+                                        left: 2px;
+                                        width: 10px;
+                                        height: 10px;
+                                        background: #088B46;
+                                        border-radius: 50%;
+                                        display: block;
+                                      }
+                                  .delivery_type {
+                                    width: 85%;
+                                  }
+                  }
+                  .text_align_center{
+                    text-align: center;
+                              ion-datetime::part(native) {
+                                  border-radius: 0px;
+                                  background-color: #f9f9f9;
+                                  border: 1px solid #dcdcdc;
+                                }
+                                ion-datetime-button{
+                                  margin-right: 3rem;
+                                }
+                                ion-datetime-button::part(native) {
+                                  background-color: #ffffff;
+                                  border: 2px solid #00894d;
+                                  border-radius: 26px;
+                                  color: #000;
+                                }
+                               
+                  }
+                   input[type="textarea"] {
+                                  background: white;
+                                  border: 1px solid black;
+                                  border-radius: 3px;
+                                  width: 100%;
+                                  margin-top: 12px;
+                                  padding: 6px 10px 72px 10px;
+                                  color: #000;
+
+                    }
+      } 
+  
+}
+.modal_footer{
+    padding: 12px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
 }

@@ -79,6 +79,21 @@ export class ViewCartPage implements OnInit {
   async ionViewWillEnter() {
     await this.loadCartFromStorage(); 
   }
+  async navigateToParticularProduct(product_id: any){
+    await this.storage.set('lastProductId', product_id);
+    // this.router.navigate(['/product-detail'], {
+    //   state: { 
+    //          product_id: product_id,     
+    //    }
+    // });
+    this.router.navigate(
+    ['/product-detail'], 
+    {
+      queryParams: { id: product_id },   // ✅ param passed internally
+      skipLocationChange: true           // ✅ not visible in URL
+    }
+  );
+  }
 
   selectOnlyOne(option: string) {
     if (this.selectedOption === option) {

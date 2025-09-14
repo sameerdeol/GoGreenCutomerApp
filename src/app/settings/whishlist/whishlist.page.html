@@ -1,0 +1,79 @@
+<app-common-header></app-common-header>
+<ion-content>
+  <div class="page_outer_div">
+    <!-- Loading Spinner -->
+    <div class="loading-container" *ngIf="isLoading">
+      <ion-spinner name="crescent" class="loading-spinner"></ion-spinner>
+      <p class="loading-text">Loading wishlist...</p>
+    </div>
+
+    <!-- No Data Message -->
+    <div class="no-data-container" *ngIf="!isLoading && (!AllProducts || AllProducts.length === 0)">
+      <ion-icon name="heart-outline" class="no-data-icon"></ion-icon>
+      <h3>No Favorite Products</h3>
+      <p>You haven't added any products to your wishlist yet.</p>
+    </div>
+
+    <!-- Products List -->
+    <div class="products-container" *ngIf="!isLoading && AllProducts && AllProducts.length > 0">
+      <div class="products-header">
+        <h3>My Wishlist</h3>
+        <p class="product-count">{{ AllProducts.length }} item{{ AllProducts.length !== 1 ? 's' : '' }}</p>
+      </div>
+
+      <div class="products-grid">
+        <ion-card *ngFor="let product of AllProducts; let i = index" 
+                  class="product-card" 
+                  (click)="navigateToProduct(product)">
+          
+          <!-- Product Image -->
+          <div class="product-image-container">
+            <img [src]="product.featured_image" 
+                 [alt]="product.name" 
+                 class="product-image"
+                 (error)="onImageError($event)">
+            
+            <!-- Remove from Wishlist Button -->
+            <button class="remove-wishlist-btn" 
+                    (click)="removeFromWishlist(product); $event.stopPropagation()">
+              <ion-icon name="heart" class="heart-icon"></ion-icon>
+            </button>
+          </div>
+
+          <!-- Product Info -->
+          <ion-card-content class="product-info">
+            <div class="product-category">{{ product.category_name }}</div>
+            <h4 class="product-name">{{ product.name }}</h4>
+            <!-- <p class="product-description">{{ product.description }}</p> -->
+            
+            <!-- Price Section -->
+            <div class="price-section">
+              <div class="price-container">
+                <span class="current-price">${{ product.discounted_price || product.price }}</span>
+                <span class="original-price" *ngIf="product.discounted_price && product.discounted_price !== product.price">
+                  ${{ product.price }}
+                </span>
+                <!-- <span class="discount-badge" *ngIf="product.discount_percent > 0">
+                  {{ product.discount_percent }}% OFF
+                </span> -->
+              </div>
+            </div>
+
+            <!-- Product Details -->
+            <div class="product-details">
+              <!-- <div class="product-unit">
+                <ion-icon name="cube-outline"></ion-icon>
+                <span>{{ product.product_quantity }} {{ product.product_unit }}</span>
+              </div> -->
+              <!-- <div class="stock-status" [class.out-of-stock]="product.stock === 0">
+                <ion-icon [name]="product.stock > 0 ? 'checkmark-circle' : 'close-circle'"></ion-icon>
+                <span>{{ product.stock > 0 ? 'In Stock' : 'Out of Stock' }}</span>
+              </div> -->
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+  </div>
+</ion-content>
+<app-footer-tabs></app-footer-tabs>

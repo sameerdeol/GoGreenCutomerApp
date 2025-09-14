@@ -30,7 +30,7 @@ export class StoreProductsPage implements OnInit {
   cartItems: any[] = [];
   vendorDetails: any;
   user_id: any;
-  filters = ['50% Off', 'Fast Delivery', '4.0+', '3.5+', 'High to Low', 'Low to High'];
+  filters = ['Fast Delivery', '4.0+', 'High to Low'];
   expandedProducts: { [key: string]: boolean } = {}; // Track expanded state per product
   animateCart: boolean = false;
   cartQuantity: number = 0;
@@ -40,7 +40,7 @@ export class StoreProductsPage implements OnInit {
   vendor_id: any;
   selectedFilterCount: any;
   showViewCart: boolean = false;
-  isVendorOpen: boolean = false;
+  isVendorOpen: any;
   filterData = {
     price: null as string | null,
     discount: null as string | null,
@@ -66,7 +66,8 @@ export class StoreProductsPage implements OnInit {
       this.vendor_id = vendor.vendor_id;
       this.getAllProductsByVendor(this.vendor_id,userID);
       this.vendorDetails = vendor;
-      console.log("vendorDetails", this.vendorDetails)
+      this.isVendorOpen = this.vendorDetails.is_vendor_opened;
+      // console.log("vendorDetails", this.vendorDetails)
     }
 
     this.cartSubscription = this.cartService.cartQuantity$.subscribe(quantity => {
@@ -214,31 +215,6 @@ export class StoreProductsPage implements OnInit {
     await modal.present();
   }
 
-  getVendorStatus(closeTime: any): string {
-      if (!closeTime) {
-        return ''; // Don't show anything
-      }
-
-    if (!closeTime || typeof closeTime !== 'string' || !closeTime.includes(':')) {
-      console.warn('Invalid closeTime format:', closeTime);
-      return 'Unknown';
-    }
-
-    const [hours, minutes] = closeTime.split(':').map(Number);
-
-    if (isNaN(hours) || isNaN(minutes)) {
-      console.warn('Invalid time values in closeTime:', closeTime);
-      return 'Unknown';
-    }
-
-    const now = new Date();
-    const closeDate = new Date();
-    closeDate.setHours(hours, minutes, 0, 0);
-
-    this.isVendorOpen = now < closeDate;
-    return this.isVendorOpen ? 'Open now' : 'Closed';
-  }
-
   toggleExpand(productId: string) {
     this.expandedProducts[productId] = !this.expandedProducts[productId];
   }
@@ -252,9 +228,7 @@ export class StoreProductsPage implements OnInit {
   }
 
   async ngOnInit() {
- 
     this.cartQuantity = this.cartService.getCurrentQuantity();
- 
   }
 
   ngOnDestroy(): void {
@@ -263,12 +237,16 @@ export class StoreProductsPage implements OnInit {
       this.cartSubscription.unsubscribe();
     }
   }
+
   navigateToProduct(product: any) {
-    //  await this.storage.set('product_id', id);
     this.router.navigate(['/product-detail'], {
-      state: { product: product }
+      state: { product: product,
+             vendorStatus: this.isVendorOpen,
+             vendorDetails: this.vendorDetails
+       }
     });
   }
+
   navigateToOrders() {
     this.router.navigate(['/view-cart']);
   }
@@ -289,7 +267,7 @@ export class StoreProductsPage implements OnInit {
     this.cartService.setCartItems(this.cartItems);
     this.totalQuantity = this.cartService.getCurrentQuantity();
   }
-
+  
   async loadCartFromStorage() {
     const storedCart = await this.storage.get('cartItems');
     this.cartItems = storedCart || [];
@@ -307,7 +285,7 @@ export class StoreProductsPage implements OnInit {
       this.showViewCart = true;
     });
 
-    console.log('🛒 Cart loaded from storage:', this.cartItems);
+    // console.log('🛒 Cart loaded from storage:', this.cartItems);
   }
 
   navigateToViewCart() {
@@ -325,12 +303,13 @@ export class StoreProductsPage implements OnInit {
     this.apiservice.get_allproductsByVendorID(vendor_id, searchTerm, user_id).subscribe((response) => {
       if (response.success == true) {
         this.allProducts = response.product;
-        console.log("all vendor products", this.allProducts)
+        // console.log("all vendor products", this.allProducts)
       }
     })
   }
 
   async addToCart(product: any) {
+    console.log('this.isVendorOpen',this.isVendorOpen)
 if (!this.isVendorOpen) {
   const alert = await this.alertController.create({
     header: 'Vendor Closed',
