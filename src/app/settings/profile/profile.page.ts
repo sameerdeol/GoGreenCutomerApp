@@ -18,7 +18,7 @@ register();
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
    standalone: true,
-      imports: [IonicModule, FormsModule, CommonModule, FooterTabsComponent, CommonHeaderComponent], 
+      imports: [IonicModule, FormsModule, CommonModule, CommonHeaderComponent], 
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ProfilePage implements OnInit {

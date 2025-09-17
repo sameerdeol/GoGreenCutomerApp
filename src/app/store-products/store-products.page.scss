@@ -8,16 +8,24 @@ ion-content {
 }
 
 .header_bg_img {
-  position: relative;
+  position: fixed;
   top: 0;
   left: 0;
+  right: 0;
   width: 100%;
   height: 220px;
-  background-size: cover;          /* Scales image to cover entire container */
-  background-position: center;     /* Centers image both horizontally and vertically */
-  background-repeat: no-repeat;    /* Prevents tiling */
-  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+  transition: all 0.3s ease-in-out;
+  
+  &.collapsed {
+    height: 80px;
+    opacity: 0.7;
+  }
 }
+
 .left_arrow_div {
   background: #fff;
   width: 32px;
@@ -35,11 +43,88 @@ ion-content {
   font-weight: bold;
 }
 
-.main_content {
+.sticky-header {
   position: relative;
-  z-index: 1;
-  padding: 0 10px;
-  margin-top: -30px;
+  margin-top: 200px;
+  background: white;
+  border-radius: 20px 20px 0 0;
+  z-index: 50;
+  transition: all 0.3s ease-in-out;
+  min-height: calc(100vh - 200px);
+  
+  &.collapsed {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    right: 0;
+    margin-top: 0;
+    border-radius: 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    min-height: calc(100vh - 80px);
+  }
+}
+
+.vendor-details-sticky {
+  position: sticky;
+  top: 0;
+  background: white !important;
+  z-index: 100;
+  padding: 20px 15px 0;
+  border-bottom: 1px solid #f0f0f0;
+  
+  .sticky-header.collapsed & {
+    top: 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    background: white !important;
+  }
+}
+
+.filters-sticky {
+  position: sticky;
+  top: 120px; 
+  background: white !important;
+  z-index: 99;
+  padding: 0 15px 15px;
+  border-bottom: 1px solid #f0f0f0;
+  
+  .sticky-header.collapsed & {
+    top: 120px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 99;
+    background: white !important;
+  }
+}
+
+.products-content {
+  background: white;
+}
+
+.main_content {
+  background: white;
+  border-radius: 20px 20px 0 0;
+  margin-top: -20px;
+  position: relative;
+  z-index: 2;
+}
+
+// Sticky section - vendor details + filters combined
+.sticky-combined-section {
+  @include mix.sticky-top(0, 100);
+  padding: 20px 15px 15px;
+  border-bottom: 1px solid vars.$border-color;
+  
+  .sticky-header.collapsed & {
+    box-shadow: vars.$shadow-medium;
+  }
+}
+
+// Products content
+.products-content {
+  background: white;
+  padding: 0 15px 15px;
+}
 
   .restrao_details {
     background: #fff;
@@ -120,7 +205,7 @@ ion-content {
   box-shadow: 0px 0px 10px #ededed;
   padding: 15px 10px;
   margin-top: 10px;
-  margin-bottom: 80px;
+
           .share_bookmark_bar{
             @include mix.flex-align-space-between;
             margin-bottom: 10px;
@@ -267,26 +352,16 @@ ion-content {
       color: #008a4a;
       height: 35px;
       text-transform: capitalize;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;        /* Show only 2 lines */
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      @include mix.text-clamp(2);
     }
 
      .product-info-col p{
       margin: 0px 0px 10px 0px;
       font-size: 14px;
-      // font-weight: 700;
-      // color: #008a4a;
       text-transform: capitalize;
       height: 45px;
       color: black;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;        /* Show only 2 lines */
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      @include mix.text-clamp(2);
     }
     .product-info-col h3{
       margin: 0px;
@@ -301,9 +376,7 @@ ion-content {
         display: block;
 
         .description-text {
-          overflow: hidden;
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
+          @include mix.text-clamp(3);
           transition: all 0.3s ease;
           font-size: 13px;
           color: #000;
@@ -311,6 +384,7 @@ ion-content {
 
         .description-text.collapsed {
           -webkit-line-clamp: 3;
+          line-clamp: 3;
           white-space: normal;
           text-overflow: ellipsis;
           font-size: 13px;
@@ -319,6 +393,7 @@ ion-content {
 
         .description-text:not(.collapsed) {
           -webkit-line-clamp: unset;
+          line-clamp: unset;
           white-space: normal;
           font-size: 13px;
           color: #000;
@@ -339,9 +414,10 @@ ion-content {
 
   ion-list {
     background: vars.$secondary-color;
+    margin-bottom: 7rem;
   }
 
-}
+
 .pro_qyt_buttons{
   margin-top: 8px;
 }
@@ -374,9 +450,7 @@ ion-content {
     left: 20px;
     width: 20px;
     text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @include mix.flex-align-center;
     border-radius: 14px;
     z-index: 9;
   }
@@ -384,30 +458,18 @@ ion-content {
 
 
 .view_cart_div{
-    position: fixed;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    bottom: 76px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 43%;
-    max-width: 400px;
+    @include mix.fixed-bottom-button(76px, 43%);
     background: #00854a;
-    color: #fff;
+    color: vars.$white;
     font-size: 18px;
-    font-weight: 600;
+    @include mix.font-bold-6;
     text-align: center;
     padding: 10px;
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
-    z-index: 9999;
-        ion-icon{
-          color: white;
-          font-size: 20px;          
-        }
+    
+    ion-icon{
+      color: vars.$white;
+      font-size: 20px;          
+    }
 }
 
 .pro_qyt_box {

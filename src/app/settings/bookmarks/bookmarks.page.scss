@@ -1,4 +1,6 @@
-  // Loading Spinner Styles
+@use 'src/theme/variables' as vars;
+@use 'src/theme/mixins' as mix;
+// Loading Spinner Styles
   .loading-container {
     display: flex;
     flex-direction: column;
@@ -89,10 +91,10 @@
                         --background-focused: transparent;
                         --background-activated: transparent;
                         --box-shadow: none;
-                        --color: #00a86b;
-                        --color-hover: #00a86b;
-                        --color-focused: #00a86b;
-                        --color-activated: #00a86b;
+                        --color: vars.$primary-color;
+                        --color-hover: vars.$primary-color;
+                        --color-focused: vars.$primary-color;
+                        --color-activated: vars.$primary-color;
                         --padding-start: 4px;
                         --padding-end: 4px;
                         --padding-top: 4px;
@@ -115,7 +117,7 @@
                         
                         .bookmark-icon {
                           font-size: 24px;
-                          color: #00a86b;
+                          color: vars.$primary-color;
                           margin: 0;
                         }
                       }

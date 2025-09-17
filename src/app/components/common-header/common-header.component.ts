@@ -46,7 +46,7 @@ export class CommonHeaderComponent implements OnInit {
     } else if (url.includes('/whishlist')) {
       this.headerText = 'Wishlist';
     }else if (url.includes('/my-account')) {
-      this.headerText = 'My Account';
+      this.headerText = 'Settings';
     } else if (url.includes('/all-address')) {
       this.headerText = 'Saved Address';
     }else if (url.includes('/otp')) {
@@ -61,6 +61,8 @@ export class CommonHeaderComponent implements OnInit {
       this.headerText = 'Privacy';
     }else if (url.includes('/terms-and-condition')) {
       this.headerText = 'Terms Of Use';
+    }else if (url.includes('/help-center')) {
+      this.headerText = 'Help Center';
     }else {
       this.headerText = ''; // default
     }

@@ -51,6 +51,7 @@ export class ProductDetailPage implements OnInit {
   rating = 5;
   stars = [1, 2, 3, 4, 5];
   isFavorite: boolean = false;
+   isLoading: boolean = true;
 
   constructor(private location: Location,
     private storage: Storage,
@@ -63,24 +64,53 @@ export class ProductDetailPage implements OnInit {
     this.init();
     this.checkExistingItems();
     const navigation = this.router.getCurrentNavigation();
+    this.isLoading = true;
     this.route.queryParamMap.subscribe(params => {
     const id = params.get('id');
+    console.log('[ProductDetail] constructor queryParamMap id =', id);
 
     if (id) {
-      this.product_id = +id;
+      const newProductId = +id;
+      // Always load the product from route parameters (this takes priority)
+      this.product_id = newProductId;
       // console.log("Product ID from route:", this.product_id);
-      this.getProductToDetailsById(this.product_id);
+      
+      // Get additional data from state if available
+      if (navigation?.extras?.state) {
+        this.vendorStatus = navigation.extras.state['vendorStatus'] ?? '';
+        this.vendorDetails = navigation.extras.state['vendorDetails'] ?? null;
+        // Use state product data if available, otherwise fetch from API
+        if (navigation.extras.state['product']?.id === newProductId) {
+          this.resetProductState();
+          this.productDetails = navigation.extras.state['product'];
+          this.checkExistingItems();
+          this.isLoading = false;
+        } else {
+          this.getProductToDetailsById(this.product_id);
+        }
+      } else {
+        this.getProductToDetailsById(this.product_id);
+      }
 
     } else if (navigation?.extras?.state) {
-      this.productDetails = navigation.extras.state['product'] ?? null;
-      this.product_id = this.productDetails?.id ?? null;
-      this.vendorStatus = navigation.extras.state['vendorStatus'] ?? '';
-      this.vendorDetails = navigation.extras.state['vendorDetails'] ?? null;
-      // console.log("Product ID from state:", this.product_id);
+      const stateProductId = navigation.extras.state['id'] ?? navigation.extras.state['product']?.id ?? null;
+      if (stateProductId) {
+        this.product_id = stateProductId;
+        this.productDetails = navigation.extras.state['product'] ?? null;
+        this.vendorStatus = navigation.extras.state['vendorStatus'] ?? '';
+        this.vendorDetails = navigation.extras.state['vendorDetails'] ?? null;
+        console.log("Product ID from state:", this.product_id);
+        if (this.productDetails) {
+          this.resetProductState();
+          this.productDetails = navigation.extras.state['product'];
+          this.checkExistingItems();
+          this.isLoading = false;
+        }
+      }
     } else {
-
       console.warn("No product_id found in route or state");
       this.router.navigate(['/products']); // optional redirect
+      this.isLoading = false;
     }
   });
     this.cartSubscription = this.cartService.cartQuantity$.subscribe(quantity => {
@@ -93,10 +123,43 @@ export class ProductDetailPage implements OnInit {
   }
 
   async ionViewWillEnter() {
-    await this.loadCartFromStorage(); // Re-load on every visit to this page
-    // Restore selected state when returning to page
+    await this.loadCartFromStorage(); 
+
+    // Always check route snapshot on entry
+    const idFromRoute = this.route.snapshot.queryParamMap.get('id');
+    console.log('[ProductDetail] ionViewWillEnter idFromRoute =', idFromRoute);
+    if (idFromRoute) {
+      const numericId = Number(idFromRoute);
+      if (!this.product_id || this.product_id !== numericId) {
+        this.product_id = numericId;
+        this.getProductToDetailsById(this.product_id);
+        return;
+      }
+    }
+
+    // Fallback: use navigation state or lastProductId if no id in route
+    if (!idFromRoute) {
+      const stateId = this.router.getCurrentNavigation()?.extras?.state?.['id'];
+      if (stateId) {
+        this.product_id = Number(stateId);
+        this.getProductToDetailsById(this.product_id);
+        return;
+      }
+      const lastProductId = await this.storage.get('lastProductId');
+      console.log('[ProductDetail] ionViewWillEnter lastProductId =', lastProductId);
+      if (lastProductId) {
+        this.product_id = Number(lastProductId);
+        this.getProductToDetailsById(this.product_id);
+        return;
+      }
+    }
+
+    // If we already have productDetails, restore selected state
     if (this.productDetails) {
       await this.checkExistingItems();
+    } else if (!idFromRoute) {
+      // Avoid endless loading if nothing to load
+      this.isLoading = false;
     }
   }
 
@@ -107,38 +170,82 @@ export class ProductDetailPage implements OnInit {
     }
    
   }
+
+  resetProductState(): void {
+    // Reset all product-specific state
+    this.selectedAddons = [];
+    this.selectedVariant = null;
+    this.selectedVariatnPrice = 0;
+    this.showVariantAndAddons = false;
+    // Don't reset showViewCart here - it should show if ANY items are in cart
+    this.productDetails = null;
+    
+    // Don't reset isAddedMap as it should persist across products
+    // this.isAddedMap = {};
+  }
   getProductToDetailsById(id: any){
-    this.apiservice.get_product_details(id).subscribe((response)=>{
-      if(response.success === true){
-         this.productDetails = response.product;
-          console.log('Your Clicked Product Details is :',this.productDetails)
+    // Reset state when loading a different product
+    this.resetProductState();
+     this.isLoading = true; 
+    
+    this.apiservice.get_product_details(id).subscribe({
+      next: async (response) => {
+        console.log('[ProductDetail] API response for id', id, response);
+        if(response.success === true){
+           this.productDetails = response.product;
+            // After product details are loaded, check existing items and set default variant
+            await this.checkExistingItems();
+            // If no existing items, set default variant
+            if (!this.selectedVariant && this.productDetails?.variants?.length > 0) {
+              this.onintialSetVariantId();
+            }
+        }
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('[ProductDetail] API error for id', id, err);
+        this.isLoading = false;
       }
     })
   }
   async checkExistingItems(){
-    const storedCart = await this.storage.get('cartItems');
+    const storedCart = await this.storage.get('cartItems') || [];
     const existingItem = storedCart.find((item: any) => item.id === this.productDetails?.id);
     console.log('existing item in cart on page load',existingItem)
+    
     if (existingItem) {
         this.showVariantAndAddons = true;
+        this.isAddedMap[this.productDetails.id] = true;
+        this.showViewCart = true;
              
         // Restore variant
         if (existingItem.variant_id) {
-          this.selectedVariant = existingItem.variant_id;
-          this.selectedVariatnPrice = existingItem.variant_price;
-          console.log('existingItem.variant_id',existingItem.variant_id)
+          this.selectedVariant = Number(existingItem.variant_id);
+          this.selectedVariatnPrice = Number(existingItem.variant_price || 0);
+          console.log('Restored variant_id:',existingItem.variant_id)
+        } else if (this.productDetails?.variants?.length > 0) {
+          // If no variant saved but variants exist, set default
+          this.onintialSetVariantId();
         }
 
         // Restore addons (multiple addons support)
         if (existingItem.addons?.length > 0 ) {
-          this.selectedAddons = existingItem.addons.map((addon: any) => addon.addon_id);
-          console.log('existingItem.selectedAddons',this.selectedAddons)
+          this.selectedAddons = existingItem.addons.map((addon: any) => Number(addon.addon_id));
+          console.log('Restored selectedAddons:',this.selectedAddons)
         } else {
           this.selectedAddons = [];
         }
-    }else{
+    } else {
+      // No existing item - set defaults
       this.showVariantAndAddons = false;
       this.selectedAddons = [];
+      this.selectedVariant = null;
+      this.isAddedMap[this.productDetails?.id] = false;
+      
+      // Set default variant if variants exist
+      if (this.productDetails?.variants?.length > 0) {
+        this.onintialSetVariantId();
+      }
     }
   }
   async ngOnInit() {
@@ -151,26 +258,35 @@ export class ProductDetailPage implements OnInit {
      if (this.productDetails?.variants?.length > 0) {
       const lower = getLowestPriceVariant(this.productDetails.variants);
       this.selectedVariant = Number(lower.id);
-      console.log('this.selectedVariant',this.selectedVariant)
+      console.log('Default variant selected:',this.selectedVariant)
       this.selectedVariatnPrice = Number(lower.price);
+      
+      // Update cart item if it exists
+      const existingItemIndex = this.cartItems.findIndex(item => item.id === this.productDetails.id);
+      if (existingItemIndex !== -1) {
+        this.cartItems[existingItemIndex].variant_id = this.selectedVariant;
+        this.cartItems[existingItemIndex].variant_price = this.selectedVariatnPrice;
+        this.storage.set('cartItems', this.cartItems);
+      }
     }
   }
   toggleVariant(variant: any, productId: number) {
-    this.selectedVariant = variant.id;
-    // this.productState.selectedVariant = variant.id;
+    this.selectedVariant = Number(variant.id);
+    this.selectedVariatnPrice = Number(variant.price);
+    // console.log('Variant toggled:', this.selectedVariant, 'Price:', this.selectedVariatnPrice);
 
     const cartItemIndex = this.cartItems.findIndex(item => item.id === productId);
     if (cartItemIndex !== -1) {
       const cartItem = this.cartItems[cartItemIndex];
-      cartItem.variant_id = variant.id;
-      cartItem.variant_price = Number(variant.price); // ← add this
-      console.log('🧩 Variant added to cart item:', cartItem);
+      cartItem.variant_id = this.selectedVariant;
+      cartItem.variant_price = this.selectedVariatnPrice;
+      console.log('🧩 Variant updated in cart item:', cartItem);
       this.storage.set('cartItems', this.cartItems);
     }
   }
   onVariantChange(event: any) {
-  const selectedVariantId = event.detail.value;
-  const variant = this.productDetails.variants.find((v: any) => v.id === selectedVariantId);
+  const selectedVariantId = Number(event.detail.value);
+  const variant = this.productDetails.variants.find((v: any) => Number(v.id) === selectedVariantId);
   if (variant) {
     this.toggleVariant(variant, this.productDetails.id);
   }
@@ -202,14 +318,14 @@ export class ProductDetailPage implements OnInit {
         const cartItem = this.cartItems[cartItemIndex];
         cartItem.addons = []; // ✅ Clear all addons
         this.storage.set('cartItems', this.cartItems); // ✅ Persist updated cart
-        console.log(`🧹 Cleared addons for product ID ${productId}:`, cartItem);
+        // console.log(`🧹 Cleared addons for product ID ${productId}:`, cartItem);
       }
     }
 
     console.log('🛒 Cart after clearing:', this.cartItems);
   }
   async toggleAddon(addon: any) {
-    const addonId = addon.id;
+    const addonId = Number(addon.id);
     const addonIndex = this.selectedAddons.indexOf(addonId);
     
     if (addonIndex > -1) {
@@ -230,13 +346,14 @@ export class ProductDetailPage implements OnInit {
 
       // ✅ Make sure variant_id is set properly
       cartItem.variant_id = this.selectedVariant || null;
+      cartItem.variant_price = this.selectedVariatnPrice || 0;
 
       // ✅ Update addons based on selected addons
-      cartItem.addons = this.selectedAddons.map(addonId => {
-        const addon = this.productDetails.addons.find((a: any) => a.id === addonId);
+      cartItem.addons = this.selectedAddons.map(selectedAddonId => {
+        const foundAddon = this.productDetails.addons.find((a: any) => Number(a.id) === selectedAddonId);
         return {
-          addon_id: addonId,
-          price: addon ? addon.price : 0
+          addon_id: selectedAddonId,
+          price: foundAddon ? Number(foundAddon.price) : 0
         };
       });
 
@@ -250,7 +367,7 @@ export class ProductDetailPage implements OnInit {
   }
 
   isAddonSelected(addonId: any): boolean {
-    return this.selectedAddons.includes(addonId);
+    return this.selectedAddons.includes(Number(addonId));
   }
 
   async addToCart(product: any) {
@@ -267,45 +384,59 @@ export class ProductDetailPage implements OnInit {
     await alert.present();
     return;
   }
+  
+  // Ensure variant is selected if variants exist
+  if (!this.selectedVariant && product?.variants?.length > 0) {
+    this.onintialSetVariantId();
+  }
+  
+  // console.log('selected variant when add to cart', this.selectedVariant)
+  
   const existingItem = this.cartItems.find(item => item.id === product.id);
-    if(this.selectedVariant == null || ""){
-      this.selectedVariant = product?.variants?.id;
-      this.onintialSetVariantId();
-    }
-     console.log('selected variant when add to cart', this.selectedVariant)
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      // Include selected addons when adding to cart
-      const selectedAddonsData = this.selectedAddons.map(addonId => {
-        const addon = product.addons.find((a: any) => a.id === addonId);
-        return {
-          addon_id: addonId,
-          price: addon ? addon.price : 0
-        };
-      });
+  
+  if (existingItem) {
+    existingItem.quantity += 1;
+    // Update variant and addons for existing item
+    existingItem.variant_id = this.selectedVariant || null;
+    existingItem.variant_price = this.selectedVariatnPrice || 0;
+    existingItem.addons = this.selectedAddons.map(addonId => {
+      const addon = product.addons?.find((a: any) => a.id === addonId);
+      return {
+        addon_id: addonId,
+        price: addon ? addon.price : 0
+      };
+    });
+  } else {
+    // Include selected addons when adding to cart
+    const selectedAddonsData = this.selectedAddons.map(addonId => {
+      const addon = product.addons?.find((a: any) => a.id === addonId);
+      return {
+        addon_id: addonId,
+        price: addon ? addon.price : 0
+      };
+    });
 
-      this.cartItems.push({
-        category_id: product.category_id,
-        id: product.id,
-        quantity: 1,
-        price: product.price,
-        image: product.featured_image,
-        variant_id: this.selectedVariant || null,
-        variant_price: Number(this.selectedVariant?.price || '0'),
-        vendor_id: product.vendor_id,
-        addons: selectedAddonsData,
-        title: product.name, // 👈 add name
-        subtitle: product.description,
-      });
-    }
-    // this.showPopup();
-    this.updateTotalQuantity();
-    this.isAddedMap[product.id] = true;
-    this.showViewCart = true;
-    this.showVariantAndAddons = true;
-    await this.storage.set('cartItems', this.cartItems);
-    console.log('🛒 Added:', this.cartItems);
+    this.cartItems.push({
+      category_id: product.category_id,
+      id: product.id,
+      quantity: 1,
+      price: product.price,
+      image: product.featured_image,
+      variant_id: this.selectedVariant || null,
+      variant_price: this.selectedVariatnPrice || 0,
+      vendor_id: product.vendor_id,
+      addons: selectedAddonsData,
+      title: product.name,
+      subtitle: product.description,
+    });
+  }
+  
+  this.updateTotalQuantity();
+  this.isAddedMap[product.id] = true;
+  this.showViewCart = true;
+  this.showVariantAndAddons = true;
+  await this.storage.set('cartItems', this.cartItems);
+  console.log('🛒 Added to cart:', this.cartItems);
   }
 
   async removeFromCart(product: any) {
@@ -317,19 +448,27 @@ export class ProductDetailPage implements OnInit {
       } else {
         this.cartItems.splice(index, 1);
         this.isAddedMap[product.id] = false;
-        this.showViewCart = false;
+        
+        // Check if cart still has items to show view cart
+        this.showViewCart = this.cartItems.length > 0;
+        
         this.clear('Addon');
         this.selectedAddons = []; // Clear selected addons
         this.selectedVariant = null; // Clear selected variant
-        this.onintialSetVariantId();
+        this.selectedVariatnPrice = 0;
+        
+        // Set default variant if variants exist
+        if (product?.variants?.length > 0) {
+          this.onintialSetVariantId();
+        }
+        
         this.showVariantAndAddons = false;
       }
 
       await this.storage.set('cartItems', this.cartItems);
-      console.log('❌ Removed:', this.cartItems);
+      console.log('❌ Removed from cart:', this.cartItems);
     }
     this.updateTotalQuantity();
-
   }
   getQuantity(productId: number): number {
     const item = this.cartItems.find(i => i.id === productId);
@@ -364,13 +503,13 @@ export class ProductDetailPage implements OnInit {
     this.cartItems = storedCart || [];
     this.updateTotalQuantity();
 
-    // Update isAddedMap
+    // Update isAddedMap and showViewCart only
     this.isAddedMap = {};
     this.showViewCart = false;
     this.cartItems.forEach(item => {
       this.isAddedMap[item.id] = true;
       this.showViewCart = true;
-      this.showVariantAndAddons = true;
+      // Don't set showVariantAndAddons here - let checkExistingItems handle it for current product only
     });
 
     // Restore selected state for current product

@@ -4,7 +4,7 @@
 .main_content{
     
     .outer_category_div{     
-        margin-top: 10px;
+        margin-top: 20px;
           .main_vendor_types{
               padding: 5px;
                            .slide-content {
@@ -77,6 +77,38 @@
         font-size: 14px;
         text-transform: uppercase;
     }
+    // Shared bookmark styles
+    .bookmark_outer_div{
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 9;
+      .bookmark-btn {
+        --background: white;
+        --background-hover: transparent;
+        --background-focused: transparent;
+        --background-activated: transparent;
+        --box-shadow: none;
+        --color: vars.$primary-color;
+        --color-hover: vars.$primary-color;
+        --color-focused: vars.$primary-color;
+        --color-activated: vars.$primary-color;
+        --padding-start: 4px;
+        --padding-end: 4px;
+        --padding-top: 4px;
+        --padding-bottom: 4px;
+        margin: 0;
+        padding: 4px;
+        width: auto;
+        height: auto;
+        background: none;
+        border: none;
+        box-shadow: none;
+        &:hover { transform: scale(1.1); }
+        &:active { transform: scale(0.95); }
+        .bookmark-icon { font-size: 24px; color: vars.$primary-color; margin: 0; }
+      }
+    }
     .Recomended_vendor_div{
       margin-top: 10px;
           .vendors-scroll-container {
@@ -129,51 +161,9 @@
                                                           display: flex;
                                                           gap: 6px;
                                                           z-index: 3;
-                                                                
-                                                                    .dot {
-                                                                      width: 5px;
-                                                                      height: 5px;
-                                                                      border-radius: 50%;
-                                                                      background: rgba(255, 255, 255, 0.6);
-                                                                      transition: all 0.3s ease;
-                                                                      border: 1px solid rgba(255, 255, 255, 0.8);
-                                                                    }
-
-                                                                    .dot.active {
-                                                                      background: white;
-                                                                      transform: scale(1.2);
-                                                                      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-                                                                    }
+                                                            .dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.6); transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.8); }
+                                                            .dot.active { background: white; transform: scale(1.2); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
                                                         }
-                                                        .favorite-icon {
-                                                          position: absolute;
-                                                          top: 12px;
-                                                          right: 12px;
-                                                          width: 36px;
-                                                          height: 36px;
-                                                          background: rgba(255, 255, 255, 0.9);
-                                                          border-radius: 50%;
-                                                          @include mix.flex-align-center;
-                                                          backdrop-filter: blur(10px);
-                                                          transition: all 0.3s ease;
-                                                          z-index: 3;
-                                                          cursor: pointer;
-                                                          position: absolute;
-                                                              
-                                                                      .bookmark-filled {
-                                                                          background-color: #ffffff;
-                                                                          border-radius: 5px;
-                                                                          padding: 5px;
-                                                                          font-size: 24px;
-                                                                          width: 25px;
-                                                                          height: 25px;
-                                                                        }                              
-                                                                      .bookmark-outline {
-                                                                        color: #00a86b;               // Green icon only
-                                                                        font-size: 20px;
-                                                                      }
-                                                        }                                     
-                                                        
                                             }
                                             .vendor-info {
                                                           padding: 12px;                                                             
@@ -277,26 +267,6 @@
             cursor: pointer;
             position: relative;
             margin: 4px;
-                     .bookmark_outer_div{
-                      position: absolute;
-                      top: 10px;
-                      float: inline-end;
-                      right: 10px;
-                      z-index: 9;
-                      border-radius: 5px;
-                              .bookmark-filled {
-                                  background-color: #ffffff;
-                                  border-radius: 5px;
-                                  padding: 5px;
-                                  font-size: 24px;
-                                  width: 25px;
-                                  height: 25px;
-                                }                              
-                              .bookmark-outline {
-                                color: #00a86b;               // Green icon only
-                                font-size: 20px;
-                              }
-                    }
                     .vendor-image-carousel-container {
                       position: relative;
                       overflow: hidden;
@@ -316,7 +286,6 @@
                                           transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
                                         }
 
-                                  
                               }
                               .store-dots-pagination {
                                 position: absolute;
@@ -326,20 +295,8 @@
                                 display: flex;
                                 gap: 6px;
                                 z-index: 3;
-                                    .store-pagination-dot {
-                                            width: 8px;
-                                            height: 8px;
-                                            border-radius: 50%;
-                                            background: rgba(255, 255, 255, 0.6);
-                                            transition: all 0.3s ease;
-                                            border: 1px solid rgba(255, 255, 255, 0.8);
-                                          }
-
-                                          .store-pagination-dot.active {
-                                            background: white;
-                                            transform: scale(1.2);
-                                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-                                          }
+                                    .store-pagination-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.6); transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.8); }
+                                    .store-pagination-dot.active { background: white; transform: scale(1.2); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
                               }
 
                              

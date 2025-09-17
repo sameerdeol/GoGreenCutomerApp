@@ -1,0 +1,68 @@
+<app-common-header></app-common-header>
+
+<ion-content [fullscreen]="true" class="white-content">
+  <ion-refresher slot="fixed" (ionRefresh)="$event.target.complete()"></ion-refresher>
+
+  <ion-spinner *ngIf="loading" name="crescent" style="margin: 24px auto; display: block;"></ion-spinner>
+
+  <ion-card *ngIf="!loading && parcel" class="pd-detail-card">
+    <ion-card-header>
+      <ion-card-title>{{ parcel.parcel_uid || ('#'+parcel.id) }}</ion-card-title>
+      <ion-card-subtitle>
+        <span>Created {{ parcel.created_at | date:'MMM d, y' }}</span>
+        <span class="chip" [ngClass]="{
+          'chip--pending': parcel.status === 0,
+          'chip--confirmed': parcel.status === 1,
+          'chip--out': parcel.status === 2,
+          'chip--cancelled': parcel.status === 3
+        }">{{ getParcelStatusText(parcel.status) }}</span>
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="row">
+        <ion-icon name="arrow-up-circle-outline"></ion-icon>
+        <div>
+          <div class="label">Pickup</div>
+          <div class="value">{{ parcel.pickup_address || parcel.pickup?.address }}</div>
+        </div>
+      </div>
+      <div class="row">
+        <ion-icon name="arrow-down-circle-outline"></ion-icon>
+        <div>
+          <div class="label">Drop</div>
+          <div class="value">{{ parcel.drop_address || parcel.drop?.address }}</div>
+        </div>
+      </div>
+      <div class="grid">
+        <div>
+          <div class="label">Weight</div>
+          <div class="value">{{ parcel.total_weight || '-' }} kg</div>
+        </div>
+        <div>
+          <div class="label">Status</div>
+          <div class="value">{{ getParcelStatusText(parcel.status) }}</div>
+        </div>
+        <div *ngIf="parcel.delivery_date">
+          <div class="label">Delivery Date</div>
+          <div class="value">{{ parcel.delivery_date | date:'MMM d, y, h:mm a' }}</div>
+        </div>
+      </div>
+      <div *ngIf="parcel.parcel_details?.length" class="items">
+        <div class="label">Items</div>
+        <ion-list lines="none" class="pd-items-list">
+          <ion-item *ngFor="let item of parcel.parcel_details" class="pd-item">
+            <ion-icon name="cube-outline" slot="start"></ion-icon>
+            <ion-label>{{ item.name }}</ion-label>
+            <ion-note slot="end">{{ item.weight }} kg</ion-note>
+          </ion-item>
+        </ion-list>
+      </div>
+      <div *ngIf="parcel.parcel_comment" class="note">
+        <div class="label">Note</div>
+        <div class="value">{{ parcel.parcel_comment }}</div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+
+

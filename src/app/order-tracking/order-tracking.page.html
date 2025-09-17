@@ -1,0 +1,96 @@
+<app-common-header></app-common-header>
+<ion-content [fullscreen]="true">
+  <div class="tracking-container">
+    <!-- <div class="map-half">
+      <div id="map" class="map-frame">
+       
+        <div class="map-placeholder">Map loading…</div>
+      </div>
+    </div> -->
+    <div class="details-half">
+      <div class="details-card" *ngIf="!loading && view; else orderState">
+        <div class="status-row">
+          <h2 class="status">{{ view.status }}</h2>
+          <span class="sub-status" *ngIf="view?.riderStatus">{{ view.riderStatus }}</span>
+          <span class="eta" *ngIf="view?.etaMinutes">~ {{ view.etaMinutes }} min</span>
+        </div>
+
+        <div class="meta-grid">
+          <div class="meta"><span class="label">Order</span><span class="value">#{{ view.orderUid || view.id }}</span></div>
+          <div class="meta" *ngIf="view?.createdAt"><span class="label">Placed</span><span class="value">{{ view.createdAt | date:'medium' }}</span></div>
+          <div class="meta"><span class="label">Payment</span><span class="value">{{ view.paymentMethod || '—' }}</span></div>
+          <div class="meta"><span class="label">Fast Delivery</span><span class="value">{{ view.isFastDelivery ? 'Yes' : 'No' }}</span></div>
+          <div class="meta"><span class="label">Quantity</span><span class="value">{{ view.totalQuantity }}</span></div>
+          <div class="meta"><span class="label">Total</span><span class="value">${{ view.totalPrice }}</span></div>
+        </div>
+
+        <div class="section" *ngIf="view?.storeName || view?.storeAddress || view?.vendorPhone">
+          <h3>Store</h3>
+          <p class="value" *ngIf="view?.storeName">{{ view.storeName }}</p>
+          <p class="muted" *ngIf="view?.storeAddress">{{ view.storeAddress }}</p>
+          <p class="muted" *ngIf="view?.vendorPhone">{{ view.vendorPhone }}</p>
+        </div>
+
+        <div class="section" *ngIf="view?.customerName || view?.customerPhone">
+          <h3>Customer</h3>
+          <p class="value" *ngIf="view?.customerName">{{ view.customerName }}</p>
+          <p class="muted" *ngIf="view?.customerPhone">{{ view.customerPhone }}</p>
+        </div>
+
+        <div class="section" *ngIf="view?.deliveryAddress">
+          <h3>Deliver to</h3>
+          <p class="value">{{ view.deliveryAddress }}</p>
+          <p class="muted" *ngIf="view?.floor || view?.landmark">{{ view.floor || '' }} <span *ngIf="view?.floor && view?.landmark">·</span> {{ view.landmark || '' }}</p>
+        </div>
+
+        <div class="section" *ngIf="view?.rider">
+          <h3>Rider</h3>
+          <div class="rider-row">
+            <div class="rider-info">
+              <div class="avatar">{{ view.rider?.name?.charAt(0) || 'R' }}</div>
+              <div>
+                <p class="rider-name">{{ view.rider?.name }}</p>
+                <p class="rider-phone">{{ view.rider?.phone }}</p>
+              </div>
+            </div>
+            <div class="rider-actions">
+              <ion-button size="small" fill="outline" color="success" (click)="callRider()">Call</ion-button>
+              <ion-button size="small" color="success" (click)="chatWithRider()">Chat</ion-button>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" *ngIf="view?.items?.length">
+          <h3>Items</h3>
+          <div class="item" *ngFor="let it of view?.items">
+            <div class="item-head">
+              <div class="name">{{ it.product_name }}</div>
+              <div class="price">${{ it.total_item_price || it.product_price }}</div>
+            </div>
+            <div class="item-body">
+              <div class="qty">Qty: {{ it.product_quantity }}</div>
+              <div class="desc" *ngIf="it.product_description">{{ it.product_description }}</div>
+              <div class="variant" *ngIf="it.variant">
+                <span class="badge">{{ it.variant.type }}: {{ it.variant.value }}</span>
+                <span class="muted" *ngIf="it.variant?.price">( ${{ it.variant.price }} )</span>
+              </div>
+              <div class="addons" *ngIf="it.addons?.length">
+                <span class="badge" *ngFor="let ad of it.addons">{{ ad.name }}<span *ngIf="ad.price"> · ${{ ad.price }}</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #orderState>
+        <div class="details-card">
+          <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+          <p *ngIf="!loading && notFound">Order not found.</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</ion-content>
+
+
+

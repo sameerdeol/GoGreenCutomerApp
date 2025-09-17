@@ -31,10 +31,10 @@
       <div class="view_cart_item_div" *ngFor="let item of cartItems" >
         <input type="checkbox" [(ngModel)]="selectedItemMap[item.id]" (change)="onItemCheckboxChange(item)" />
 
-        <div class="view_cart_outer_div" (click)="navigateToParticularProduct(item.id)">
+        <div class="view_cart_outer_div" >
           <div class="display_flex_only">
             <div class="checkout_item_outer_div">
-              <img [src]="item.image" alt="" class="mb-2">
+              <img [src]="item.image" alt="" class="mb-2" (click)="navigateToParticularProduct(item.id)">
               <button class="add_to_cart_btn_bg2">
                 <span class="remove_item_btn" (click)="removeFromCart(item)">-</span>
                 {{ getQuantity(item.id) }}
@@ -42,7 +42,7 @@
               </button>
             </div>
 
-            <div>
+            <div (click)="navigateToParticularProduct(item.id)">
               <p>{{ item.title }}</p>
               <p class="description_text">{{ item.subtitle }}</p>
               <p class="font_weight">{{currency}}{{ getItemTotal(item) }}</p>
@@ -64,17 +64,14 @@
         <div class="col-6 text_end">{{currency}}{{getCartTotal()}}</div>
       </div>
 
-      <!-- <div class="row mt-2">
-        <div class="col-6 font-weight-bold">Total</div>
-        <div class="col-6 text_end font-weight-bold">{{currency}}{{ getCartTotal() }}</div>
-      </div> -->
-
-        <div class="row mt-2">
+      <div class="row mt-2">
         <div class="col-6">
-          <div class="display_flex_only margin_bottom_2">
+          <div class="display_flex_only margin_bottom_2" 
+               (click)="selectedDeliveryOption = 'Fast'; updateTotalWithDelivery()" 
+               style="cursor: pointer;">
             <input type="radio" name="delivery" [(ngModel)]="selectedDeliveryOption" [value]="'Fast'"
               (change)="updateTotalWithDelivery()" class="custom-radio">
-            <label class="font_weight">Fast Delivery</label>
+            <label class="font_weight" style="cursor: pointer;">Fast Delivery</label>
           </div>
         </div>
         <div class="col-6 text_end">{{currency}}3</div>
@@ -82,10 +79,12 @@
 
       <div class="row mt-2">
         <div class="col-6">
-          <div class="display_flex_only margin_bottom_2">
+          <div class="display_flex_only margin_bottom_2" 
+               (click)="selectedDeliveryOption = 'Normal'; updateTotalWithDelivery()" 
+               style="cursor: pointer;">
             <input type="radio" name="delivery" [(ngModel)]="selectedDeliveryOption" [value]="'Normal'"
               (change)="updateTotalWithDelivery()" class="custom-radio">
-            <label class="font_weight">Normal Delivery</label>
+            <label class="font_weight" style="cursor: pointer;">Normal Delivery</label>
           </div>
         </div>
         <div class="col-6 text_end">{{currency}}0</div>

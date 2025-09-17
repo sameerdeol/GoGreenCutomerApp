@@ -45,27 +45,34 @@
             (click)="presentPopover($event)"></ion-icon>
         </div>
 
-      <div *ngFor="let item of items; let i = index" class="add_item_div mb-2">
+      <div class="add_item_div mb-2">
+        <!-- Item Name -->
+        <input 
+          type="text" 
+          placeholder="Item name (e.g., Document, Package)" 
+          [(ngModel)]="items[0].name" 
+          (focus)="onInputFocus()" (blur)="onInputBlur()"
+          style="width: 200px; margin-right: 6px; margin-bottom: 5px;" />
+
         <!-- Weight -->
         <input 
           type="number" 
           placeholder="Weight" 
-          [(ngModel)]="item.weight" 
-          (ngModelChange)="validateWeight(item)" 
+          [(ngModel)]="items[0].weight" 
+          (ngModelChange)="validateWeight(items[0])" 
           (focus)="onInputFocus()" (blur)="onInputBlur()"
           style="width: 70px; margin-right: 6px;" />
 
         <!-- Unit -->
         <select 
           class="slect_option" 
-          [(ngModel)]="item.unit" 
-          (ngModelChange)="validateWeight(item)"
+          [(ngModel)]="items[0].unit" 
+          (ngModelChange)="validateWeight(items[0])"
           style="width: 60px; margin-right: 6px;">
           <option value="kg" selected>kg</option>
           <option value="g">g</option>
           <option value="lbs">lbs</option>
         </select>
-  
       </div>
 
         <!-- Distance -->
@@ -122,10 +129,10 @@
       </div>
 
       <div class="summary-section items">
-        <h3>Parcel Items</h3>
-        <div *ngFor="let item of items; let i = index" class="item-card">
-          <p><strong>Item {{ i+1 }}</strong></p>
-          <p><strong>Weight:</strong> {{ item.weight || '-' }} {{ item.unit }}</p>
+        <h3>Parcel Item</h3>
+        <div class="item-card">
+          <p><strong>{{ items[0].name || 'Parcel Item' }}</strong></p>
+          <p><strong>Weight:</strong> {{ items[0].weight || '-' }} {{ items[0].unit }}</p>
         </div>
       </div>
 

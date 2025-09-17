@@ -1,0 +1,353 @@
+<app-common-header></app-common-header>
+
+<ion-content [fullscreen]="true">
+  <div class="page_outer_div">
+    
+    <!-- Enhanced Header Section -->
+    <div class="help-center-header">
+      <div class="header-background">
+        <div class="floating-shapes">
+          <div class="shape shape-1"></div>
+          <div class="shape shape-2"></div>
+          <div class="shape shape-3"></div>
+        </div>
+      </div>
+      <div class="header-content">
+        <div class="header-icon-container">
+          <div class="icon-background">
+            <ion-icon name="headset-outline"></ion-icon>
+          </div>
+          <div class="pulse-ring"></div>
+        </div>
+        <h1>How can we help you?</h1>
+        <p>Our support team is here to assist you 24/7. Share your concerns and we'll resolve them quickly.</p>
+        <!-- <div class="stats-row">
+          <div class="stat-item">
+            <span class="stat-number">24/7</span>
+            <span class="stat-label">Support</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">&lt;2h</span>
+            <span class="stat-label">Response</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">98%</span>
+            <span class="stat-label">Satisfaction</span>
+          </div>
+        </div> -->
+      </div>
+    </div>
+
+    <!-- Enhanced Query Form -->
+    <div class="bg-white rounded-4 shadow-sm mx-3 mb-4" style="margin-top: -30px; position: relative; overflow: hidden;">
+      <div class="text-center p-4" style="background: linear-gradient(135deg, #f8fffe 0%, #e8f5f3 100%); border-bottom: 1px solid #e8f5f3;">
+        <div class="d-flex justify-content-center align-items-center mb-3" style="width: 60px; height: 60px; background: linear-gradient(135deg, #00854a 0%, #00a855 100%); border-radius: 50%; margin: 0 auto;">
+          <ion-icon name="document-text-outline" style="font-size: 28px; color: white;"></ion-icon>
+        </div>
+        <h2 class="h4 fw-bold text-dark mb-2">Tell us about your issue</h2>
+        <p class="text-muted mb-0" style="font-size: 14px;">Please provide as much detail as possible to help us assist you better</p>
+      </div>
+
+      <form (ngSubmit)="submitQuery()" #queryForm="ngForm" class="p-4">
+        
+        <!-- Query Type Selection with Icons -->
+        <div class="mb-4">
+          <label class="d-flex align-items-center gap-2 fw-semibold text-dark mb-3" style="font-size: 16px; gap: 10px;">
+            <ion-icon name="list-outline" style="font-size: 18px; color: #00854a;"></ion-icon>
+            What can we help you with?
+          </label>
+          <div class="row g-3">
+            <div class="col-6">
+              <div class="card h-100 border-2 cursor-pointer transition-all" 
+                   [class.border-success]="queryData.type === 'product'"
+                   [class.bg-success]="queryData.type === 'product'"
+                   [class.text-white]="queryData.type === 'product'"
+                   [class.border-light]="queryData.type !== 'product'"
+                   (click)="selectQueryType('product')"
+                   style="cursor: pointer; transition: all 0.3s ease;">
+                <div class="card-body text-center p-3">
+                  <ion-icon name="cube-outline" class="d-block mb-2" 
+                            [style.color]="queryData.type === 'product' ? 'white' : '#00854a'"
+                            style="font-size: 24px; margin: 0 auto;"></ion-icon>
+                  <span class="d-block" style="font-size: 12px; font-weight: 500; color: #000;">Product Issues</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="card h-100 border-2 cursor-pointer transition-all" 
+                   [class.border-success]="queryData.type === 'order'"
+                   [class.bg-success]="queryData.type === 'order'"
+                   [class.text-white]="queryData.type === 'order'"
+                   [class.border-light]="queryData.type !== 'order'"
+                   (click)="selectQueryType('order')"
+                   style="cursor: pointer; transition: all 0.3s ease;">
+                <div class="card-body text-center p-3">
+                  <ion-icon name="receipt-outline" class="d-block mb-2" 
+                            [style.color]="queryData.type === 'order' ? 'white' : '#00854a'"
+                            style="font-size: 24px; margin: 0 auto;"></ion-icon>
+                  <span class="d-block" style="font-size: 12px; font-weight: 500; color: #000;">Order Problems</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="card h-100 border-2 cursor-pointer transition-all" 
+                   [class.border-success]="queryData.type === 'delivery'"
+                   [class.bg-success]="queryData.type === 'delivery'"
+                   [class.text-white]="queryData.type === 'delivery'"
+                   [class.border-light]="queryData.type !== 'delivery'"
+                   (click)="selectQueryType('delivery')"
+                   style="cursor: pointer; transition: all 0.3s ease;">
+                <div class="card-body text-center p-3">
+                  <ion-icon name="car-outline" class="d-block mb-2" 
+                            [style.color]="queryData.type === 'delivery' ? 'white' : '#00854a'"
+                            style="font-size: 24px; margin: 0 auto;"></ion-icon>
+                  <span class="d-block" style="font-size: 12px; font-weight: 500; color: #000;">Delivery Issues</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="card h-100 border-2 cursor-pointer transition-all" 
+                   [class.border-success]="queryData.type === 'payment'"
+                   [class.bg-success]="queryData.type === 'payment'"
+                   [class.text-white]="queryData.type === 'payment'"
+                   [class.border-light]="queryData.type !== 'payment'"
+                   (click)="selectQueryType('payment')"
+                   style="cursor: pointer; transition: all 0.3s ease;">
+                <div class="card-body text-center p-3">
+                  <ion-icon name="card-outline" class="d-block mb-2" 
+                            [style.color]="queryData.type === 'payment' ? 'white' : '#00854a'"
+                            style="font-size: 24px; margin: 0 auto;"></ion-icon>
+                  <span class="d-block" style="font-size: 12px; font-weight: 500; color: #000;">Payment Help</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="card h-100 border-2 cursor-pointer transition-all" 
+                   [class.border-success]="queryData.type === 'account'"
+                   [class.bg-success]="queryData.type === 'account'"
+                   [class.text-white]="queryData.type === 'account'"
+                   [class.border-light]="queryData.type !== 'account'"
+                   (click)="selectQueryType('account')"
+                   style="cursor: pointer; transition: all 0.3s ease;">
+                <div class="card-body text-center p-3">
+                  <ion-icon name="person-outline" class="d-block mb-2" 
+                            [style.color]="queryData.type === 'account' ? 'white' : '#00854a'"
+                            style="font-size: 24px; margin: 0 auto;"></ion-icon>
+                  <span class="d-block" style="font-size: 12px; font-weight: 500; color: #000;">Account Issues</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="card h-100 border-2 cursor-pointer transition-all" 
+                   [class.border-success]="queryData.type === 'other'"
+                   [class.bg-success]="queryData.type === 'other'"
+                   [class.text-white]="queryData.type === 'other'"
+                   [class.border-light]="queryData.type !== 'other'"
+                   (click)="selectQueryType('other')"
+                   style="cursor: pointer; transition: all 0.3s ease;">
+                <div class="card-body text-center p-3">
+                  <ion-icon name="help-outline" class="d-block mb-2" 
+                            [style.color]="queryData.type === 'other' ? 'white' : '#00854a'"
+                            style="font-size: 24px; margin: 0 auto;"></ion-icon>
+                  <span class="d-block" style="font-size: 12px; font-weight: 500; color: #000;">Other</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Selection (shown only for product-related queries) -->
+        <div class="form-group" *ngIf="queryData.type === 'product'">
+          <label class="form-label">Related Product (Optional)</label>
+          <ion-input
+            [(ngModel)]="queryData.productName"
+            name="productName"
+            placeholder="Enter product name"
+            fill="outline">
+          </ion-input>
+        </div>
+
+        <!-- Order ID (compulsory for all cases) -->
+        <div class="form-group enhanced-input">
+          <label class="form-label">
+            <ion-icon name="receipt-outline"></ion-icon>
+            Order ID *
+          </label>
+          <div class="input-container">
+            <ion-input
+              [(ngModel)]="queryData.orderId"
+              name="orderId"
+              placeholder="Enter your order ID"
+              fill="outline"
+              required>
+            </ion-input>
+            <div class="input-icon">
+              <ion-icon name="receipt-outline"></ion-icon>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subject -->
+        <div class="form-group enhanced-input">
+          <label class="form-label">
+            <ion-icon name="text-outline"></ion-icon>
+            Subject *
+          </label>
+          <div class="input-container">
+            <ion-input
+              [(ngModel)]="queryData.subject"
+              name="subject"
+              placeholder="Brief description of your issue"
+              fill="outline"
+              required>
+            </ion-input>
+            <div class="input-icon">
+              <ion-icon name="pencil-outline"></ion-icon>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Detailed Description -->
+        <div class="form-group enhanced-textarea">
+          <label class="form-label">
+            <ion-icon name="chatbubbles-outline"></ion-icon>
+            Tell us more about your issue *
+          </label>
+          <div class="textarea-container">
+            <ion-textarea
+              [(ngModel)]="queryData.description"
+              name="description"
+              placeholder="Please describe your issue in detail. The more information you provide, the better we can help you..."
+              rows="6"
+              fill="outline"
+              required>
+            </ion-textarea>
+            <div class="character-count">
+              {{ queryData.description.length }}/1000
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="contact-section">
+          <h3 class="section-title">
+            <ion-icon name="mail-outline"></ion-icon>
+            Contact Information
+          </h3>
+          
+          <div class="form-group enhanced-input">
+            <label class="form-label">
+              <ion-icon name="at-outline"></ion-icon>
+              Email Address *
+            </label>
+            <div class="input-container">
+              <ion-input
+                [(ngModel)]="queryData.email"
+                name="email"
+                type="email"
+                placeholder="your.email@example.com"
+                fill="outline"
+                required
+                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                (ionInput)="validateEmail($event)"
+                [class.invalid]="emailError">
+              </ion-input>
+              <div class="input-icon">
+                <ion-icon [name]="emailError ? 'close-circle' : 'mail-outline'" 
+                          [class.error]="emailError"></ion-icon>
+              </div>
+            </div>
+            <div class="validation-message" *ngIf="emailError">
+              <ion-icon name="alert-circle-outline"></ion-icon>
+              <span>{{ emailErrorMessage }}</span>
+            </div>
+          </div>
+
+          <div class="form-group enhanced-input">
+            <label class="form-label">
+              <ion-icon name="call-outline"></ion-icon>
+              Phone Number (Optional)
+            </label>
+            <div class="input-container">
+              <ion-input
+                [(ngModel)]="queryData.phone"
+                name="phone"
+                type="tel"
+                placeholder="Enter your phone number"
+                fill="outline">
+              </ion-input>
+              <div class="input-icon">
+                <ion-icon name="call-outline"></ion-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced Attachment Option -->
+        <div class="form-group attachment-section">
+          <label class="form-label">
+            <ion-icon name="image-outline"></ion-icon>
+            Add Screenshot (Optional)
+          </label>
+          <div class="file-upload-area" [class.has-file]="selectedFile">
+            <input 
+              type="file" 
+              #fileInput 
+              (change)="onFileSelected($event)"
+              accept="image/*"
+              style="display: none;">
+            
+            <div class="upload-content" (click)="triggerFileUpload()">
+              <div class="upload-icon">
+                <ion-icon [name]="selectedFile ? 'checkmark-circle' : 'cloud-upload-outline'"></ion-icon>
+              </div>
+              <div class="upload-text">
+                <span class="main-text">
+                  {{ selectedFile ? selectedFile.name : 'Drag & drop or click to upload' }}
+                </span>
+                <small class="sub-text">
+                  {{ selectedFile ? 'File ready to upload' : 'PNG, JPG up to 5MB' }}
+                </small>
+              </div>
+            </div>
+            
+            <ion-button 
+              *ngIf="selectedFile"
+              fill="clear" 
+              color="danger"
+              (click)="removeFile()"
+              class="remove-file-btn">
+              <ion-icon name="close-circle" slot="icon-only"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+
+        <!-- Enhanced Submit Button -->
+        <div class="submit-container">
+          <div class="submit-info">
+            <ion-icon name="shield-checkmark-outline"></ion-icon>
+            <span>Your information is secure and will only be used to help resolve your query</span>
+          </div>
+          
+          <ion-button 
+            type="submit" 
+            expand="block" 
+            [disabled]="!queryForm.form.valid || isSubmitting"
+            class="submit-btn">
+            <div class="btn-content">
+              <ion-icon [name]="isSubmitting ? 'hourglass-outline' : 'send-outline'"></ion-icon>
+              <span>{{ isSubmitting ? 'Sending your query...' : 'Send Help Request' }}</span>
+            </div>
+            <div class="btn-loading" *ngIf="isSubmitting">
+              <ion-spinner name="crescent"></ion-spinner>
+            </div>
+          </ion-button>
+        </div>
+
+      </form>
+    </div>
+
+
+  </div>
+</ion-content>

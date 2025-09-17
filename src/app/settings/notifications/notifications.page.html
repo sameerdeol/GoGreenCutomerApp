@@ -1,4 +1,7 @@
 <ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="fetchNotifications($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <div class="page_outer_div ">
 
     <div class="d_flex align_items_center justify-content-between">
@@ -10,91 +13,43 @@
 
     <div class="notification-outer-div mt-5">
 
-  
-    <div class="section-heading ion-margin-top">
-      <h6 class="section-title">Today</h6>
-      <div class="section-line"></div>
-    </div>
+      <div class="d_flex align_items_center" style="gap:12px;">
+        <ion-chip [color]="showUnreadOnly ? 'success' : 'medium'" (click)="toggleUnreadOnly(true)">Unread</ion-chip>
+        <ion-chip [color]="!showUnreadOnly ? 'success' : 'medium'" (click)="toggleUnreadOnly(false)">All</ion-chip>
+      </div>
 
-    <!-- Highlighted Notification (Dinner Reminder) -->
-    <ion-card color="success" class="custom-highlight-card">
-      <ion-item lines="none" class="bg-notification-green">
-        <ion-icon name="notifications" slot="start"></ion-icon>
+      <ion-spinner *ngIf="loading" name="crescent" class="ion-margin-top"></ion-spinner>
 
-        <ion-label>
-          <div class="label-header">
-            <h2>Reminder for your Dinner</h2>
-            <ion-note class="note-top">9min ago</ion-note>
+      <ng-container *ngIf="!loading && groupedNotifications.length; else emptyState">
+        <ng-container *ngFor="let group of groupedNotifications">
+          <div class="section-heading ion-margin-top">
+            <h6 class="section-title">{{ group.label }}</h6>
+            <div class="section-line"></div>
           </div>
-          <p class="text_gogreen">
-            It’s time for your dinner! Take a break, enjoy your meal, and recharge.
-          </p>
-        </ion-label>
-      </ion-item>
-    </ion-card>
 
-    <ion-item class="notification-item bg-green" lines="none">
-      <ion-avatar slot="start">
-        <ion-icon name="notifications-outline" class="icon-avatar"></ion-icon>
-      </ion-avatar>
+          <ion-item *ngFor="let n of group.items" class="notification-item bg-green" lines="none" (click)="onNotificationClick(n)">
+            <ion-avatar slot="start">
+              <ion-icon [name]="n.is_read ? 'notifications-outline' : 'notifications'" class="icon-avatar"></ion-icon>
+            </ion-avatar>
 
-      <ion-label>
-        <div class="label-header">
-          <h2>Reminder for your Dinner</h2>
-          <ion-note class="note-top">9min ago</ion-note>
+            <ion-label>
+              <div class="label-header">
+                <h2 style="color: #000;">{{ n.title || 'Notification' }}</h2>
+                <ion-note class="note-top">{{ timeAgo(n.created_at) }}</ion-note>
+              </div>
+              <p>{{ n.message }}</p>
+            </ion-label>
+          </ion-item>
+        </ng-container>
+      </ng-container>
+
+      <ng-template #emptyState>
+        <div class="ion-text-center ion-margin-top">
+          <p>No notifications to show.</p>
         </div>
-        <p>It’s time for your dinner! Take a break, enjoy your meal, and recharge.</p>
-      </ion-label>
-    </ion-item>
-
-    <ion-item class="notification-item bg-green" lines="none">
-      <ion-avatar slot="start">
-        <ion-icon name="notifications-outline" class="icon-avatar"></ion-icon>
-      </ion-avatar>
-
-      <ion-label>
-        <div class="label-header">
-          <h2>Reminder for your Dinner</h2>
-          <ion-note class="note-top">9min ago</ion-note>
-        </div>
-        <p>It’s time for your dinner! Take a break, enjoy your meal, and recharge.</p>
-      </ion-label>
-    </ion-item>
-
-    <ion-item class="notification-item bg-green" lines="none">
-      <ion-avatar slot="start">
-        <ion-icon name="notifications-outline" class="icon-avatar"></ion-icon>
-      </ion-avatar>
-
-      <ion-label>
-        <div class="label-header">
-          <h2>Reminder for your Craving</h2>
-          <ion-note class="note-top">9min ago</ion-note>
-        </div>
-        <p>Craving alert! Time to treat yourself to something delicious — you’ve earned it!</p>
-      </ion-label>
-    </ion-item>
-
-    <!-- Yesterday Section -->
-    <div class="section-heading ion-margin-top">
-      <h6 class="section-title">Yesterday</h6>
-      <div class="section-line"></div>
-    </div>
-
-    <ion-item class="notification-item bg-green" lines="none">
-      <ion-avatar slot="start">
-        <ion-icon name="notifications-outline" class="icon-avatar"></ion-icon>
-      </ion-avatar>
-
-      <ion-label>
-        <div class="label-header">
-          <h2>Your Order has been shipped</h2>
-          <ion-note class="note-top">9min ago</ion-note>
-        </div>
-        <p>It’s on its way — get ready to receive your package soon!</p>
-      </ion-label>
-    </ion-item>
+      </ng-template>
 
     </div>
   </div>
+
 </ion-content>

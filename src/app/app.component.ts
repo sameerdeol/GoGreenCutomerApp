@@ -45,7 +45,15 @@ export class AppComponent {
     window.history.back();
   }
 });
-  
+  App.addListener('appUrlOpen', (data) => {
+    try {
+      const url = new URL(data.url);
+      const vendorId = url.searchParams.get('vendorId');
+      if (vendorId) {
+        this.router.navigate(['/store-products'], { queryParams: { vendorId } });
+      }
+    } catch {}
+  });
   }
   async init() {
     await this.storage.create();

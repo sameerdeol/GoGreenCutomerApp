@@ -1,5 +1,6 @@
+<app-common-header></app-common-header>
 <ion-content [fullscreen]="true">
-  <app-common-header></app-common-header>
+
   <div class="page_outer_div mb-6rem">
     <app-global-search (searchFocus)="onSearchFocusChange($event)"></app-global-search>
   <div *ngIf="loading">
@@ -45,4 +46,6 @@
   </div>
 
 </ion-content>
-<app-footer-tabs></app-footer-tabs>
+<ion-footer *ngIf="!hideFooter">
+  <app-footer-tabs></app-footer-tabs>
+</ion-footer>

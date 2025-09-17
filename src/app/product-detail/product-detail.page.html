@@ -1,9 +1,15 @@
+  <app-common-header></app-common-header>
 <ion-content [fullscreen]="true">
   <!-- <div class="page_outer_div "> -->
-  <app-common-header></app-common-header>
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-content">
+      <ion-spinner name="crescent" color="success"></ion-spinner>
+      <p class="loading-text">Loading products...</p>
+    </div>
+  </div>
 
 
-  <div class="bg_img">
+  <div class="bg_img" *ngIf="!isLoading">
     <div class="home_slidr_outer_div">
       <swiper-container class="mySwiper" slides-per-view="1" space-between="15" autoplay="false" pagination="true">
         <swiper-slide *ngFor="let item of productDetails?.gallery_images">
@@ -33,6 +39,11 @@
         </ion-icon>
 
         </div>
+        <!-- Rating badge: show only when > 0 -->
+        <div class="rating-badge" *ngIf="productDetails?.average_rating > 0">
+          <span class="num">{{ productDetails.average_rating | number:'1.1-1' }}</span>
+          <ion-icon name="star" class="single-star"></ion-icon>
+        </div>
         <div class="product_desc display_flex">
           <p class="text_font ">{{productDetails.description}}</p>
 
@@ -41,11 +52,12 @@
           <p class="price_text font-weight-bold">${{productDetails?.price}}</p>
           <p class="text_font text-right" *ngIf="productDetails?.fast_delivery_available === 0"><img class="mr-1"
               src="assets/fast-delivery.svg">Available on fast delivery</p>
+            
         </div>
       </div>
     </div>
 
-    <div class="page_outer_div Addons_div_bg">
+    <div class="page_outer_div Addons_div_bg" [ngClass]="{'view-cart-margin-addons': showViewCart}">
       <div class="p_heading" *ngIf="productDetails?.attributes?.length > 0">
         <p>Product Details</p>
       </div>
@@ -72,8 +84,12 @@
           <div *ngFor="let variant of productDetails?.variants" class="addon-item">
             <label class="addon-label">
               <div class="left">
-                <input type="radio" name="variant" [value]="variant.id"   [(ngModel)]="selectedVariant"
-                  class="custom-radio" (click)="toggleVariant(variant,productDetails.id)"/>
+                <input type="radio" 
+                       name="variant" 
+                       [value]="variant.id"   
+                       [checked]="selectedVariant === variant.id"
+                       class="custom-radio" 
+                       (change)="toggleVariant(variant,productDetails.id)"/>
                 <p>{{ variant.value }}</p>
               </div>
               <div class="right">

@@ -30,6 +30,8 @@ export class CheckoutPage implements OnInit {
   addressType: any;
   fulladdress: any;
   savedUserAddress: any[] = [];
+  selectedAddressId: any;
+  selectedAddress: any;
   minDateTime: string ='';
   maxDateTime: string = '';
   constructor(private router: Router,private storage: Storage,private apiservice: ApiserviceService) { 
@@ -46,14 +48,17 @@ export class CheckoutPage implements OnInit {
     if (nav?.extras.state) {
       this.totalamountWithDilevryCharges = nav.extras.state['totalPrice'];
       this.deliveryOption = nav.extras.state['deliveryOption'];
- 
+      console.log('this.deliveryOption ',this.deliveryOption )
+
     }
-    // await this.storage.set('totalamountWithDilevryCharges',this.totalamountWithDilevryCharges);
+    await this.storage.set('isFastDeilvery',this.deliveryOption);
     this.getCustomerAddress();
     this.addressType = await this.storage.get('selectedTypeText');
     this.fulladdress = await this.storage.get('fullAddress');
     const savedDate = await this.storage.get('selectedDate');
     const savedTime = await this.storage.get('selectedTime');
+    console.log('addressType', this.addressType );
+    console.log('fulladdress', this.fulladdress )
 
     // If both exist, combine them to set the value for the datetime picker.
     if (savedDate && savedTime) {
@@ -87,30 +92,50 @@ setDateLimits() {
     .slice(0, 16);
 
   this.maxDateTime = localFutureISO;
-
-  console.log('Min datetime (IST):', this.minDateTime);
-  console.log('Max datetime (IST):', this.maxDateTime);
 }
 
 
   async onDateTimeChange(event: CustomEvent) {
     const newValue = event.detail.value;  
     this.selectedDateTime = newValue;
+    console.log('newValue',newValue)
     const [datePart, timePart] = newValue.split('T'); 
-
+    await this.storage.set('sheduledDateAndTime', newValue);
     // Save the date and time separately
     await this.storage.set('selectedDate', datePart);
     await this.storage.set('selectedTime', timePart);
   }
-  async getCustomerAddress(){
-    const user_id = await this.storage.get('userID');
-    this.apiservice.get_User_address(user_id).subscribe((response)=>{
-      if(response){
-        this.savedUserAddress = response.addresses;
-        console.log('get address',response)
+async getCustomerAddress() {
+  const user_id = await this.storage.get('userID');
+  this.apiservice.get_User_address(user_id).subscribe(async (response) => {
+    if (response) {
+      this.savedUserAddress = response.addresses;
+      console.log('get address', response);
+
+      // ✅ Try to find default address
+      let defaultAddress = this.savedUserAddress.find(address => address.last_used === 1);
+
+      // ✅ If no default, use the first one
+      if (!defaultAddress && this.savedUserAddress.length > 0) {
+        defaultAddress = this.savedUserAddress[0];
       }
-    })
-  }
+
+      if (defaultAddress) {
+        const defaultIndex = this.savedUserAddress.indexOf(defaultAddress);
+        this.selectedOption = 'option' + defaultIndex;
+        this.selectedAddressId = defaultAddress.id;
+        this.selectedAddress = defaultAddress;
+
+        // Store in storage
+        await this.storage.set('saveAddressID', defaultAddress.id);
+        await this.storage.set('selectedAddress', defaultAddress);
+
+        console.log('Selected address set:', defaultAddress);
+      }
+    }
+  });
+}
+
   navigateToViewCart() {
     // this.location.back();
     this.router.navigate(['/view-cart']);
@@ -122,10 +147,19 @@ setDateLimits() {
   async selectOnlyOne(option: string, id: any) {
     if (this.selectedOption === option) {
       this.selectedOption = ''; // uncheck if clicked again
+      this.selectedAddressId = null;
+      this.selectedAddress = null;
+      await this.storage.remove('saveAddressID');
+      await this.storage.remove('selectedAddress');
     } else {
       this.selectedOption = option; // check only this one
+      this.selectedAddressId = id;
+      
+      // Find and store the selected address details
+      this.selectedAddress = this.savedUserAddress.find(address => address.id === id);
+      await this.storage.set('saveAddressID', id);
+      await this.storage.set('selectedAddress', this.selectedAddress);
     }
-    await this.storage.set('saveAddressID', id);
   }
 
 

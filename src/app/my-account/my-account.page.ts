@@ -54,8 +54,14 @@ export class MyAccountPage implements OnInit {
     console.log('bookmark click')
     this.router.navigate(['/bookmarks']);
   }
+  helpCenter(){
+    this.router.navigate(['/help-center']);
+  }
   FaQs(){
     this.router.navigate(['/faqs']);
+  }
+  reviewPurchase(){
+    this.router.navigate(['/review-purchase']);
   }
   privacy(){
     this.router.navigate(['/privacy']);

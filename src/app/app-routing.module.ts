@@ -82,6 +82,14 @@ const routes: Routes = [
     loadChildren: () => import('./settings/notifications/notifications.module').then( m => m.NotificationsPageModule)
   },
   {
+    path: 'order-tracking',
+    loadComponent: () => import('./order-tracking/order-tracking.page').then(m => m.OrderTrackingPage)
+  },
+  {
+    path: 'order-tracking/:orderId',
+    loadComponent: () => import('./order-tracking/order-tracking.page').then(m => m.OrderTrackingPage)
+  },
+  {
     path: 'orders',
     loadChildren: () => import('./settings/orders/orders.module').then( m => m.OrdersPageModule)
   },
@@ -92,6 +100,10 @@ const routes: Routes = [
   {
     path: 'view-order-details',
     loadChildren: () => import('./view-order-details/view-order-details.module').then( m => m.ViewOrderDetailsPageModule)
+  },
+  {
+    path: 'parcel-detail/:id',
+    loadComponent: () => import('./parcel-detail/parcel-detail.page').then(m => m.ParcelDetailPage)
   },
   {
     path: 'all-address',
@@ -117,9 +129,17 @@ const routes: Routes = [
     path: 'about-us',
     loadChildren: () => import('./settings/about-us/about-us.module').then( m => m.AboutUsPageModule)
   },
+  {
+    path: 'help-center',
+    loadComponent: () => import('./settings/help-center/help-center.page').then( m => m.HelpCenterPage)
+  },
+  {
+    path: 'review-purchase',
+    loadChildren: () => import('./settings/review-purchase/review-purchase.module').then( m => m.ReviewPurchasePageModule)
+  },
+
 
  
-  
 
 // No AuthGuard needed
 ];

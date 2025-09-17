@@ -1,6 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ModalController } from '@ionic/angular';
+import { IonicModule, ModalController, IonContent } from '@ionic/angular';
 import { HeaderComponent } from '../components/header/header.component';
 import { CommonModule } from '@angular/common';
 import { register } from 'swiper/element/bundle';
@@ -12,11 +12,14 @@ import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { BottomSlideComponent } from '../components/bottom-slide/bottom-slide.component';
 import { Storage } from '@ionic/storage-angular';
-import { ViewChildren, QueryList, ElementRef, AfterViewInit } from '@angular/core';
+import { ViewChildren, QueryList, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
 import { GlobalSearchComponent } from "../components/global-search/global-search.component";
 import type { SwiperOptions } from 'swiper/types';
 import { toggleFavourite } from '../utils/utils';
-
+import { SocketService } from '../services/socket';
+import { io } from "socket.io-client";
+import { Subscription } from 'rxjs';
+ 
 register();
 
 @Component({
@@ -31,7 +34,10 @@ register();
 export class HomePage implements OnInit, OnDestroy {
   @ViewChildren('storeSwiper') storeSwiperRefs!: QueryList<ElementRef>;
   @ViewChildren('recommendedSwiper') recommendedSwiperRefs!: QueryList<ElementRef>;
-  private activeSwiper: any = null;
+  @ViewChild(HeaderComponent) headerComponent!: HeaderComponent;
+  @ViewChild('categorySection') categorySection!: ElementRef;
+  @ViewChild(IonContent) ionContent!: IonContent;
+
 
   // Image carousel properties for vendors
   hoveredVendorIndex: number | null = null;
@@ -86,7 +92,7 @@ export class HomePage implements OnInit, OnDestroy {
   showCartPopup: boolean = false;
   totalQuantity: number = 0;
   totalAmount: number = 0;
-  searchedProduct: any[]=[];
+  searchedProduct: any[] = [];
   cartItems: any[] = [];
   searchKeyword: string = '';
   isAddedMap: { [key: string]: boolean } = {};
@@ -106,26 +112,52 @@ export class HomePage implements OnInit, OnDestroy {
   selectedIndex: number = -1;
   hoveredIndex: number | null = null;
   hideFooter = false;
+  selectedCategoryTitle: string = 'All Stores';
+  private riderLocationSub!: Subscription;
   constructor(
     private apiservice: ApiserviceService, 
     private router: Router,
     private modalCtrl: ModalController,
     private storage: Storage, 
     private cartService: CartService,
-    
+    private socketService: SocketService
   ) {
     this.init();
   }
   async ngOnInit() {
+    this.socketService.connect();
+
+
+
+
+    
     const user_id = await this.storage.get('userID');
+    const nav = this.router.getCurrentNavigation();
+    const state = nav?.extras.state;
+
+    if (state && state['refresh']) {
+      // ✅ Trigger a one-time reload
+   
+      window.location.reload();
+    }
     // const token = await this.storage.get('auth_token');
     this.userID = user_id;
     this.getAllVendors([null]);
     this.storage.get('statictoken')
     this.getAllVendorTypes();
     this.getAllBannerImg();
-    this.onCategorySelect(0, 0);
+    // Set initial category selection without triggering scroll
+    this.selectedCategoryIndex = 0;
+    this.selectedCategoryTitle = 'All Stores';
+    
+    // Call getExistingCustomerDetails from header component
+    setTimeout(() => {
+      if (this.headerComponent) {
+        this.headerComponent.getExistingCustomerDetails();
+      }
+    }, 100);
   }
+ 
   // Image carousel methods for vendors
   getVendorImages(vendor: any): string[] {
     return vendor?.featured_images?.length > 0 
@@ -234,11 +266,9 @@ export class HomePage implements OnInit, OnDestroy {
     this.navigateToVendorStore(vendor);
   }
 
-
   async init() {
     await this.storage.create();
   }
-
 
   async ionViewWillEnter() {
     const storedCart = await this.storage.get('cartItems');
@@ -249,6 +279,8 @@ export class HomePage implements OnInit, OnDestroy {
     this.totalQuantity = this.cartService.getCurrentQuantity();
   }
   ngOnDestroy() {
+     this.riderLocationSub?.unsubscribe();
+    this.socketService.disconnect();
     if (this.intervalId) {
       clearInterval(this.intervalId);
     }
@@ -293,7 +325,97 @@ export class HomePage implements OnInit, OnDestroy {
 
   onCategorySelect(index: number, item: any) {
     this.selectedCategoryIndex = index;
-    this.getAllVendors([item.id])
+    if (!item || item.id === 0) {
+      this.selectedCategoryTitle = 'All Stores';
+    } else {
+      this.selectedCategoryTitle = item.vendor_type || 'All Stores';
+    }
+    this.getAllVendors([item.id]);
+    // Wait for the API call to complete and DOM to update
+    setTimeout(() => {
+      this.scrollToCategorySection();
+    }, 500);
+    
+    // Alternative approach - scroll to recommended section
+    setTimeout(() => {
+      this.scrollToRecommendedSection();
+    }, 600);
+  }
+
+  private async scrollToCategorySection(): Promise<void> {
+    try {
+      if (!this.ionContent) return;
+      
+      // Wait a bit more for DOM to be ready
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      const scrollEl = await this.ionContent.getScrollElement();
+      const header = document.querySelector('app-header') as HTMLElement | null;
+      const headerHeight = header ? header.offsetHeight : 0;
+      
+      // Try to find the category section element
+      let el = this.categorySection?.nativeElement as HTMLElement | null;
+      
+      // If categorySection is not found, try to find it by class or text content
+      if (!el) {
+        el = document.querySelector('.slider_heading_div') as HTMLElement | null;
+      }
+      
+      // If still not found, try to find by the heading text
+      if (!el) {
+        const headings = document.querySelectorAll('h3');
+        for (let i = 0; i < headings.length; i++) {
+          const heading = headings[i];
+          if (heading.textContent?.includes(this.selectedCategoryTitle)) {
+            el = heading.parentElement as HTMLElement;
+            break;
+          }
+        }
+      }
+      
+      if (!el) {
+        console.warn('Category section element not found');
+        return;
+      }
+      
+      // Calculate scroll position
+      const rect = el.getBoundingClientRect();
+      const scrollTop = scrollEl.scrollTop;
+      const y = rect.top + scrollTop - headerHeight - 20; // 20px extra padding
+      
+      // console.log('Scrolling to position:', y);
+      this.ionContent.scrollToPoint(0, Math.max(0, y), 300);
+      
+    } catch (e) {
+      console.warn('scrollToCategorySection failed', e);
+    }
+  }
+
+  private async scrollToRecommendedSection(): Promise<void> {
+    try {
+      if (!this.ionContent) return;
+      
+      const scrollEl = await this.ionContent.getScrollElement();
+      const header = document.querySelector('app-header') as HTMLElement | null;
+      const headerHeight = header ? header.offsetHeight : 0;
+      
+      // Find the "Recommended For You" section
+      const recommendedSection = document.querySelector('.recomender_heading') as HTMLElement;
+      
+      if (recommendedSection) {
+        const rect = recommendedSection.getBoundingClientRect();
+        const scrollTop = scrollEl.scrollTop;
+        const y = rect.top + scrollTop - headerHeight - 20;
+        
+        // console.log('Scrolling to Recommended section at position:', y);
+        this.ionContent.scrollToPoint(0, Math.max(0, y), 300);
+      } else {
+        console.warn('Recommended section not found');
+      }
+      
+    } catch (e) {
+      console.warn('scrollToRecommendedSection failed', e);
+    }
   }
 
   selectCategory(index: number, category_id: any, category_name: any): void {
@@ -311,6 +433,14 @@ export class HomePage implements OnInit, OnDestroy {
     this.getAllVendors([null]);
     this.getAllVendorTypes();
     this.getAllBannerImg();
+    
+    // Call getExistingCustomerDetails from header component on refresh
+    setTimeout(() => {
+      if (this.headerComponent) {
+        this.headerComponent.getExistingCustomerDetails();
+      }
+    }, 100);
+    
     event.target.complete();
   }
 
@@ -391,7 +521,7 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   navigateToVendorStore(item: any) {
-     console.log('this is homeID', this.userID)
+    //  console.log('this is homeID', this.userID)
     this.router.navigate(['/store-products'], {
       state: { vendor: item , user_id: this.userID}
     });
@@ -404,7 +534,7 @@ export class HomePage implements OnInit, OnDestroy {
 
       this.getVednorByVendorId(item.id).subscribe((response) => {
         if (response.success === true) {
-          console.log('Vendor by VendorID', response);
+          // console.log('Vendor by VendorID', response);
 
           this.router.navigate(['/store-products'], {
             state: { vendor: response.data[0] }

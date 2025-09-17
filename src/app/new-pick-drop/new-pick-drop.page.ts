@@ -1,6 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, OnDestroy, NgZone, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AlertController, IonicModule, ModalController, IonContent } from '@ionic/angular';
+import { AlertController, IonicModule, ModalController, IonContent, ToastController } from '@ionic/angular';
 import { HeaderComponent } from '../components/header/header.component';
 import { CommonModule } from '@angular/common';
 import { register } from 'swiper/element/bundle';
@@ -51,7 +51,7 @@ export class NewPickDropPage implements OnInit, OnDestroy {
   selectedDateTime: string = new Date().toISOString(); 
   selectedDelvieryOption: string = 'today';
   items: any[] = [
-    { weight: null, unit: 'kg', width: null, height: null, error: false }
+    { name: '', weight: null, unit: 'kg', width: null, height: null, error: false }
   ]
   todayDate: string = '';
   currentTime: string = '';
@@ -69,7 +69,8 @@ export class NewPickDropPage implements OnInit, OnDestroy {
     private storage: Storage,
     private ngZone: NgZone,
     private modalController: ModalController,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private toastController: ToastController
   ) {
     this.init();
     const now = new Date();
@@ -182,37 +183,40 @@ export class NewPickDropPage implements OnInit, OnDestroy {
       return false;
     }
 
-    // Check if at least one item exists
+    // Check if item exists
     if (!this.items || this.items.length === 0) {
-      await this.presentAlert('Please add at least one parcel item.');
+      await this.presentAlert('Please add a parcel item.');
       return false;
     }
 
-    // Validate each item
-    for (let i = 0; i < this.items.length; i++) {
-      const item = this.items[i];
-      
-      // Check if weight is provided
-      if (item.weight == null || item.weight <= 0 || item.weight === '') {
-        await this.presentAlert(`Please fill all required fields.`);
-        return false;
-      }
+    const item = this.items[0];
+    
+    // Check if name is provided
+    if (!item.name || item.name.trim() === '') {
+      await this.presentAlert('Please provide a name for the parcel item.');
+      return false;
+    }
+    
+    // Check if weight is provided
+    if (item.weight == null || item.weight <= 0 || item.weight === '') {
+      await this.presentAlert('Please provide weight for the parcel item.');
+      return false;
+    }
 
-      // Convert weight to kg for validation
-      let weightInKg = 0;
-      if (item.unit === 'kg') {
-        weightInKg = parseFloat(item.weight);
-      } else if (item.unit === 'g') {
-        weightInKg = parseFloat(item.weight) / 1000;
-      } else if (item.unit === 'lbs') {
-        weightInKg = parseFloat(item.weight) * 0.453592;
-      }
+    // Convert weight to kg for validation
+    let weightInKg = 0;
+    if (item.unit === 'kg') {
+      weightInKg = parseFloat(item.weight);
+    } else if (item.unit === 'g') {
+      weightInKg = parseFloat(item.weight) / 1000;
+    } else if (item.unit === 'lbs') {
+      weightInKg = parseFloat(item.weight) * 0.453592;
+    }
 
-      // Check if weight exceeds 3kg
-      if (weightInKg > 3) {
-        await this.presentAlert(`Weight should not be more than 3kg.`);
-        return false;
-      }
+    // Check if weight exceeds 3kg
+    if (weightInKg > 3) {
+      await this.presentAlert('Weight should not be more than 3kg.');
+      return false;
     }
 
     return true;
@@ -343,13 +347,6 @@ export class NewPickDropPage implements OnInit, OnDestroy {
     });
   }
 
-  addRow() {
-    this.items.push({ weight: null, unit: 'kg' });
-  }
-
-  removeRow(index: number) {
-    this.items.splice(index, 1);
-  }
 
   calculateCharges(): number {
     if (!this.distanceKm) return 0;
@@ -370,41 +367,66 @@ export class NewPickDropPage implements OnInit, OnDestroy {
     await alert.present();
   }
   async placeOrder() {
-    // const valid = await this.isFormValid();
-    // if (!valid) return;
+    const valid = await this.isFormValid();
+    if (!valid) return;
 
     // ✅ proceed if validation passes
     this.isModalOpen = true;
   }
   submitOrder() {
-    // Get separate delivery date and time
-    const deliveryDate = this.getDeliveryDate();
-    const deliveryTime = this.getDeliveryTime();
+    // Get delivery date in ISO format
+    const deliveryDate = this.getDeliveryDateISO();
     
-    const orderData = {
-      pickup: { address: this.pickupAddress, coords: this.pickupCoords },
-      drop: { address: this.dropAddress, coords: this.dropCoords },
-      parcel: this.items, // all items with weight, dimensions, etc.
-      trip: {
-        distanceText: this.distanceText,
-        distanceKm: this.distanceKm,
-        duration: this.routeDurationText,
-        charges: this.calculateCharges()
+    // Transform single item to match the required format
+    const item = this.items[0];
+    let weightInKg = 0;
+    if (item.unit === 'kg') {
+      weightInKg = parseFloat(item.weight) || 0;
+    } else if (item.unit === 'g') {
+      weightInKg = (parseFloat(item.weight) || 0) / 1000;
+    } else if (item.unit === 'lbs') {
+      weightInKg = (parseFloat(item.weight) || 0) * 0.453592;
+    }
+    
+    const payload = {
+      pickup: {
+        address: this.pickupAddress,
+        coords: {
+          lat: this.pickupCoords?.lat || 0,
+          lng: this.pickupCoords?.lng || 0
+        }
       },
-      userId: this.userID,
-      parcelComment: this.parcelComment,
+      drop: {
+        address: this.dropAddress,
+        coords: {
+          lat: this.dropCoords?.lat || 0,
+          lng: this.dropCoords?.lng || 0
+        }
+      },
+      parcel: [{
+        name: item.name || 'Parcel Item',
+        weight: weightInKg
+      }],
+      userId: parseInt(this.userID) || 0,
+      parcelComment: this.parcelComment || "",
       deliveryDate: deliveryDate,
-      deliveryTime: deliveryTime,
-      scheduledComments: this.scheduledComments
+      scheduledComments: this.scheduledComments || ""
     };
 
-    const ordersArray = [orderData];
-    console.log('Orders Array:', ordersArray);
-    console.log('Delivery Date:', deliveryDate);
-    console.log('Delivery Time:', deliveryTime);
-    console.log('Scheduled Comments:', this.scheduledComments);
-
-    this.isModalOpen = false; // close modal
+    console.log('Payload to be sent:', payload);
+    
+    // Call API service to submit the order
+    this.apiservice.submitPickDropOrder(payload).subscribe({
+      next: (response) => {
+        console.log('Order submitted successfully:', response);
+        this.isModalOpen = false; // close modal
+        this.showSuccessToast();
+      },
+      error: (error) => {
+        console.error('Error submitting order:', error);
+        this.showErrorToast();
+      }
+    });
   }
 
   selectDeliveryOption(option: string) {
@@ -553,6 +575,21 @@ export class NewPickDropPage implements OnInit, OnDestroy {
     });
   }
 
+  getDeliveryDateISO(): string {
+    // If today delivery is selected, return current date/time in ISO format
+    if (this.selectedDelvieryOption === 'today') {
+      return new Date().toISOString();
+    }
+    
+    // If custom date/time is selected, return the selected date/time in ISO format
+    if (this.selectedDelvieryOption === 'nottoday' && this.selectedDateTime) {
+      return new Date(this.selectedDateTime).toISOString();
+    }
+    
+    // Fallback: return current date/time in ISO format
+    return new Date().toISOString();
+  }
+
   onInputFocus() {
     this.isInputFocused = true;
     // Scroll to top when input is focused to show Google Maps suggestions
@@ -610,5 +647,37 @@ export class NewPickDropPage implements OnInit, OnDestroy {
     
     // Add resize listener to handle orientation changes
     window.addEventListener('resize', scrollHandler, { passive: true });
+  }
+
+  async showSuccessToast() {
+    const toast = await this.toastController.create({
+      message: 'Order submitted successfully! You will get notified when rider picks up the parcel.',
+      duration: 4000,
+      position: 'top',
+      color: 'success',
+      buttons: [
+        {
+          text: 'OK',
+          role: 'cancel'
+        }
+      ]
+    });
+    await toast.present();
+  }
+
+  async showErrorToast() {
+    const toast = await this.toastController.create({
+      message: 'Failed to submit order. Please try again.',
+      duration: 3000,
+      position: 'top',
+      color: 'danger',
+      buttons: [
+        {
+          text: 'OK',
+          role: 'cancel'
+        }
+      ]
+    });
+    await toast.present();
   }
 }

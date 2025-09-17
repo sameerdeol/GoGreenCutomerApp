@@ -81,16 +81,11 @@ export class ViewCartPage implements OnInit {
   }
   async navigateToParticularProduct(product_id: any){
     await this.storage.set('lastProductId', product_id);
-    // this.router.navigate(['/product-detail'], {
-    //   state: { 
-    //          product_id: product_id,     
-    //    }
-    // });
     this.router.navigate(
     ['/product-detail'], 
     {
       queryParams: { id: product_id },   // ✅ param passed internally
-      skipLocationChange: true           // ✅ not visible in URL
+      state: { id: product_id }
     }
   );
   }

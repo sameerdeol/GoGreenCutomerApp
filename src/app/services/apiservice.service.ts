@@ -48,6 +48,7 @@ export class ApiserviceService {
   AllOrders = this.base_path+ 'order/orderhistorybyuserid';
   getAllCatAndSubCat = this.base_path+ 'category/get-cateandsubcat';
   allvendorOnSearchedResult = this.base_path + 'search/searchvendorbysearchterm';
+  helpQuerySubmit = this.base_path + 'support/submit-query';
   getCatandVendors = this.base_path+'category/get-cateandrelatedvendor';
   getVendorsByVendorId = this.base_path+'vendors/vendorbyid';
   getproductByVendor = this.base_path+ '/search/searchallbyVendor';
@@ -56,7 +57,12 @@ export class ApiserviceService {
   saveNotificationToken  = this.base_path+'notifications/userfcm-token';
   removeNotificationToken = this.base_path+'notifications/remove-fcmtoken';
   getAllProducts = this.base_path+ 'products/getproducts';
-
+  sumbitReview = this.base_path+'ratings/add';
+  getAllNotification = this.base_path+'notifications/all-notifications';
+  getOrderDetail = this.base_path+'order/getorderdetails';
+  pickAndDropSubmit = this.base_path+'parcels/create';
+  getAllPickAndDropOrders = this.base_path+ 'parcels/getall/'
+  getPickDropById = this.base_path+ 'parcels/getbyid'
   private _storageReady = false;
 
   constructor(private http: HttpClient, private storage: Storage) {
@@ -111,6 +117,21 @@ export class ApiserviceService {
         return this.http.post<any>(this.allcategories, body, { headers });})
     );
   }
+  submit_pick_and_drop(payload: any): Observable<any> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        const body = { payload: payload };
+        return this.http.post<any>(this.pickAndDropSubmit, body, { headers });})
+    );
+  }
+    
+  get_OrderDetail(order_id: any): Observable<any> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        const body = { order_id: order_id };
+        return this.http.post<any>(this.getOrderDetail, body, { headers });})
+    );
+  }
    get_all_categories2(): Observable<any> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => {
@@ -138,6 +159,35 @@ export class ApiserviceService {
         return this.http.get<any>(this.getAllCatAndSubCat, { headers });})
     );
   }
+  get_all_notifications(user_id: string, onlyUnread: boolean = false): Observable<any> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        let url = `${this.getAllNotification}/${user_id}`;
+        if (onlyUnread) {
+          url += `?onlyUnread=true`;
+        }
+        return this.http.get<any>(url, { headers });
+      })
+    );
+  }
+  get_all_pick_and_drop_orders(user_id: any): Observable<any> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        let url = `${this.getAllPickAndDropOrders}/${user_id}`;
+        return this.http.get<any>(url, { headers });
+      })
+    );
+  }
+
+  get_pick_drop_by_id(user_id: any, id: any): Observable<any> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        const url = `${this.getPickDropById}/${user_id}/${id}`;
+        return this.http.get<any>(url, { headers });
+      })
+    );
+  }
+
   save_notification_token(user_id: any, fcmToken: any): Observable<any> {
     return this.getAuthHeaders().pipe(
       switchMap(headers => {
@@ -174,7 +224,13 @@ export class ApiserviceService {
         return this.http.post<any>(this.getVendorsByVendorId, body, { headers });})
     );
   }
-  
+  submit_rating(payload: any){   
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        return this.http.post<any>(this.sumbitReview,payload, { headers });})
+    );
+ 
+  }
   filterProducts(payload: any){   
     return this.getAuthHeaders().pipe(
       switchMap(headers => {
@@ -448,5 +504,30 @@ removeToFavourite(user_id: any, id: any, favnum: any, type: 'vendor' | 'product'
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const body = { phonenumber: phonenumber, otp: otp, prefix: prefix };
     return this.http.post<any>(this.loginApi, body, { headers });
+  }
+
+  // Submit help query with file upload support
+  submitHelpQuery(formData: FormData): Observable<any> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        // Remove Content-Type header to let browser set it with boundary for FormData
+        const uploadHeaders = new HttpHeaders();
+        headers.keys().forEach(key => {
+          if (key !== 'Content-Type') {
+            uploadHeaders.set(key, headers.get(key) || '');
+          }
+        });
+        return this.http.post<any>(this.helpQuerySubmit, formData, { headers: uploadHeaders });
+      })
+    );
+  }
+
+  // Submit Pick & Drop Order
+  submitPickDropOrder(payload: any): Observable<any> {
+    return this.getAuthHeaders().pipe(
+      switchMap(headers => {
+        return this.http.post<any>(this.pickAndDropSubmit, payload, { headers });
+      })
+    );
   }
 }

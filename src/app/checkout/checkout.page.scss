@@ -10,8 +10,8 @@ input[type="checkbox"] {
     -webkit-appearance: none;
     border: 2px solid #088B46;
     border-radius: 50%; /* makes it round */
-    width: 20px;
-    height: 20px;
+    width: 21px;
+    height: 22px;
     outline: none;
     cursor: pointer;
     position: relative;
@@ -20,7 +20,9 @@ input[type="checkbox"] {
     justify-content: center;
 
   }
-
+.addres_bg>div{
+  width: 85%;
+}
  
   input[type="checkbox"]:checked::before {
     content: "";

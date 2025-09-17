@@ -1,5 +1,5 @@
 
-
+  <app-common-header></app-common-header>
 <ion-content [fullscreen]="true">
   <!-- <div class="green_header">
     <div class="page_outer_div ">
@@ -13,7 +13,7 @@
       </div>
     </div>
   </div> -->
-  <app-common-header></app-common-header>
+
   
   <div class="page_outer_div bordr_bottom_gray">
 
@@ -37,7 +37,7 @@
     <div>Account Setting</div>
      <div class="accounts_grid">      
         <div class="12">
-          <div class="card-content">
+          <div class="card-content" (click)="reviewPurchase()">
             <div class="display_flex align_items_center main_icons">
               <ion-icon name="information-circle-outline"></ion-icon>
               <p>Review your purchase</p>
@@ -105,7 +105,7 @@
         </div>   
     </div> 
     <div class="12">         
-      <div class="card-content">
+      <div class="card-content" (click)="helpCenter()">
         <div class="display_flex align_items_center main_icons">
           <ion-icon name="chatbox-ellipses-outline"></ion-icon>
           <p>Help Center</p>

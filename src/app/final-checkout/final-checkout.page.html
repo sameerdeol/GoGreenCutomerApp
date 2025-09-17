@@ -25,24 +25,24 @@
     </div>
    
  <div class="radio_outer_div">
-  <!-- <div class="display_flex addres_bg">
+  <div class="display_flex addres_bg" *ngIf="selectedAddress">
     <div>
-      <label class="font_weight">Delevring to Home</label>
-      <p class="primary_font_size">#7-A Nishat Bagh Behind BD Flour Mill Ambala Cantt</p>
+      <label class="font_weight">Delivering to {{ 
+        selectedAddress.type === 1 ? 'Home' : 
+        selectedAddress.type === 2 ? 'Office' : 
+        selectedAddress.type === 3 ? 'Hotel' : 
+        'Other' 
+      }}</label>
+      <p class="primary_font_size">{{ selectedAddress.address }}</p>
     </div>
+  </div>
   
-    <input type="checkbox" [checked]="selectedOption === 'option1'" (change)="selectOnlyOne('option1')">
-    
-  </div> -->
-
-  <div class="display_flex addres_bg">
-    <div >
-      <label class="font_weight">Delevring to Office</label>
-      <p class="primary_font_size">#7-A Nishat Bagh Behind BD Flour Mill Ambala Cantt</p>
+  <!-- Fallback message if no address is selected -->
+  <div class="display_flex addres_bg" *ngIf="!selectedAddress">
+    <div>
+      <label class="font_weight">No Address Selected</label>
+      <p class="primary_font_size">Please go back and select an address</p>
     </div>
-
-    <!-- <input type="checkbox" [checked]="selectedOption === 'option2'" (change)="selectOnlyOne('option2')"> -->
-  
   </div>
 </div>
 </div>

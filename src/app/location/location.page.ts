@@ -157,14 +157,9 @@ export class LocationPage implements OnInit {
       if (status === 'OK' && results[0]) {
         this.ngZone.run(() => {
           const fullAddress = results[0].formatted_address;
-          const maxLength = 60;
 
-          const trimmedAddress = fullAddress.length > maxLength
-            ? fullAddress.substring(0, maxLength) + '...'
-            : fullAddress;
-
-          this.addressDetails = trimmedAddress;
-          this.address = trimmedAddress;
+          this.addressDetails = fullAddress;
+          this.address = fullAddress;
         });
       } else {
         console.warn('Reverse geocoding failed:', status);

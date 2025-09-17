@@ -1,0 +1,103 @@
+<app-common-header></app-common-header>
+
+<ion-content [fullscreen]="true">
+  <!-- Pull to Refresh -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="arrow-down"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <div class="container-fluid py-4">
+    <!-- Header Section -->
+    <div class="text-center mb-4">
+      <div class="d-flex justify-content-center align-items-center mb-3" style="width: 80px; height: 80px; background: linear-gradient(135deg, #00854a 0%, #00a855 100%); border-radius: 50%; margin: 0 auto;">
+        <ion-icon name="star-outline" style="font-size: 40px; color: white;"></ion-icon>
+      </div>
+      <h1 class="h3 fw-bold text-dark mb-2">Review Your Purchases</h1>
+      <p class="text-muted">Share your experience with products you've received</p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="text-center py-5">
+      <ion-spinner name="crescent" color="success"></ion-spinner>
+      <p class="text-muted mt-3">Loading your delivered orders...</p>
+    </div>
+
+    <!-- No Delivered Orders -->
+    <div *ngIf="!isLoading && deliveredOrders.length === 0" class="text-center py-5">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body py-5">
+          <ion-icon name="bag-outline" style="font-size: 60px; color: #00854a; margin-bottom: 20px;"></ion-icon>
+          <h3 class="h5 fw-semibold text-dark mb-3">No Delivered Orders</h3>
+          <p class="text-muted mb-4">You don't have any delivered orders to review yet. Once you receive your orders, you can come back here to share your feedback.</p>
+          <ion-button fill="outline" color="success" routerLink="/all-categories">
+            <ion-icon name="storefront-outline" slot="start"></ion-icon>
+            Start Shopping
+          </ion-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delivered Orders List -->
+    <div *ngIf="!isLoading && deliveredOrders.length > 0">
+      <div class="row">
+        <div class="col-12" *ngFor="let order of deliveredOrders">
+          <div class="card border-0 shadow-sm mb-4">
+            <!-- Order Header -->
+            <div class="card-header bg-light border-0">
+              <div class="d-flex justify-content-between align-items-center ">
+                <div>
+                  <h6 class="mb-1 mt-1 fw-semibold text-dark">Order #{{ order.order_uid }}</h6>
+                  <small class="text-muted status_div">
+                    <ion-icon name="checkmark-circle" color="success"></ion-icon>
+                    Delivered
+                  </small>
+                </div>
+                <div class="text-end">
+                  <small class="text-muted">{{ order.products.length }} item(s)</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Products List -->
+            <div class="card-body p-0">
+              <div *ngFor="let product of order.products; let last = last" 
+                   class="d-flex align-items-center justify-content-between p-2"
+                   [class.border-bottom]="!last">
+                
+                <div class="d-flex align-items-center flex-grow-1" style="gap: 10px;">
+                  <img [src]="product.featured_image" 
+                       [alt]="product.product_name"
+                       class="rounded me-3"
+                       style="width: 70px; height: 70px; object-fit: cover; cursor: pointer;"
+                       (click)="navigateToProduct(product)">
+                  <div class="flex-grow-1" (click)="navigateToProduct(product)" style="cursor: pointer;">
+                    <h6 class="mb-1 mt-1 fw-semibold text-dark">{{ product.product_name }}</h6>
+                    <div class="text-muted">
+                      <small>{{ currency }}{{ product.single_item_price }} × {{ product.product_quantity }}</small>
+                      <br>
+                      <small class="fw-semibold">Total: {{ currency }}{{ product.total_item_price }}</small>
+                    </div>
+                  </div>
+                </div>
+                
+                <ion-button 
+                  size="small" 
+                  fill="solid" 
+                  style="--background: #28a745; --background-activated: #218838; --background-hover: #218838; --color: white !important;"
+                  (click)="openReviewModal(product, order)">
+                  REVIEW
+                </ion-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</ion-content>

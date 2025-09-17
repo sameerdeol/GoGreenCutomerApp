@@ -31,6 +31,7 @@ export class FinalCheckoutPage implements OnInit {
   userID: any;
   cartitems: any[]=[];
   loading: boolean = false;
+  selectedAddress: any;
   constructor(private router: Router,
     private storage: Storage,
     private apiservice: ApiserviceService,
@@ -49,8 +50,12 @@ export class FinalCheckoutPage implements OnInit {
     const user_id = await this.storage.get('userID');
     this.userID =  user_id;
     this.cartitems =  await this.storage.get('cartItems');
+    
+    // Get selected address from storage
+    this.selectedAddress = await this.storage.get('selectedAddress');
+    console.log('Selected address in final checkout:', this.selectedAddress);
    
-    const deilveryoption = await this.storage.get('selectedDeliveryOption');
+    const deilveryoption = await this.storage.get('isFastDeilvery');
     if(deilveryoption == "Fast"){
       this.selectedDeliveryOption = 1;
     }else{
@@ -81,9 +86,7 @@ export class FinalCheckoutPage implements OnInit {
       this.verb = 'in';
     }
 
-
-
-    this.deliveryOption = await this.storage.get('selectedDeliveryOption');
+    this.deliveryOption = await this.storage.get('isFastDeilvery');
     // this.totalamountWithDilevryCharges = await this.storage.get('totalAmountWithDeleveryCharges');
   
   }

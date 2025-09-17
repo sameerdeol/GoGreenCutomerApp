@@ -22,10 +22,12 @@ export class ThankYouPage implements OnInit {
 
   constructor(private router: Router) { }
 
-  ngOnInit() {
-    setTimeout(() => {
-      this.router.navigate(['/home']);
-    }, 3000); // 4000ms = 4 seconds
-  }
+ ngOnInit() {
+  setTimeout(() => {
+    this.router.navigate(['/home'], {
+      state: { refresh: true }
+    });
+  }, 3000); // 3 seconds
+}
 
 }

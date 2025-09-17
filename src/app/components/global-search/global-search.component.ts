@@ -117,6 +117,10 @@ export class GlobalSearchComponent implements OnInit, AfterViewInit {
     const user_id = await this.storage.get('userID');
     return this.apiservice.get_all_vendor_by_VendorId(user_id, vendor_id);
   }
+  // async getAllProductsByVendor(vendor_id: any,searchTerm: any,user_id: any) {
+  // console.log('vendor_id',vendor_id)
+  // return this.apiservice.get_allproductsByVendorID(vendor_id, searchTerm, user_id)
+  // }
 
   async getAllVendorsBySearchedResult(search_name: any) {
     this.showSearchResults = false;   // Hide search dropdown
@@ -146,36 +150,37 @@ export class GlobalSearchComponent implements OnInit, AfterViewInit {
     });
   }
 
-  async navigateToVendorSearchedVendors(item: any) {
-    if (item.type === 'vendor') {
-      (await this.getVednorByVendorId(item.id)).subscribe((response) => {
-        if (response.success === true) {
+async navigateToVendorSearchedVendors(item: any) {
+  if (item.type === 'vendor') {
+    const vendor_id = item.id;
 
+    (await this.getVednorByVendorId(vendor_id))
+      .subscribe((response) => {
+        if (response.success === true) {
           // ✅ Pass the API's vendor data into navigation
+          console.log('response',response)
           this.router.navigate(['/store-products'], {
-            state: { vendor: response.data[0] }
+            state: { vendor: response.data[0], user_id: this.userID }
           });
         } else {
           console.warn('Vendor not found for id:', item.id);
         }
       });
 
-    } else if (item.type === 'product') {
-      const product_id = item.id;
-      if (product_id) {
-        this.dismissModal.emit();
-      }
-      this.router.navigate(['/product-detail'], {
-        state: {
-          product_id: product_id,
-        }
-      });
+  } else if (item.type === 'product') {
+    const product_id = item.id;
+    if (product_id) {
+      this.dismissModal.emit();
+    }
+    this.router.navigate(['/product-detail'], {
+      queryParams: { id: product_id }
+    });
 
-    }
-    else if (item.type === 'category' || 'subcategory') {
-      this.getAllVendorsBySearchedResult(item.title);
-    }
+  } else if (item.type === 'category' || item.type === 'subcategory') {
+    this.getAllVendorsBySearchedResult(item.title);
   }
+}
+
 
   async getSearchedProduct(value: any) {
     const searchstring = value;

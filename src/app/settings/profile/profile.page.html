@@ -1,8 +1,9 @@
-<ion-content [fullscreen]="true">
 <app-common-header
   [headerText]="'Profile'"
   >
 </app-common-header>
+<ion-content [fullscreen]="true">
+
   <div class="green_header">
     <div class="page_outer_div ">
       <div class="display_flex_only justify_content_center mt-4">
@@ -52,14 +53,16 @@
       </div>
     </div>
 
-    <div>
-      <ion-button class="welcome_submit mt_4" expand="block" id="submitBtn" (click)="validateForm()">
-        Save
-      </ion-button>
-    </div>
   </div>
 
 
 
 </ion-content>
-<app-footer-tabs></app-footer-tabs>
+<ion-footer>
+    <div>
+      <ion-button class="welcome_submit m-3" expand="block" id="submitBtn" (click)="validateForm()">
+        Save
+      </ion-button>
+    </div>
+</ion-footer>
+<!-- <app-footer-tabs></app-footer-tabs> -->

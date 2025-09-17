@@ -6,36 +6,77 @@
     <small>{{ order.created_at | date:'mediumDate' }}</small>
   </section>
 
-  <section class="products">
-    <ion-item *ngFor="let product of order.products">
+<section class="products">
+  <ion-card *ngFor="let product of order.products; let i = index">
+    <ion-item lines="none">
       <ion-thumbnail slot="start">
         <img [src]="product.featured_image" />
       </ion-thumbnail>
       <ion-label>
-        <h3>{{ product.product_name }}</h3>
-        <p>{{ product.product_quantity }} × ${{ product.single_item_price }}</p>
+        <h3>{{ product.product_name || ('Product ' + (i+1)) }}</h3>
+        <p>Quantity: {{ product.product_quantity }}</p>
       </ion-label>
       <div slot="end">
-        ${{ product.single_item_price * product.product_quantity }}
+        ${{ product.total_item_price || (product.single_item_price * product.product_quantity) }}
       </div>
-      
     </ion-item>
-  </section>
 
-  <section class="price-summary">
-    <strong>Total: ${{ order.total_price }}</strong>
-  </section>
+    <div class="table-wrapper">
+      <table class="ion-text-wrap product-details-table">
+        <tbody>
+          <!-- Variants -->
+          <tr *ngIf="product.variants?.length">
+            <td class="label">Variant :</td>
+            <td>
+              <div class="chip-row">
+                <div class="chip" *ngFor="let v of product.variants">
+                  <span class="name">
+                    {{ v.variant_type }}: {{ v.variant_value }}
+                  </span>
+                  <span class="price" *ngIf="v.variant_price">
+                    ${{ v.variant_price }}
+                  </span>
+                </div>
+              </div>
+            </td>
+          </tr>
 
-  <section class="shipping-payment">
-    <h3>Shipping Address</h3>
-    <p>{{ order.address.address }}</p>
-    <h3>Payment Method</h3>
-    <p>{{ order.payment_method }}</p>
-  </section>
+          <!-- Addons -->
+          <tr *ngIf="product.addons?.length">
+            <td class="label">Addons :</td>
+            <td>
+              <div class="addon-chip-list">
+                <div class="chip" *ngFor="let addon of product.addons">
+                  <span class="name">{{ addon.name || addon.addon_name }}</span>
+                  <span class="price" *ngIf="addon.price || addon.addon_price">
+                    ${{ addon.price || addon.addon_price }}
+                  </span>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Per Product Total -->
+          <tr>
+            <td class="label">Per Product Total</td>
+            <td>
+              ${{ product.total_item_price || (product.single_item_price * product.product_quantity) }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ion-card>
+</section>
+
+<!-- Order Total -->
+<section class="price-summary">
+  <strong>Total: ${{ order.total_price }}</strong>
+</section>
+
    <ion-footer >
   <div class="footer_btn">
     <ion-button  color="medium">Track Order</ion-button>
-    <ion-button  color="primary" (click)="buyAgain()">Buy Again</ion-button>
   </div>
 
   </ion-footer>

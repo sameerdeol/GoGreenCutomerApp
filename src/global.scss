@@ -97,6 +97,30 @@ ion-select-popover ion-item:hover {
 ion-select-popover ion-list {
   background: #13723b !important; /* remove that light strip */
 }
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #f8fffe 0%, #e8f5f3 100%);
+  
+  .loading-content {
+    text-align: center;
+    
+    ion-spinner {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 16px;
+    }
+    
+    .loading-text {
+      color: #00854a;
+      font-size: 16px;
+      font-weight: 500;
+      margin: 0;
+    }
+  }
+}
 .m_0  {
     margin: 0px !important;
 }

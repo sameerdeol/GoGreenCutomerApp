@@ -1,62 +1,76 @@
-<ion-content fullscreen>
+<ion-content fullscreen (ionScroll)="onScroll($event)">
 
-  <div *ngIf="vendorDetails" class="header_bg_img"
-    [ngStyle]="{'background-image': 'url(' + vendorDetails.store_image + ')'}">
-    <div class="page_outer_div">
-      <div class="display_flex align_items_center">
-        <div class="left_arrow_div">
-          <ion-icon name="chevron-back-outline" (click)="goback()"></ion-icon>
-        </div>
-      </div>
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-content">
+      <ion-spinner name="crescent" color="success"></ion-spinner>
+      <p class="loading-text">Loading store products...</p>
     </div>
   </div>
 
-  <!-- Foreground Content -->
-  <div class="main_content">
-    <!-- Store Info -->
-    <div *ngIf="vendorDetails">
-      <div class="restrao_details">
-        <div class="store_basix_details">
-          <div class="store_heading">
-            <h2>{{vendorDetails.store_name}}</h2>
+  <!-- Main Content - Show when not loading -->
+  <div *ngIf="!isLoading">
+    <!-- Fixed Header with Background Image -->
+    <div *ngIf="vendorDetails" class="header_bg_img" 
+      [class.collapsed]="isHeaderCollapsed"
+      [ngStyle]="{'background-image': 'url(' + vendorDetails.store_image + ')'}">
+      <div class="page_outer_div">
+        <div class="display_flex align_items_center">
+          <div class="left_arrow_div">
+            <ion-icon name="chevron-back-outline" (click)="goback()"></ion-icon>
           </div>
-          <div class="store_heading_distory">
-            <ion-icon name="location-outline"></ion-icon> {{vendorDetails.store_address}} <span>(5km)</span>
-          </div>
-          <div class="store_heading_timing">
-            <img src="assets/timer-icon.svg" alt="">
-            <!-- <ion-icon name="time-outline"></ion-icon> -->
-       
-                <p [ngClass]="{
-              'text_gogreen': vendorDetails.is_vendor_opened,
-              'text-danger': !vendorDetails.is_vendor_opened
-                }">
-              {{ vendorDetails.is_vendor_opened ? 'Open now' : 'Closed' }}
-              (Closes at {{ vendorDetails.vendor_close_time }})
-            </p>
-          </div>
-        </div>
-        <div class="store_basix_details_rating">
-          3.5 <ion-icon name="star"></ion-icon>
         </div>
       </div>
     </div>
 
-    <div class="main_content_body">
+    <!-- Sticky Store Details Section -->
+    <div class="sticky-header" [class.collapsed]="isHeaderCollapsed">
+      <div class="main_content">
+        <!-- Combined Sticky Section: Vendor Details + Filters -->
+        <div class="sticky-combined-section bg-white">
+          <!-- Vendor Details -->
+          <div *ngIf="vendorDetails" class="mb-3">
+            <div class="restrao_details">
+              <div class="store_basix_details">
+                <div class="store_heading">
+                  <h2 class="mb-1">{{vendorDetails.store_name}}</h2>
+                </div>
+                <div class="d-flex align-items-center mb-1">
+                  <ion-icon name="location-outline" class="me-1"></ion-icon> 
+                  <span class="text-muted">{{vendorDetails.store_address}} </span>
+                </div>
+                <div class="d-flex align-items-center">
+                  <img src="assets/timer-icon.svg" alt="" class="me-1">
+                  <p class="mb-0" [ngClass]="{
+                    'text_gogreen': vendorDetails.is_vendor_opened,
+                    'text-danger': !vendorDetails.is_vendor_opened
+                  }">
+                    {{ vendorDetails.is_vendor_opened ? 'Open now' : 'Closed' }}
+                    (Closes at {{ vendorDetails.vendor_close_time }})
+                  </p>
+                </div>
+              </div>
+              <div class="store_basix_details_rating d-flex align-items-center">
+                <span class="me-1">3.5</span> <ion-icon name="star"></ion-icon>
+              </div>
+            </div>
+          </div>
 
-      <div class="share_bookmark_bar">
-        <ion-icon class="color_black font-24" (click)="shareContent()" name="share-social-outline"></ion-icon>
-        <div (click)="toggleFav(vendorDetails); $event.stopPropagation()" class="bookmark-btn m-0">
-          <ion-icon class="text_gogreen bookmark-filled"
-            [name]="vendorDetails.is_favourite == 1 ? 'bookmark' : 'bookmark-outline'"></ion-icon>
-        </div>
-      </div>
+          <!-- Filters Section -->
+          <div class="main_content_body mt-3">
+            <div class="share_bookmark_bar">
+              <ion-icon class="color_black font-24" (click)="shareContent()" name="share-social-outline"></ion-icon>
+              <div (click)="toggleFav(vendorDetails); $event.stopPropagation()" class="bookmark-btn m-0">
+                <ion-icon class="text_gogreen bookmark-filled"
+                  [name]="vendorDetails.is_favourite == 1 ? 'bookmark' : 'bookmark-outline'"></ion-icon>
+              </div>
+            </div>
 
-      <swiper-container class="mySwiper" slides-per-view="2.5" space-between="5" autoplay="false" [breakpoints]="{
-        '640': { 'slidesPerView': 5, 'spaceBetween': 5 },
-        '768': { 'slidesPerView': 5, 'spaceBetween': 5 },
-        '1024': { 'slidesPerView': 5, 'spaceBetween': 5 }
-      }">
+            <swiper-container class="mySwiper" slides-per-view="2.5" space-between="5" autoplay="false" [breakpoints]="{
+              '640': { 'slidesPerView': 5, 'spaceBetween': 5 },
+              '768': { 'slidesPerView': 5, 'spaceBetween': 5 },
+              '1024': { 'slidesPerView': 5, 'spaceBetween': 5 }
+            }">
         <!-- Static Filters Slide -->
         <swiper-slide (click)="selectFilter('Filters')"
           [ngClass]="{'active-slide': selectedFilters.includes('Filters')}">
@@ -76,10 +90,13 @@
             </ion-icon>
           </div>
         </swiper-slide>
-      </swiper-container>
+            </swiper-container>
+          </div>
+        </div>
 
-
-      <ion-list>
+        <!-- Scrollable Products Section -->
+        <div class="products-content">
+          <ion-list>
         <ion-item class="mb-3 mt-3 product-row" lines="none" *ngFor="let product of allProducts" >
           <div slot="start" class="product_img_div">
             <div class="product_img_div_box">
@@ -118,10 +135,12 @@
         </ion-item>
       </ion-list>
 
-    </div>
-
-  </div>
-  <div class="view_cart_div" *ngIf="showViewCart" (click)="navigateToOrders()">
+          </div> <!-- Close products-content -->
+      </div> <!-- Close main_content -->
+    </div> <!-- Close sticky-header -->
+  </div> <!-- Close main wrapper -->
+  
+  <div class="view_cart_div" *ngIf="showViewCart && !isLoading" (click)="navigateToOrders()">
     <p class="margin_0">
     {{ cartQuantity }} {{ cartQuantity > 1 ? 'items' : 'item' }} added
   </p>

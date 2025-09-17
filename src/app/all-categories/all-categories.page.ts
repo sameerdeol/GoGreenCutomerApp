@@ -47,6 +47,7 @@ export class AllCategoriesPage implements OnInit {
   Allvendors: any;
   hideDiv = false;
   loading: boolean = true;
+  hideFooter = false;
   suggestions = ['bread', 'milk', 'rice', 'tomatoes', 'eggs', 'fruits', 'vegetables', 'meat', 'dairy', 'snacks'];
   constructor(private apiservice: ApiserviceService,private router: Router,private location : Location,private storage: Storage) { 
     this.init();
@@ -64,6 +65,9 @@ export class AllCategoriesPage implements OnInit {
   }
    onSearchFocusChange(isFocused: boolean) {
     this.hideDiv = isFocused;
+    this.hideFooter = isFocused;
+    console.log('onfocus change',this.hideFooter)
+
   }
   // onSearchChange(value: string) {
   //   this.searchKeyword = value;

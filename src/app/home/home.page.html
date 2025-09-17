@@ -86,13 +86,21 @@
                   </div>
 
                   <!-- Favorite Heart Icon -->
-                  <div class="favorite-icon">                
+                  <!-- <div class="favorite-icon">                
                      <button fill="clear" (click)="toggleFav(item); $event.stopPropagation()"
                         class="bookmark-btn m-0 book_mark_button">
                         <ion-icon class="text_gogreen bookmark-filled"
                           [name]="item?.is_favourite == 1 ? 'bookmark' : 'bookmark-outline'">
                         </ion-icon>
                       </button>
+                  </div> -->
+                    <div class="bookmark_outer_div">
+                    <ion-button fill="clear" (click)="toggleFav(item); $event.stopPropagation()"
+                      class="bookmark-btn book_mark_button">
+                      <ion-icon class="bookmark-icon"
+                        [name]="item?.is_favourite == 1 ? 'bookmark' : 'bookmark-outline'">
+                      </ion-icon>
+                    </ion-button>
                   </div>
                 </div>
 
@@ -129,8 +137,8 @@
         <!-- 🛍️ All Vendors -->
         <!-- All Stores Section with Image Carousel -->
         <div class="features_product_div" *ngIf="Allvendors && Allvendors.length > 0">
-          <div class="slider_heading_div">
-            <h3>All Stores</h3>
+          <div class="slider_heading_div"  #categorySection>
+            <h3>{{ selectedCategoryTitle }}</h3>
           </div>
 
           <ion-card *ngFor="let item of Allvendors; let i = index"
@@ -140,13 +148,21 @@
             (touchstart)="onVendorTouch(i)">
 
             <!-- Bookmark/Favorite Button -->
-            <div class="bookmark_outer_div">
+            <!-- <div class="bookmark_outer_div">
               <button fill="clear" (click)="toggleFav(item); $event.stopPropagation()"
                 class="bookmark-btn m-0 book_mark_button">
                 <ion-icon class="text_gogreen bookmark-filled"
                   [name]="item?.is_favourite == 1 ? 'bookmark' : 'bookmark-outline'">
                 </ion-icon>
               </button>
+            </div> -->
+              <div class="bookmark_outer_div">
+              <ion-button fill="clear" (click)="toggleFav(item); $event.stopPropagation()"
+                class="bookmark-btn book_mark_button">
+                <ion-icon class="bookmark-icon"
+                  [name]="item?.is_favourite == 1 ? 'bookmark' : 'bookmark-outline'">
+                </ion-icon>
+              </ion-button>
             </div>
 
             <!-- Image Carousel Container -->

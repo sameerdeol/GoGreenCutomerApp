@@ -13,6 +13,7 @@ import { Subscription } from 'rxjs';
 import { FilterModalComponent } from '../components/filter-modal/filter-modal.component';
 import { toggleFavourite } from '../utils/utils';
 import { Share } from '@capacitor/share';
+import { Capacitor } from '@capacitor/core';
 @Component({
   selector: 'app-store-products',
   templateUrl: './store-products.page.html',
@@ -41,6 +42,8 @@ export class StoreProductsPage implements OnInit {
   selectedFilterCount: any;
   showViewCart: boolean = false;
   isVendorOpen: any;
+  isLoading: boolean = true;
+  isHeaderCollapsed: boolean = false;
   filterData = {
     price: null as string | null,
     discount: null as string | null,
@@ -55,20 +58,33 @@ export class StoreProductsPage implements OnInit {
     private location: Location,
     private modalController: ModalController,
     private modalCtrl: ModalController,
-    private alertController: AlertController) {
+    private alertController: AlertController,
+    private route: ActivatedRoute) {
 
     this.init();
-    // this.user_id = await this.storage.get('userID')
+   
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras?.state) {
       const vendor = navigation.extras.state['vendor'];
       const userID = navigation.extras.state['user_id'];
+      console.log("vendorDetails", vendor)
       this.vendor_id = vendor.vendor_id;
       this.getAllProductsByVendor(this.vendor_id,userID);
       this.vendorDetails = vendor;
       this.isVendorOpen = this.vendorDetails.is_vendor_opened;
       // console.log("vendorDetails", this.vendorDetails)
     }
+
+    // Support deep link via query param vendorId
+    this.route.queryParamMap.subscribe(params => {
+      const vendorIdParam = params.get('vendorId');
+      if (vendorIdParam && !this.vendorDetails) {
+        const vId = Number(vendorIdParam);
+        if (!isNaN(vId)) {
+          this.loadVendorById(vId);
+        }
+      }
+    });
 
     this.cartSubscription = this.cartService.cartQuantity$.subscribe(quantity => {
       this.cartQuantity = quantity;
@@ -77,6 +93,13 @@ export class StoreProductsPage implements OnInit {
   }
   async init() {
     await this.storage.create();
+  }
+
+  onScroll(event: any) {
+    const scrollTop = event.detail.scrollTop;
+    const threshold = 100; // Adjust this value to control when header collapses
+    
+    this.isHeaderCollapsed = scrollTop > threshold;
   }
   toggleSlideFilter(filter: string) {
     if (this.selectedFilters.includes(filter)) {
@@ -228,6 +251,7 @@ export class StoreProductsPage implements OnInit {
   }
 
   async ngOnInit() {
+    this.user_id = await this.storage.get('userID')
     this.cartQuantity = this.cartService.getCurrentQuantity();
   }
 
@@ -240,6 +264,7 @@ export class StoreProductsPage implements OnInit {
 
   navigateToProduct(product: any) {
     this.router.navigate(['/product-detail'], {
+      queryParams: { id: product.id },
       state: { product: product,
              vendorStatus: this.isVendorOpen,
              vendorDetails: this.vendorDetails
@@ -251,12 +276,43 @@ export class StoreProductsPage implements OnInit {
     this.router.navigate(['/view-cart']);
   }
   async shareContent() {
-    await Share.share({
-      title: 'check this product',
-      text: 'Check out this amazing Grocesory app!',
-      url: 'https://your-app-link.com',
-      dialogTitle: 'Share via'
-    });
+    const vendorId = this.vendor_id || this.vendorDetails?.vendor_id;
+    if (!vendorId) {
+      await this.alertController.create({ header: 'Share', message: 'Vendor not available to share.', buttons: ['OK'] }).then(a => a.present());
+      return;
+    }
+
+    const webLink = `https://gogreen.app/vendor?vendorId=${encodeURIComponent(vendorId)}`;
+    const appScheme = `gogreen://vendor?vendorId=${encodeURIComponent(vendorId)}`;
+    const intentLink = `intent://vendor?vendorId=${encodeURIComponent(vendorId)}#Intent;scheme=gogreen;package=go.green.customer;end`;
+
+    const platform = Capacitor.getPlatform();
+
+    try {
+      if (platform === 'web') {
+        const can = await Share.canShare();
+        if (can.value) {
+          await Share.share({
+            title: this.vendorDetails?.store_name || 'GoGreen Vendor',
+            text: `Open in app: ${appScheme}\nAndroid intent: ${intentLink}`,
+            url: webLink,
+            dialogTitle: 'Share store'
+          });
+        } else {
+          window.prompt('Copy this link', webLink);
+        }
+      } else {
+        // Native: always include text and set url to https to ensure chooser opens
+        await Share.share({
+          title: this.vendorDetails?.store_name || 'GoGreen Vendor',
+          text: `Open in app: ${appScheme}\nAndroid intent: ${intentLink}`,
+          url: webLink,
+          dialogTitle: 'Share store'
+        });
+      }
+    } catch (e) {
+      window.open(webLink, '_blank');
+    }
   }
   async ionViewWillEnter() {
     await this.loadCartFromStorage();
@@ -299,13 +355,31 @@ export class StoreProductsPage implements OnInit {
     this.cartService.setCartItems(this.cartItems);
   }
   getAllProductsByVendor(vendor_id: any,user_id:any) {
+    this.isLoading = true;
     const searchTerm = "";
     this.apiservice.get_allproductsByVendorID(vendor_id, searchTerm, user_id).subscribe((response) => {
       if (response.success == true) {
         this.allProducts = response.product;
         // console.log("all vendor products", this.allProducts)
       }
+      this.isLoading = false;
+    }, (error) => {
+      console.error('Error loading products:', error);
+      this.isLoading = false;
     })
+  }
+
+  private loadVendorById(vendorId: number) {
+    this.isLoading = true;
+    this.apiservice.get_all_vendor_by_VendorId?.(this.user_id, vendorId).subscribe((response: any) => {
+      if (response?.success && response?.data?.[0]) {
+        this.vendorDetails = response.data[0];
+        this.vendor_id = this.vendorDetails.vendor_id;
+        this.isVendorOpen = this.vendorDetails.is_vendor_opened;
+        this.getAllProductsByVendor(this.vendor_id, this.user_id);
+      }
+      this.isLoading = false;
+    }, () => { this.isLoading = false; });
   }
 
   async addToCart(product: any) {
@@ -315,8 +389,8 @@ if (!this.isVendorOpen) {
     header: 'Vendor Closed',
     message: 
       `This vendor is currently closed. Please come back during opening hours.\n\n` +
-      `Opens at: ${this.vendorDetails?.open_time || 'N/A'}\n` +
-      `Closes at: ${this.vendorDetails?.close_time || 'N/A'}`,
+      `Opens at: ${this.vendorDetails?.vendor_start_time || 'N/A'}\n` +
+      `Closes at: ${this.vendorDetails?.vendor_close_time || 'N/A'}`,
     buttons: ['OK']
   });
   await alert.present();

@@ -1,9 +1,31 @@
 <app-common-header></app-common-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">AboutUs</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="container-fluid py-4">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8">
+        <div class="text-center mb-4">
+          <div class="d-flex justify-content-center align-items-center mb-3" style="width: 80px; height: 80px; background: linear-gradient(135deg, #00854a 0%, #00a855 100%); border-radius: 50%; margin: 0 auto;">
+            <ion-icon name="people-outline" style="font-size: 40px; color: white;"></ion-icon>
+          </div>
+          <h1 class="h3 fw-bold text-dark mb-2">About Us</h1>
+          <p class="text-muted">Learn more about our mission and values</p>
+        </div>
+        
+        <div class="card border-0 shadow-sm">
+          <div class="card-body text-center py-5">
+            <ion-icon name="leaf-outline" style="font-size: 60px; color: #00854a; margin-bottom: 20px;"></ion-icon>
+            <h3 class="h5 fw-semibold text-dark mb-3">Our Story Coming Soon</h3>
+            <p class="text-muted mb-4">We're crafting our story to share with you. This section will include our mission, vision, team information, and commitment to providing eco-friendly solutions.</p>
+            <!-- <div class="d-flex justify-content-center gap-3">
+              <ion-button fill="outline" color="success" routerLink="/settings/help-center">
+                <ion-icon name="chatbubble-outline" slot="start"></ion-icon>
+                Get in Touch
+              </ion-button>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </ion-content>
